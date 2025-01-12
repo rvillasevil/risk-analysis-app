@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  risk_assistant: one
+  materias_primas: MyText
+  carga_fuego: 9.99
+  tipo_almacenamiento: MyString
+  altura_almacenamiento: 9.99
+  congestion: false
+  productos_combustibles: false
+  estabilidad_almacenamiento: false
+
+two:
+  risk_assistant: two
+  materias_primas: MyText
+  carga_fuego: 9.99
+  tipo_almacenamiento: MyString
+  altura_almacenamiento: 9.99
+  congestion: false
+  productos_combustibles: false
+  estabilidad_almacenamiento: false

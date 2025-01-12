@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  risk_assistant: one
+  incendio: false
+  robo: false
+  interrupcion_negocio: false
+  responsabilidad_civil: false
+  riesgos_naturales: MyText
+  otros_riesgos: MyText
+
+two:
+  risk_assistant: two
+  incendio: false
+  robo: false
+  interrupcion_negocio: false
+  responsabilidad_civil: false
+  riesgos_naturales: MyText
+  otros_riesgos: MyText
