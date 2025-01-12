@@ -1,0 +1,41 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  risk_assistant: one
+  estado_sistema_electrico: MyString
+  proteccion_electrica: false
+  ultima_revision_electrica: 2025-01-12
+  termografias: false
+  transformadores_numero: 1
+  transformadores_potencia: 9.99
+  calderas_potencia: 9.99
+  calderas_ubicacion: MyString
+  calderas_critico: false
+  frio_capacidad: 9.99
+  frio_uso: MyString
+  aire_compresores_numero: 1
+  aire_presion_maxima: 9.99
+  agua_almacenamiento: MyString
+  agua_capacidad: 9.99
+  proteccion_incendios: false
+  generadores_capacidad: 9.99
+
+two:
+  risk_assistant: two
+  estado_sistema_electrico: MyString
+  proteccion_electrica: false
+  ultima_revision_electrica: 2025-01-12
+  termografias: false
+  transformadores_numero: 1
+  transformadores_potencia: 9.99
+  calderas_potencia: 9.99
+  calderas_ubicacion: MyString
+  calderas_critico: false
+  frio_capacidad: 9.99
+  frio_uso: MyString
+  aire_compresores_numero: 1
+  aire_presion_maxima: 9.99
+  agua_almacenamiento: MyString
+  agua_capacidad: 9.99
+  proteccion_incendios: false
+  generadores_capacidad: 9.99

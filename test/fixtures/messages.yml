@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  risk_assistant: one
+  sender: MyString
+  content: MyText
+  role: MyString
+
+two:
+  risk_assistant: two
+  sender: MyString
+  content: MyText
+  role: MyString

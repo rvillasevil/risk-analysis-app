@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  risk_assistant: one
+  superficie_construida: 9.99
+  superficie_parcela: 9.99
+  anio_construccion: 1
+  regimen_propiedad: MyString
+  espacios_confinados: false
+  galerias_subterraneas: false
+  elementos_combustibles: MyText
+
+two:
+  risk_assistant: two
+  superficie_construida: 9.99
+  superficie_parcela: 9.99
+  anio_construccion: 1
+  regimen_propiedad: MyString
+  espacios_confinados: false
+  galerias_subterraneas: false
+  elementos_combustibles: MyText

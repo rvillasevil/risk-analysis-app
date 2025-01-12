@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  risk_assistant: one
+  actividad_principal: MyString
+  actividad_secundaria: MyString
+  anio_inicio: 1
+  jornada_laboral: MyString
+  produccion_anual: 9.99
+  facturacion_anual: 9.99
+  procesos_peligrosos: MyText
+  certificaciones: MyString
+
+two:
+  risk_assistant: two
+  actividad_principal: MyString
+  actividad_secundaria: MyString
+  anio_inicio: 1
+  jornada_laboral: MyString
+  produccion_anual: 9.99
+  facturacion_anual: 9.99
+  procesos_peligrosos: MyText
+  certificaciones: MyString
