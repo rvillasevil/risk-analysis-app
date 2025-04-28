@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>InsurAI Risk Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= javascript_include_tag "application", "data-turbo-track": "reload" %>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand" href="/">
+        <%= image_tag "logo2.png", alt: "Nombre de tu empresa", height: "50", style:"margin:-20px" %><span style="color:#d47205; font-weight:600;letter-spacing:-1px;">&nbsp&nbsp&nbsp insurAI</span>
+      </a>
+
+      <!-- Botón hamburguesa para móviles -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Links de navegación -->
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Servicios</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Sobre Nosotros</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Contacto</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="row">
+      <div class="col-md-8 offset-2">
+        <h1>Creamos superBrokers</h1>
+        <p>Plataforma de gestión de riesgos. Automatiza la toma de datos y report para cotización. Aporta una visión clara de los riesgos a tu cliente.</p>
+        <%= link_to "Solicitar una Demo", new_user_registration_path, class: "cta-button" %>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 style="text-align:center; margin-bottom: 2rem;">Características principales</h2>
+
+    <div class="features">
+      <div class="feature-card">
+        <h3>Diagnóstico inteligente</h3>
+        <p>Identifica riesgos automáticamente y recibe evaluaciones completas en minutos.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>Planes de acción automáticos</h3>
+        <p>Genera medidas de mitigación personalizadas basadas en estándares industriales.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>Informes listos para aseguradoras</h3>
+        <p>Exporta informes compatibles con requisitos de underwriting en un clic.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero" style="background: #1e293b;">
+    <h2>Confían en nosotros empresas líderes</h2>
+    <p>Moderniza la gestión de riesgos hoy mismo.</p>
+    <%= link_to "Empezar ahora", new_user_registration_path, class: "cta-button" %>
+  </section>
+
+  <footer>
+    <p>© <%= Time.now.year %> InsurAI. Todos los derechos reservados.</p>
+  </footer>
+</body>
+</html>
+
+

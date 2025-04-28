@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_01_12_090157) do
+ActiveRecord::Schema[7.0].define(version: 2025_04_25_175849) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -103,6 +103,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_12_090157) do
     t.string "role"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "key"
+    t.string "value"
+    t.string "thread_id"
     t.index ["risk_assistant_id"], name: "index_messages_on_risk_assistant_id"
   end
 
@@ -135,6 +138,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_12_090157) do
     t.datetime "updated_at", null: false
     t.string "name"
     t.jsonb "sections_completed"
+    t.string "thread_id"
     t.index ["user_id"], name: "index_risk_assistants_on_user_id"
   end
 
