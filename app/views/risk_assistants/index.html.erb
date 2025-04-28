@@ -1,10 +1,15 @@
-<h1>Mis RiskAssistants</h1>
-<%= link_to 'Nuevo RiskAssistant', new_risk_assistant_path, class: 'button' %>
-<ul>
-  <% @risk_assistants.each do |risk_assistant| %>
-    <li>
-      <%= link_to risk_assistant.name, risk_assistant_path(risk_assistant) %>
-      <%= link_to 'Eliminar', risk_assistant_path(risk_assistant), method: :delete, data: { confirm: '¿Estás seguro?' }, class: 'button' %>
-    </li>
-  <% end %>
-</ul>
+<div class="container">
+  <div class="row">
+    <h1>Mis RiskAssistants</h1>
+    <%= link_to 'Nuevo RiskAssistant', new_risk_assistant_path, class: 'button' %>
+    <ul>
+      <% @risk_assistants.each do |risk_assistant| %>
+        <li>
+          <%= link_to risk_assistant.name, risk_assistant_path(risk_assistant) %>
+          <%= link_to 'Eliminar', risk_assistant, data: { turbo_method: :delete, turbo_confirm: "¿Estas seguro?" }, class: 'button' %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
