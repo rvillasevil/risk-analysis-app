@@ -1,15 +1,15 @@
 <div class="container">
   <div class="row">
     <h1>Mis RiskAssistants</h1>
-    <%= link_to 'Nuevo RiskAssistant', new_risk_assistant_path, class: 'button' %>
-    <ul>
+    <%= link_to 'Nuevo RiskAssistant', new_risk_assistant_path, class: 'btn btn-secondary' %>
+    <div style="padding: 20px;">
       <% @risk_assistants.each do |risk_assistant| %>
-        <li>
+        <h5>
           <%= link_to risk_assistant.name, risk_assistant_path(risk_assistant) %>
-          <%= link_to 'Eliminar', risk_assistant, data: { turbo_method: :delete, turbo_confirm: "¿Estas seguro?" }, class: 'button' %>
-        </li>
+          <%= link_to 'Delete', risk_assistant, data: { turbo_method: :delete, turbo_confirm: "¿Estas seguro?" }, class: 'btn btn-secondary btn-sm' %>
+        </h5>
       <% end %>
-    </ul>
+    </div>
   </div>
 </div>
 

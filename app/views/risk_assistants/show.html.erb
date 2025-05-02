@@ -11,16 +11,20 @@
       <h5>Actividad: <%= @company_activity.value if @company_activity != nil %></h5>
       <h5>Cubiertas: <%= @company_roof.value if @company_roof != nil %></h5>
       <h5>Cerramientos: <%= @company_walls.value if @company_walls != nil %></h5>
-      <h5>Tabiquería: <%= @company_interior_walls.value if @company_interior_walls != nil %></h5>       
+      <h5>Tabiquería: <%= @company_interior_walls.value if @company_interior_walls != nil %></h5>
+      <% @messages.each do |mensaje| %>
+        <h5><%= mensaje.key  %></h5>
+        <h6><%= mensaje.value %></h6>
+      <% end %>      
     </div>
 
     <div class="col-md-6">
-      <%= thread_id = @risk_assistant.thread_id %>
-      <%= form_with url: risk_assistant_messages_path(@risk_assistant), method: :post, local: true do |form| %>
-        <%= form.hidden_field :thread_id, value: thread_id %>
+      <%= @risk_assistant.thread_id %>
+      <%= form_with url: risk_assistant_messages_path(@risk_assistant), method: :post, local: true, multipart: true do |form| %>
         <div>
           <%= form.label :content, 'Escribe tu mensaje:' %>
           <%= form.text_area :content, name: 'message[content]', rows: 3, required: true, placeholder: "Escribe tu mensaje aquí..." %>
+          <%= file_field_tag :file %>
         </div>
         <%= form.submit 'Enviar', class: 'button' %>
       <% end %>
