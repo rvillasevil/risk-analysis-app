@@ -9,10 +9,13 @@ class MessagesController < ApplicationController
       redirect_to risk_assistant_path(@risk_assistant) and return
     end
 
-    @message = @risk_assistant.messages.new(message_params.merge(sender: 'user', role: 'user'))
+    @message = @risk_assistant.messages.new(message_params.merge(sender: 'user', role: 'user', thread_id: @risk_assistant.thread_id))
+
+    thread_id = @risk_assistant.thread_id
+    puts "🔥 thread_id desde risk_assistant: #{@risk_assistant.thread_id.inspect}"
 
     if @message.save
-      if @risk_assistant.thread_id == nil
+      if @risk_assistant.thread_id.present?
         #runs thread
         base_url = "https://api.openai.com/v1"
         headers = {
@@ -20,31 +23,160 @@ class MessagesController < ApplicationController
           "Content-Type" => "application/json",
           "OpenAI-Beta" => "assistants=v2"
         }
-        thread_id = @risk_assistant.thread_id
 
-        # Añadir mensaje del usuario
-        HTTP.post("#{base_url}/threads/#{thread_id}/messages", headers: headers, body: {
+        puts "📎 Usando thread existente: #{thread_id}"
+
+        require 'tempfile'
+
+        file_ids = []
+        file_id = nil  # ✅ define aquí la variable para usarla después
+        
+        if params[:file].present?
+          file = params[:file]
+          puts "📥 Archivo recibido: #{file.original_filename}"
+        
+          begin
+            Tempfile.open([File.basename(file.original_filename, ".*"), File.extname(file.original_filename)]) do |tempfile|
+              tempfile.binmode
+              tempfile.write(file.read)
+              tempfile.rewind
+        
+              puts "📤 Subiendo archivo a OpenAI desde: #{tempfile.path}"
+        
+              upload_headers = {
+                "Authorization" => "Bearer #{ENV['OPENAI_API_KEY']}",
+                "OpenAI-Beta" => "assistants=v2"
+              }
+        
+              upload_response = HTTP.headers(upload_headers).post(
+                "#{base_url}/files",
+                form: {
+                  file: HTTP::FormData::File.new(tempfile.path),
+                  purpose: "assistants"
+                }
+              )
+        
+              puts "📡 Respuesta de OpenAI: #{upload_response.body}"
+              file_data = JSON.parse(upload_response.body)
+              file_id = file_data["id"]
+
+              # Asociar archivo al thread
+              associate_response = HTTP.headers(headers).post(
+                "#{base_url}/threads/#{thread_id}/files",
+                json: { file_id: file_id }
+              )
+
+              puts "📎 Archivo vinculado al thread: #{associate_response.status}"              
+        
+              if file_id && file_id.to_s.start_with?("file_")
+                file_ids << file_id
+                puts "✅ Archivo subido correctamente con ID: #{file_id}"
+              else
+                puts "❌ Error al subir el archivo."
+              end
+            end # <-- Aquí se cierra y elimina el archivo de forma segura
+            sleep 2
+          rescue => e
+            puts "💥 Error al subir el archivo: #{e.class} - #{e.message}"
+          end
+        else
+          puts "⚠️ No se recibió archivo en params[:file]"
+        end
+
+
+        # 2. Añadir mensaje del usuario
+        user_input = @message.content
+        message_payload = {
           role: "user",
-          content: @message
-        }.to_json)
+          content: user_input
+        }
+        
+        if file_id.present?
+          message_payload[:attachments] = [
+            {
+              file_id: file_id,
+              tools: [{ type: "file_search" }]
+            }
+          ]
+        end
+        
 
-        # Lanzar Assistant
-        run_id = HTTP.post("#{base_url}/threads/#{thread_id}/runs", headers: headers, body: {
+        message_response = HTTP.headers(headers).post(
+          "#{base_url}/threads/#{thread_id}/messages",
+          json: message_payload
+        )
+
+        puts "📬 Estado POST mensaje: #{message_response.status}"
+        puts "📬 Cuerpo respuesta: #{message_response.body}"
+
+        puts "📩 Mensaje enviado: #{user_input}"
+
+        # Verificar que el mensaje fue creado en el thread
+        puts "🧪 Verificando mensajes actuales del thread..."
+
+        #messages_debug = HTTP.headers(headers).get("#{base_url}/threads/#{thread_id}/messages")
+        #messages_data = JSON.parse(messages_debug.body)["data"]
+
+        #messages_data.each do |msg|
+          #role = msg["role"]
+          #content = msg["content"].map { |c| c.dig("text", "value") }.compact.join("\n")
+          #puts "📨 #{role.upcase}: #{content}"
+        #end
+
+
+        # 3. Crear una run para procesar el mensaje
+        run_payload = {
           assistant_id: ENV['OPENAI_ASSISTANT_ID']
-        }.to_json).parse["id"]
+        }
+        run_response = HTTP.headers(headers).post("#{base_url}/threads/#{thread_id}/runs", json: run_payload)
+        run_data = JSON.parse(run_response.body)
+        run_id = run_data["id"]
+        puts "🏃‍♂️ Run creada: #{run_id}"
 
-        # Obtener respuesta
-        response_content = HTTP.get("#{base_url}/threads/#{thread_id}/messages", headers: headers).parse["data"].first["content"].first["text"]["value"]
+        puts "🧵 thread_id: #{thread_id.inspect}"
+        10.times do
+          sleep 1
+          run_status_response = HTTP.headers(headers).get("#{base_url}/threads/#{thread_id}/runs/#{run_id}")
+          run_status_data = JSON.parse(run_status_response.body)
+          run_status = run_status_data["status"]
+          puts "⌛ Estado de la run: #{run_status}"
+        
+          break if run_status == "completed" || run_status == "failed" || run_status == "expired"
+        
+          if run_status == "requires_action"
+            puts "⚠️ Se requiere acción adicional: #{run_status_data["required_action"].inspect}"
+            break
+          end
+        end
 
-        key_match = response_content.match(/##(.*?)##/)
+        # 5. Obtener el mensaje de respuesta
+        messages_response = HTTP.headers(headers).get("#{base_url}/threads/#{thread_id}/messages")
+        messages_response = JSON.parse(messages_response.body)["data"]
+
+        messages_response.reverse_each do |msg|
+          role = msg["role"]
+          text = msg["content"].map { |c| c.dig("text", "value") }.compact.join("\n")
+          puts "🗨️ #{role.upcase}: #{text}"
+          puts "-" * 50
+        end
+
+        last_response = messages_response&.first
+        puts "🔍 Content: #{last_response["content"].inspect}"
+
+        @text_value = last_response["content"].select { |c| c["type"] == "text" }.map { |c| c.dig("text", "value") }.join("\n").strip
+        puts "✅ Texto extraído: #{@text_value}"
+
+        puts @text_value
+        
+        key_match = @text_value.match(/##(.*?)##/)
         if key_match != nil
           key_match = key_match[1]
         end
-        value_match = response_content.match(/&&(.*?)&&/)
+        value_match = @text_value.match(/&&(.*?)&&/)
         if value_match != nil
           value_match = value_match[1]
         end
-        @risk_assistant.messages.create(content: response_content, sender: 'assistant2', role: 'assistant', key:key_match, value:value_match, thread_id: @risk_assistant.thread_id)
+        @risk_assistant.messages.create(content: @text_value, sender: 'assistant', role: 'assistant', key:key_match, value:value_match, thread_id: thread_id)
       else
         response_content = fetch_response_from_openai(@message)
         key_match = response_content.match(/##(.*?)##/)
@@ -121,100 +253,62 @@ class MessagesController < ApplicationController
       Actividad principal (texto)
 
       CARACTERÍSTICAS DE LAS INSTALACIONES:
-
       Año de construcción del edificio principal (año)
-
       Número total de edificios en el complejo (número entero)
-
       Materiales constructivos de cubierta (texto)
-
       Materiales constructivos de cerramientos (texto)
-
       Materiales constructivos de tabiquería interior (texto)
-
       Materiales del forjado y estructura principal (texto)
-
       Estado de mantenimiento general del edificio (texto)
 
       SISTEMAS DE PROTECCIÓN CONTRA INCENDIOS (PCI):
-
       Sistemas PCI existentes (texto)
-
       Existencia de rociadores automáticos (sí/no)
-
       Existencia de sistemas de detección de incendios (sí/no, tipo)
-
       Existencia de sistemas de extracción de humos (sí/no)
-
       Existencia de depósitos de agua contra incendios (sí/no)
-
       Sistemas de alarma sonora o luminosa existentes (texto)
 
       INSTALACIONES TÉCNICAS:
-
       Tipo de sistema eléctrico principal (texto)
-
       Tipos de protecciones eléctricas existentes (texto)
-
       Tipo de sistema de climatización (texto)
-
       Existencia de plantas de producción de frío o calor (sí/no)
-
       Instalaciones auxiliares relevantes (texto)
 
       ALMACENAMIENTO Y ACTIVIDADES ESPECIALES:
-
       Tipo de almacenamiento (altura, productos almacenados) (texto)
-
       Existencia de almacenamiento de productos peligrosos (sí/no, especificar)
-
       Existencia de actividades especiales con riesgo (sí/no, especificar)
-
       Medidas de prevención aplicadas a las actividades especiales (texto)
 
       MEDIDAS ORGANIZATIVAS DE SEGURIDAD:
-
       Existencia de plan de emergencia documentado (sí/no)
-
       Realización de simulacros de evacuación (sí/no, frecuencia)
-
       Formación en prevención de riesgos a empleados (sí/no, frecuencia)
-
       Mantenimiento preventivo de sistemas críticos (sí/no)
 
       HISTORIAL DE SINIESTROS:
-
       Existencia de siniestros en los últimos 5 años (sí/no, descripción)
-
       Reclamaciones a seguros relacionadas (sí/no)
 
       CUMPLIMIENTO NORMATIVO Y CERTIFICACIONES:
-
       Existencia de certificaciones de seguridad (ISO, APQ, ATEX, etc.) (sí/no, especificar)
-
       Cumplimiento de legislación local de prevención de riesgos (sí/no)
-
       Realización de auditorías de seguridad internas o externas (sí/no, frecuencia)
 
       SERVICIOS DE EMERGENCIA Y RESPUESTA:
-
       Distancia al parque de bomberos más cercano (km)
-
       Adecuación de accesos para bomberos y servicios de emergencia (sí/no)
 
       VALORACIÓN DE VULNERABILIDAD Y EXPOSICIÓN:
-
       Estimación del daño máximo posible (en miles de €)
-
       Existencia de dependencias externas críticas (sí/no, especificar)
 
       CONFIRMACIONES Y VALIDACIONES:
-
       Confirmar cada dato usando el formato:
       Perfecto, el valor de ##Campo## es &&Valor&&.
-
       Si el dato no encaja, pedir reformulación.
-
       Si un dato no aplica, permitir la respuesta No aplica o N/A.
 
       FINAL:
