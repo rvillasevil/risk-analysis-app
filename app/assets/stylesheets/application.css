@@ -134,10 +134,10 @@ footer p {
   }
   
   .message {
-    padding: 15px;
-    border-radius: 10px;
-    font-size: 0.9rem;
-    line-height: 1.4;
+    padding: 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    line-height: 1.5;
   }
   
   .message.user {
@@ -157,6 +157,7 @@ footer p {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    margin: 20px;
   }
   
   form label {
@@ -243,5 +244,3 @@ footer p {
   table tr:hover {
     background: #f8f9fa;
   }
-
-  

@@ -1,0 +1,16 @@
+<div class="container">
+  <h1>Report: <%= @risk_assistant.name %></h1>
+  <div class="row">
+
+    <% if @report_markdown.present? %>
+    <pre style="white-space: pre-wrap;"><%= @report_markdown %></pre>
+    <% else %>
+    <p>No se generó ningún informe.</p>
+    <% end %>
+
+    <%= button_to "Regenerar informe", report_risk_assistant_path(@risk_assistant),
+              method: :post,
+              class: "btn btn-secondary" %>
+
+  </div>
+</div>

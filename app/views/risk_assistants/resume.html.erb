@@ -1,0 +1,68 @@
+
+<!-- app/views/risk_assistants/resume.html.erb -->
+<h1>Resumen de mensajes para RiskAssistant #<%= @risk_assistant.id %></h1>
+
+<% if notice %>
+  <p class="notice"><%= notice %></p>
+<% end %>
+<% if alert %>
+  <p class="alert"><%= alert %></p>
+<% end %>
+
+<table border="1" cellpadding="4" cellspacing="0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Apartado</th>
+      <th>Contenido editable</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @records.each do |record| %>
+      <% next if record.key.blank? %>
+      <tr>
+        <td><%= record.id %></td>
+        <td><%= record.key.capitalize %></td>
+        <td>
+          <%= form_with url: update_message_risk_assistant_path(@risk_assistant), method: :patch, local: true do %>
+            <%= hidden_field_tag :message_id, record.id %>
+            <%= text_area_tag "message[value]", record.value, rows: 4, cols: 80 %>
+            <%= submit_tag "Guardar", class: "btn btn-primary" %>
+          <% end %>
+        </td>
+        <td>
+          <%= button_to "Eliminar", 
+                        update_message_risk_assistant_path(@risk_assistant),
+                        params: { message_id: record.id },
+                        method: :delete,
+                        data: { confirm: "¿Estás seguro de que deseas eliminar este mensaje?" },
+                        class: "btn btn-danger" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<hr>
+<h3>Agregar nuevos datos</h3>
+<%= form_with url: create_message_risk_assistant_path(@risk_assistant), method: :post, local: true do |f| %>
+  <div>
+    <%= f.label :role, "Rol" %><br>
+    <%= f.select :role, options_for_select([['User', 'user'], ['Assistant', 'assistant']], 'user') %>
+  </div>
+  <div style="margin-top: 1em;">
+    <%= f.label :key, "Key" %><br>
+    <%= f.text_field :key, size: 40 %>
+  </div>
+  <div style="margin-top: 1em;">
+    <%= f.label :value, "Value" %><br>
+    <%= f.text_area :value, rows: 5, cols: 80 %>
+  </div>
+  <div style="margin-top: 1em;">
+    <%= f.submit "Agregar mensaje", class: "btn btn-success" %>
+  </div>
+<% end %>
+
+
+

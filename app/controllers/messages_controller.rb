@@ -134,7 +134,7 @@ class MessagesController < ApplicationController
         puts "🏃‍♂️ Run creada: #{run_id}"
 
         puts "🧵 thread_id: #{thread_id.inspect}"
-        10.times do
+        30.times do
           sleep 1
           run_status_response = HTTP.headers(headers).get("#{base_url}/threads/#{thread_id}/runs/#{run_id}")
           run_status_data = JSON.parse(run_status_response.body)
@@ -176,7 +176,16 @@ class MessagesController < ApplicationController
         if value_match != nil
           value_match = value_match[1]
         end
+        red_flag = @text_value.match(/⚠️(.*?)⚠️/)
+        if red_flag != nil
+          red_flag = red_flag[1]
+        end
+        critical = @text_value.match(/⚠️(.*?)⚠️/)
         @risk_assistant.messages.create(content: @text_value, sender: 'assistant', role: 'assistant', key:key_match, value:value_match, thread_id: thread_id)
+        if red_flag.nil?
+        else
+          @risk_assistant.messages.create(content: red_flag, sender: 'red_flag', role: 'assistant', key:key_match, value:value_match, thread_id: thread_id)
+        end
       else
         response_content = fetch_response_from_openai(@message)
         key_match = response_content.match(/##(.*?)##/)
@@ -225,95 +234,14 @@ class MessagesController < ApplicationController
 
     # Construir el context
     context = 
-      "Actúa como un sistema de recopilación de datos para construir una tabla de riesgos industriales.
-        Haz una pregunta por cada campo, una a una, para que el usuario las conteste. Después de cada respuesta, confirma lo recibido y comprueba si la respuesta es correcta (ejemplo: pregunta por sector y la respuesta es algo no reconocible como sector, pregunta de nuevo) y haz la siguiente pregunta hasta completar todos los campos, incluyendo la respuesta resumen anterior:
-          - El campo que estás completando, marcado así: ##campo##, con la primera letra en mayúsculas
-          - El valor extraído resumido en caso de ser necesario, marcado así: &&valor&&
-
-          Ejemplo:
-          - Usuario: Acme Corp
-          - Respuesta: Perfecto, el nombre de la empresa es ##name##&&Acme Corp&&.
-
-      Si la respuesta no es válida para el tipo de dato esperado, solicita que se reformule.
-
-      Cuando todos los campos estén completos, muestra una tabla resumen final.
-
-      IDENTIFICACIÓN DE LA EMPRESA:
-
-      Nombre de la empresa (texto)
-
-      Sector (texto)
-
-      Número de empleados (número entero)
-
-      Ingresos anuales (miles de €) (número con decimales)
-
-      Ubicación (texto)
-
-      Actividad principal (texto)
-
-      CARACTERÍSTICAS DE LAS INSTALACIONES:
-      Año de construcción del edificio principal (año)
-      Número total de edificios en el complejo (número entero)
-      Materiales constructivos de cubierta (texto)
-      Materiales constructivos de cerramientos (texto)
-      Materiales constructivos de tabiquería interior (texto)
-      Materiales del forjado y estructura principal (texto)
-      Estado de mantenimiento general del edificio (texto)
-
-      SISTEMAS DE PROTECCIÓN CONTRA INCENDIOS (PCI):
-      Sistemas PCI existentes (texto)
-      Existencia de rociadores automáticos (sí/no)
-      Existencia de sistemas de detección de incendios (sí/no, tipo)
-      Existencia de sistemas de extracción de humos (sí/no)
-      Existencia de depósitos de agua contra incendios (sí/no)
-      Sistemas de alarma sonora o luminosa existentes (texto)
-
-      INSTALACIONES TÉCNICAS:
-      Tipo de sistema eléctrico principal (texto)
-      Tipos de protecciones eléctricas existentes (texto)
-      Tipo de sistema de climatización (texto)
-      Existencia de plantas de producción de frío o calor (sí/no)
-      Instalaciones auxiliares relevantes (texto)
-
-      ALMACENAMIENTO Y ACTIVIDADES ESPECIALES:
-      Tipo de almacenamiento (altura, productos almacenados) (texto)
-      Existencia de almacenamiento de productos peligrosos (sí/no, especificar)
-      Existencia de actividades especiales con riesgo (sí/no, especificar)
-      Medidas de prevención aplicadas a las actividades especiales (texto)
-
-      MEDIDAS ORGANIZATIVAS DE SEGURIDAD:
-      Existencia de plan de emergencia documentado (sí/no)
-      Realización de simulacros de evacuación (sí/no, frecuencia)
-      Formación en prevención de riesgos a empleados (sí/no, frecuencia)
-      Mantenimiento preventivo de sistemas críticos (sí/no)
-
-      HISTORIAL DE SINIESTROS:
-      Existencia de siniestros en los últimos 5 años (sí/no, descripción)
-      Reclamaciones a seguros relacionadas (sí/no)
-
-      CUMPLIMIENTO NORMATIVO Y CERTIFICACIONES:
-      Existencia de certificaciones de seguridad (ISO, APQ, ATEX, etc.) (sí/no, especificar)
-      Cumplimiento de legislación local de prevención de riesgos (sí/no)
-      Realización de auditorías de seguridad internas o externas (sí/no, frecuencia)
-
-      SERVICIOS DE EMERGENCIA Y RESPUESTA:
-      Distancia al parque de bomberos más cercano (km)
-      Adecuación de accesos para bomberos y servicios de emergencia (sí/no)
-
-      VALORACIÓN DE VULNERABILIDAD Y EXPOSICIÓN:
-      Estimación del daño máximo posible (en miles de €)
-      Existencia de dependencias externas críticas (sí/no, especificar)
-
-      CONFIRMACIONES Y VALIDACIONES:
-      Confirmar cada dato usando el formato:
-      Perfecto, el valor de ##Campo## es &&Valor&&.
-      Si el dato no encaja, pedir reformulación.
-      Si un dato no aplica, permitir la respuesta No aplica o N/A.
-
-      FINAL:
-
-      Mostrar una tabla resumen con todos los datos recopilados.
+      "
+        Con toda la información recabada en esta conversación, por favor:
+        1. Haz un **resumen ejecutivo**.
+        2. Extrae las **métricas clave** (campos del formulario).
+        3. Identifica **lagunas de información** si las hubiera.
+        4. Ofrece **conclusiones y recomendaciones**.
+        Devuélvelo como un informe estructurado en Markdown.
+      PROMPT
       Preguntas realizadas por ti y las respuestas del usuario: #{prompt_messages}"
 
     # Construir el prompt completo
@@ -337,6 +265,7 @@ class MessagesController < ApplicationController
       }.to_json
     )
 
+    puts "🔍 Content: #{response["content"].inspect}"
     response.parse["choices"]&.first&.dig("message", "content")&.strip || "No se recibió una respuesta válida."
   end
 

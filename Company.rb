@@ -45,6 +45,8 @@ Historial siniestral: Frecuencia/gravedad de incidentes pasados.
 Cumplimiento normativo: Certificaciones (ISO 45001, ATEX), auditorías recientes.
 
 2. Modelos de IA Específicos para Underwriting
+
+
 A. Clasificación de Riesgo por Segmento Industrial
 Qué hace: Asignar un nivel de riesgo (ej.: bajo, medio, alto) según el sector y procesos.
 
