@@ -1,32 +1,48 @@
-  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
-    <div class="container">
-      <!-- Logo -->
-      <a class="navbar-brand" href="/">
-        <%= image_tag "logoHowden.png", alt: "Nombre de tu empresa", height: "50", style:"margin:-20px" %><span style="color:black; font-weight:600;letter-spacing:-1px;">&nbsp&nbsp&nbsp IA</span>
-      </a>
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+  <div class="container">
+    <!-- Logo -->
+    <a class="navbar-brand" href="/">
+      <%= image_tag "logoHowden.png", alt: "Nombre de tu empresa", height: "50", style:"margin:-20px" %>
+      <span style="color:black; font-weight:600;letter-spacing:-1px;">&nbsp;&nbsp;&nbsp;DataRisk</span>
+    </a>
 
-      <!-- Botón hamburguesa para móviles -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    <!-- Botón hamburguesa para móviles -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <!-- Links de navegación -->
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+    <!-- Links de navegación -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Servicios</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Sobre Nosotros</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contacto</a>
+        </li>
+
+        <% if user_signed_in? %>
+          <li class="nav-item me-2">
+            <%= link_to "#{current_user.name || 'Usuario'}", edit_user_registration_path, class: "btn btn-outline-primary" %>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Servicios</a>
+            <%= link_to "Logout", destroy_user_session_path, method: :delete, data: { turbo_method: :delete },  class: "btn btn-outline-danger" %>
           </li>
+        <% else %>
           <li class="nav-item">
-            <a class="nav-link" href="#">Sobre Nosotros</a>
+            <%= link_to "Login", new_user_session_path, class: "btn btn-outline-success" %>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Contacto</a>
-          </li>
-        </ul>
-      </div>
+        <% end %>
+      </ul>
     </div>
-  </nav>
+  </div>
+</nav>
+
+

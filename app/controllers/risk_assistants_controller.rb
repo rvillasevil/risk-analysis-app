@@ -158,26 +158,80 @@
       prompt_messages   = format_previous_messages(previous_messages)
 
       context = <<~CTX
-        Eres un asistente que recibe la información proporcionada en una conversación para la obtención de datos para conformar un informe descriptivo de riesgos para el sector asegurador.
-        Con toda la información recabada en esta conversación que puede estar completa o incompleta: #{prompt_messages}, por favor redacta únicamente:
-        1. Haz un **resumen ejecutivo**.
-        2. Extrae las **métricas clave** (campos del formulario) y organizalos en:
-          A. Datos identificativos
-          B. Edificios construcción
-          C. Actividad y proceso
-          D. Instalaciones Auxiliares
-            D.1 Mantenimiento
-          E. Riesgo de incendio
-            E.1 Protección contra incendios
-            E.2 Prevención de incendios
-          F. Riesgo de Robo
-          G. Riesgo de interrupción de negocio / Pérdida de beneficio
-        3. Identifica **lagunas de información** si las hubiera.
-        4. Ofrece **conclusiones y recomendaciones**.
-        Devuélvelo como un informe estructurado en Markdown.
+        Eres un analista de riesgos para el sector asegurador. Convierte la información proporcionada en la conversación del usuario (que puede estar incompleta) en un informe estructurado en español. Sigue este formato:
+
+        # Informe Descriptivo de Riesgos para el Sector Asegurador
+
+        ## 1. Resumen Ejecutivo  
+        [Sintetiza en 3-5 líneas los hallazgos clave, riesgos dominantes y nivel de exposición general. Incluye advertencias críticas si las hay.]
+
+        ---
+
+        ## 2. Métricas Clave  
+        ### A. Datos Identificativos  
+        - **Nombre del asegurado**: [valor o "Incompleto"]  
+        - **Dirección**: [valor o "Incompleto"]  
+        - **CIF/NIF**: [valor o "Incompleto"]  
+        - **Sector de actividad**: [valor o "Incompleto"]  
+
+        ### B. Edificios Construcción  
+        - **Tipo de construcción**: [Ej: Hormigón/acero]  
+        - **Año de construcción**: [valor o "Incompleto"]  
+        - **Superficie total**: [valor]  
+        - **Estado de conservación**: [valor]  
+
+        ### C. Actividad y Proceso  
+        - **Procesos principales**: [detallar]  
+        - **Materiales almacenados**: [listar]  
+        - **Volumen de producción anual**: [valor o "Incompleto"]  
+
+        ### D. Instalaciones Auxiliares  
+        - **Generadores eléctricos**: [especificar capacidad]  
+        - **Sistemas de ventilación**: [tipo/certificación]  
+        #### D.1 Mantenimiento  
+        - **Frecuencia de mantenimiento**: [valor]  
+        - **Última inspección**: [fecha o "Incompleto"]  
+
+        ### E. Riesgo de Incendio  
+        #### E.1 Protección contra Incendios  
+        - **Extintores**: [cantidad/tipo]  
+        - **Sistema de rociadores**: [Sí/No/Incompleto]  
+        #### E.2 Prevención de Incendios  
+        - **Protocolos de manipulación de materiales**: [detalle]  
+        - **Inspecciones eléctricas**: [frecuencia o "Incompleto"]  
+
+        ### F. Riesgo de Robo  
+        - **Sistemas de seguridad**: [detallar]  
+        - **Horario de actividad**: [horas/días]  
+
+        ### G. Riesgo de Interrupción de Negocio  
+        - **Plan de continuidad**: [Sí/No/Incompleto]  
+        - **Beneficio anual estimado**: [valor]  
+
+        ---
+
+        ## 3. Lagunas de Información  
+        [Enumera en bullet points los datos faltantes clave usando **negritas** para las categorías, ej: "**Datos identificativos**: Falta CIF/NIF"]  
+
+        ---
+
+        ## 4. Conclusiones y Recomendaciones  
+        ### Conclusiones  
+        [3-5 puntos sobre riesgos prioritarios y su impacto]  
+
+        ### Recomendaciones  
+        [Acciones concretas para mitigar riesgos y completar información]  
+
+        ---
+
+        **Reglas**:  
+        1. Usa **Markdown** puro.  
+        2. Negritas solo en títulos y categorías de lagunas.  
+        3. Datos numéricos en formato estándar (ej: €1.2M, 5,000 m²).  
+        4. Marca “Incompleto” donde falte información.
       CTX
 
-      prompt = message.content
+      prompt = prompt_messages
 
       response = HTTP.post(
         "https://api.openai.com/v1/chat/completions",

@@ -1,41 +1,136 @@
-<div class="container">
-    <h1>Empresa: <%= @risk_assistant.name %></h1>
+<style>
+  body {
+    background-color: #f9fafb;
+    color: #333;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    color: #2c3e50;
+  }
+  .bg-light {
+    background-color: #ffffff !important;
+  }
+  .btn-outline-primary {
+    border-color: #1f497d;
+    color: #1f497d;
+  }
+  .btn-outline-primary:hover {
+    background-color: #1f497d;
+    color: white;
+  }
+  .btn-success {
+    background-color: #2e7d32;
+    border-color: #2e7d32;
+  }
+  .btn-success:hover {
+    background-color: #27672a;
+    border-color: #27672a;
+  }
+  .btn-secondary {
+    background-color: #7f8c8d;
+    border-color: #7f8c8d;
+    color: white;
+  }
+  .btn-secondary:hover {
+    background-color: #606a6b;
+    border-color: #606a6b;
+  }
+  .list-group-item {
+    border: none;
+    border-bottom: 1px solid #e1e4e8;
+    background-color: transparent;
+    padding: 0.5rem 0;
+  }
+  .badge {
+    background-color: #3498db;
+    font-weight: 400;
+  }
+  .form-card {
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+  }
+  label {
+    font-weight: 600;
+  }
+</style>
 
-  <div class="row">
-    
-    <div class="col-md-4" style="background-color:#f9f9f9">
-      <h3>Instrucciones</h3>
-      <h5>✅ 🔍 🗨️  🏃‍♂️♂️ 📩 ⌛📬 ⚠️  </h5>
-      <p>0. Para empezar, lanzar la orden: empezar</p>
-      <p>1. Para editar un campo, simplemente contesta indicando qué campo quieres cambiar y el nuevo valor.</p>
-      <p></p>
-      <p></p>
-      <p></p>
-      <p></p>
-      <p></p>
-      <p></p>
-      <p></p>
-      <% @messages.each do |mensaje| %>
-        <h6><%= mensaje.key  %></h6>
-        <h7><%= mensaje.value %></h7>
-      <% end %>      
-    </div>
-  
-    <div class="col-md-8" style="">
-      <%= form_with url: risk_assistant_messages_path(@risk_assistant), method: :post, local: true, multipart: true do |form| %>
-        <div class = "">
-          <%= form.label :content, 'Escribe tu mensaje:' %>
-          <%= form.text_area :content, name: 'message[content]', rows: 3, required: true, placeholder: "Escribe tu mensaje aquí..." %>
-          <%= file_field_tag :file %>
+<div class="container py-3">
+  <% sections = ['Datos identificativos', 'Situación', 'Construcción', 'Sectorización', 'Actividad', 'Servicios Auxiliares', 'Mantenimiento', 'Medios Activos', 'Medios Humanos', 'Pérdida de beneficios', 'CATNAT', 'Reportaje fotográfico'] %>
+
+    <div class="row gx-4 gy-4">
+    <aside class="col-12 col-md-4">
+      <section class="p-3 bg-light rounded shadow-sm mb-4">
+        <h2 class="">Empresa: <%= @risk_assistant.name %></h2>
+        <h5>Instrucciones</h5>
+        <h5>✅ 🔍 🗨️ 🏃‍♂️ 📩 ⌛ 📬 ⚠️</h5>
+        <p><strong>0.</strong> Para empezar, lanzar la orden: <em>empezar</em></p>
+        <p><strong>1.</strong> Para editar un campo, simplemente contesta indicando qué campo quieres cambiar y el nuevo valor.</p>
+        <% @messages.each do |mensaje| %>
+          <h6 class="mt-3 mb-1"><%= mensaje.key %></h6>
+          <small class="text-muted"><%= mensaje.value %></small>
+        <% end %>
+      </section>
+
+      <section class="p-3 bg-light rounded shadow-sm">
+        <h4 class="mb-3">Resumen por sección</h4>
+        <ul class="list-group list-group-flush" style="max-height: 380px; overflow-y: auto;">
+          <% sections.each do |sec| %>
+            <% key = sec.parameterize(separator: '_') %>
+            <% last = @risk_assistant.messages.where(section: key).order(created_at: :desc).first %>
+            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+              <div><%= sec %></div>
+              <span class="badge rounded-pill text-truncate" style="max-width: 140px;"><%= last&.content&.truncate(25) || '—' %></span>
+            </li>
+          <% end %>
+        </ul>
+      </section>
+    </aside>
+
+    <div class="col-12 col-md-8">
+
+      <div class="row row-cols-2 row-cols-md-4 g-2 mb-3">
+        
+        <% sections.each_with_index do |sec, i| %>
+          <div class="col">
+            <button class="btn btn-outline-primary w-100" data-bs-toggle="collapse" data-bs-target="#form<%= i+1 %>">
+              <strong><%= i+1 %>.</strong> <%= sec %>
+            </button>
+          </div>
+        <% end %>
+      </div>
+
+      <div id="formsGroup">
+        <% sections.each_with_index do |sec, i| %>
+        <div class="collapse mb-3" id="form<%= i+1 %>" data-bs-parent="#formsGroup">
+          <div class="card form-card p-3">
+            <div class="form-header"><%= i+1 %>. <%= sec %></div>
+            <%= form_with url: risk_assistant_messages_path(@risk_assistant), method: :post, local: true, multipart: true do |form| %>
+              <%= form.hidden_field :section, name: 'message[section]', value: sec.parameterize(separator: '_') %>
+              <%= form.label :content, 'Escribe tu mensaje:' %>
+              <%= form.text_area :content, name: 'message[content]', rows: 3, required: true, class: 'form-control mb-2', placeholder: 'Escribe tu mensaje aquí...' %>
+              <%= file_field_tag :file, class: 'form-control mb-2' %>
+              <%= form.submit 'Enviar', class: 'btn btn-success' %>
+            <% end %>
+          </div>
         </div>
-        <%= form.submit 'Enviar', class: 'btn btn-success' %>
+        <% end %>
+      </div>
+
+      <%= form_with url: risk_assistant_messages_path(@risk_assistant), method: :post, local: true, multipart: true do |form| %>
+        <div class="my-4">
+          <%= form.label :content, 'Escribe tu mensaje:' %>
+          <%= form.text_area :content, name: 'message[content]', rows: 3, required: true, class: 'form-control mb-2', placeholder: 'Escribe tu mensaje aquí...' %>
+          <%= file_field_tag :file, class: 'form-control mb-2' %>
+          <%= form.submit 'Enviar', class: 'btn btn-success' %>
+        </div>
       <% end %>
 
       <div id="messages">
         <% @risk_assistant.messages.order(created_at: :desc).each do |message| %>
           <div class="message <%= message.role %>">
             <strong><%= message.sender %>:</strong> <%= message.content %>
-            <h3><%= @campo %></h3>
+            <% if @campo.present? %><div><strong><%= @campo %></strong></div><% end %>
           </div>
         <% end %>
       </div>
@@ -44,9 +139,9 @@
         <p><strong>Pregunta inicial:</strong> <%= @first_question %></p>
       <% end %>
 
-
-      <%= link_to 'Volver a los RiskAssistants', risk_assistants_path, class: 'button' %>
+      <%= link_to 'Volver a Panel general', risk_assistants_path, class: 'btn btn-secondary mt-3' %>
     </div>
-
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
