@@ -99,7 +99,6 @@ class MessagesController < ApplicationController
             }
           ]
         end
-        
 
         message_response = HTTP.headers(headers).post(
           "#{base_url}/threads/#{thread_id}/messages",
@@ -210,7 +209,7 @@ class MessagesController < ApplicationController
   private
 
   def message_params
-    params.require(:message).permit(:content, :thread_id)
+    params.require(:message).permit(:content, :thread_id, :section)
   end
 
   def format_previous_messages(messages)

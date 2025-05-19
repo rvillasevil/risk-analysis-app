@@ -99,30 +99,9 @@ footer p {
   
   /* Contenedor principal */
   .container {
-    max-width: 800px;
     margin: 10px auto;
     padding: 20px;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Títulos */
-  h1, h2 {
-    text-align: center;
-    color: #1877f2;
-    margin-bottom: 20px;
-  }
-  
-  h1 {
-    font-size: 1.8rem;
-    font-weight: 700;
-  }
-  
-  h2 {
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-bottom: 15px;
+    /*background: #ffffff;*/ 
   }
   
   /* Mensajes */
@@ -243,4 +222,33 @@ footer p {
   
   table tr:hover {
     background: #f8f9fa;
+  }
+
+  /* Show responsive */
+  .form-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  }
+  .form-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .message.user {
+    background-color: #e7f4ff;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+  }
+  .message.assistant {
+    background-color: #f8f9fa;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+  }
+  @media (max-width: 768px) {
+    .row-cols-md-4 > * {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
   }
