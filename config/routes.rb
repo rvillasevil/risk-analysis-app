@@ -10,6 +10,11 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :policy_analyses, only: [:index, :new, :create, :show, :destroy] do
+    post :create_analysis, on: :member
+    post :ask, on: :member   # << añadimos esta línea    
+  end
+
   get  'risk_assistants/:id/report', to: "risk_assistants#report", as: 'risk_assistant_report'
   get  'risk_assistants/:id/resume', to: "risk_assistants#resume", as: 'risk_assistant_resume'
 

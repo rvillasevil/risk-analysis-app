@@ -1,0 +1,739 @@
+-
+  id: nombre
+  label: Nombre de la empresa o instalación
+  question: "¿Cuál es el nombre de la empresa?"
+  type: string
+-
+  id: direccion_riesgo
+  label: Dirección de riesgo
+  question: "¿Cuál es la dirección de la instalación (CP, localidad, provincia)?"
+  type: string
+-
+  id: ubicacion
+  label: Ubicación
+  question: "¿Dónde se encuentra la instalación?"
+  type: select
+  options: [Núcleo urbano, Polígono Industrial, Despoblado]
+
+DATOS IDENTIFICATIVOS:
+#Nombre#
+Nombre de la empresa o instalación
+Tipo: texto libre 
+#Dirección de riesgo#
+Dirección de la ubicación del riesgo (instalación), CP, localidad y provincia
+Tipo: texto libre 
+#Realizado por#
+Nombre de la persona que realiza la toma de datos (tu nombre)
+Tipo: texto libre (nombre completo) 
+#Ubicación#
+¿Dónde se encuentra la instalación?
+Tipo: selección (Núcleo urbano, Polígono Industrial, Despoblado) 
+#Configuración#
+Configuración del emplazamiento respecto a otras construcciones
+Tipo: selección (Colindante, Distancia < 3 m,  Distancia entre 3-10 m,  Distancia entre 10-20m, Aislado > 20 m) 
+#Actividades colindantes#
+Describir las actividades o tipos de negocio en las construcciones colindantes
+Tipo: texto libre
+Visible si #Actividades colindantes# < 10m
+#Modificaciones recientes#
+¿Ha habido modificaciones recientes en la instalación o proyectos futuros previstos? Describir brevemente
+Tipo: texto libre 
+#Comentarios iniciales#
+Comentarios generales adicionales (identificación, entorno, etc.)
+Tipo: texto libre
+
+EDIFICIOS - CONSTRUCCION:
+#Superficie construida#
+Superficie total construida de la instalación (en m²)
+Tipo: número (m²) 
+#Superficie de la parcela#
+Superficie total de la parcela o terreno (en m²)
+Tipo: número (m²)
+Validación: Si la superficie construida > superficie de parcela, preguntar al usuario si esto es correcto.
+#Año de construcción#
+Año de construcción del edificio principal
+Tipo: número (aaaa) 
+#Régimen de propiedad#
+Régimen de propiedad del inmueble
+Tipo: selección (Propiedad, Alquilado) 
+#Tipo de edificación#
+Tipo de ocupación del edificio
+Tipo: selección (Ocupación parcial del edificio, Ocupación 100% de un edificio, Ocupación en varios edificios separados >3 m) 
+#Número de edificios#
+Describir el número de edificios:
+Tipo: número entero
+#Distancias de seguridad entre edificios#
+Distancias de seguridad entre edificios (espacios libres de almacenamientos o instalaciones exteriores entre ellos)
+Tipo: texto libre
+Asistente: Validar si la respuesta incluye información suficiente para poder conocer la distancia entre todos los edificios, y si existen materiales combustibles entre ellos para considerarse como edificios no independientes frente al fuego.
+#Descripción por edificio N#
+Describir de cada edificio su superficie, altura y usos principales de cada uno
+Tipo: texto libre
+Preguntar por cada edificio de forma independiente, N veces, con N=#Número de edificios#
+Identificar cada edificio con 🔍Edificio N🔍 en la respuesta.
+Por cada edificio confirmar los siguientes 5 campos:
+- #Comportamiento al fuego del Edificio N#
+Comportamiento de la estructura y cerramientos frente al fuego
+Tipo: selección (Resistente al fuego, No combustible, Parcialmente combustible, Combustible) 
+- #Combustibles en cubierta del Edificio N#
+¿Existen elementos constructivos combustibles en la cubierta del edificio?
+Tipo: booleano (Sí/No) 
+- #Combustibles en cerramientos del Edificio N#
+¿Existen elementos constructivos combustibles en los cerramientos laterales exteriores?
+Tipo: booleano (Sí/No) 
+- #Combustibles en paredes interiores del Edificio N#
+¿Existen elementos constructivos combustibles en tabiques interiores o falsos techos?
+Tipo: booleano (Sí/No) 
+- #Salas técnicas del Edificio N#
+¿Existen salas técnicas dentro de este edificio? Indicar en caso positivo, incluyendo descripción de materiales constructivos y equipos/maquinaria dentro de la sala.
+Tipo: texto libre
+#Lucernarios plásticos#
+¿Existen lucernarios (tragaluces) de plástico en la cubierta? Indicar tipo si los hay
+Tipo: selección (No hay, Discontinuos, Continuos) 
+#Falsos techos#
+¿Existen falsos techos y de qué tipo?
+Tipo: selección (No hay, No combustibles, Combustibles) 
+#Revestimientos combustibles#
+¿Existen revestimientos combustibles en suelos o paredes?
+Tipo: selección (No hay, En zonas muy localizadas, En la mayor parte de la superficie) 
+
+#Distancias de seguridad#
+Distancias de seguridad entre edificios (espacios libres de almacenamientos o instalaciones exteriores entre ellos)
+Tipo: texto libre
+Asistente: Validar si la respuesta incluye información suficiente para poder conocer la distancia entre todos los edificios, y si existen materiales combustibles entre ellos para considerarse como edificios no independientes frente al fuego.
+#¿Hay cámaras frigoríficas?#
+Indicar la presencia de cámaras frigoríficas y su alcance
+Tipo: selección (No hay, Ocupan zonas puntuales, Ocupan gran parte de la superficie) #Número de cámaras#
+Número de cámaras frigoríficas existentes
+Tipo: número entero
+Visible si: #¿Hay cámaras frigoríficas?# ≠ No hay 
+#Superficie de cámaras#
+Superficie de cada cámara (o total, en m²)
+Tipo: texto libre
+Visible si: #¿Hay cámaras frigoríficas?# ≠ No hay 
+#Tipo de aislamiento de cámaras#
+Tipo de aislamiento de los paneles de las cámaras frigoríficas (ej. PUR, lana de roca, etc.)
+Tipo: texto libre
+Visible si: #¿Hay cámaras frigoríficas?# ≠ No hay 
+#Sectorización de cámaras#
+¿Las cámaras frigoríficas forman un sector de incendio independiente o están colindantes a otras áreas?
+Tipo: selección (Sector independiente, Colindantes)
+Visible si: #¿Hay cámaras frigoríficas?# ≠ No hay
+#Almacenamiento de cámaras frigoríficas#
+Describir el tipo de producto almacenado, tipo de embalaje y tipo de almacenamiento (suelo, estanterías) y en caso de ser en estanterías, altura máxima de almacenamiento.
+Tipo: texto libre
+Visible si: #¿Hay cámaras frigoríficas?# ≠ No hay
+#Galerías subterráneas#
+¿Existen galerías subterráneas (pasos de cables, cintas, almacenes bajo tierra)?
+Tipo: booleano (Sí/No) 
+#Galerías sectorizadas#
+¿Están sectorizadas contra incendios las galerías subterráneas?
+Tipo: booleano (Sí/No)
+Visible si: #Galerías subterráneas# = Sí 
+#Detección en galerías#
+¿Cuentan las galerías subterráneas con detección automática de incendios?
+Tipo: booleano (Sí/No)
+Visible si: #Galerías subterráneas# = Sí 
+#Limpieza en galerías#
+¿Presentan las galerías subterráneas un orden y limpieza adecuados?
+Tipo: booleano (Sí/No)
+Visible si: #Galerías subterráneas# = Sí 
+#Espacios confinados#
+¿Hay espacios confinados (entre plantas o bajo la cubierta)?
+Tipo: booleano (Sí/No) 
+#Confinados sectorizados#
+¿Están sectorizados contra incendios esos espacios confinados?
+Tipo: booleano (Sí/No)
+Visible si: #Espacios confinados# = Sí 
+#Detección en confinados#
+¿Cuentan los espacios confinados con detección de incendios?
+Tipo: booleano (Sí/No)
+Visible si: #Espacios confinados# = Sí 
+#Limpieza en confinados#
+¿Tienen dichos espacios confinados un orden y limpieza adecuados?
+Tipo: booleano (Sí/No)
+Visible si: #Espacios confinados# = Sí 
+
+#Comentarios construcción#
+Comentarios adicionales sobre la construcción y materiales
+Tipo: texto libre
+
+ACTIVIDAD - PROCESO
+
+#Actividad principal#
+Actividad principal de la empresa (identificar sector)
+Tipo: texto libre 
+#Actividad secundaria#
+Otras actividades secundarias relevantes (otras actividades desarrolladas dentro de la industria)
+Tipo: texto libre 
+#Año de inicio#
+Año de inicio de la actividad de la planta
+Tipo: número (aaaa) 
+#Licencia de actividad#
+¿Dispone la instalación de licencia de actividad vigente?
+Tipo: booleano (Sí/No) 
+#Horario de trabajo#
+Turnos y horario de trabajo (jornada laboral) por tipo de departamento (ejemplo: Adminstración, Manteniento, Picking, Producción Zona 2...)
+Tipo: texto libre 
+#Periodos sin personal#
+Periodos en que no hay personal en planta (p.ej. noches, fines de semana)
+Tipo: texto libre 
+#Número de trabajadores#
+Número total de trabajadores en la planta
+Tipo: número entero 
+#Porcentaje de temporales#
+Porcentaje de trabajadores temporales
+Tipo: número (porcentaje, 0-100) 
+#Producción anual#
+Producción anual de la planta (indicar cantidad y unidad de medida, p.ej. toneladas/año)
+Tipo: texto libre 
+#Facturación anual#
+Facturación anual (ventas) de la planta en euros
+Tipo: número (€) 
+#Certificaciones#
+¿Qué certificaciones dispone la empresa (calidad, gestión, medioambientales, sectoriales....)?
+Tipo: Texto libre 
+#Descripción del proceso#
+Describir el proceso de fabricación (etapas principales)
+Tipo: texto libre 
+#Materias primas#
+Principales materias primas utilizadas (y cantidades diarias/mensuales aproximadas)
+Tipo: texto libre 
+#Equipos principales#
+Lista de los principales equipos de producción (incluyendo, si es posible: fabricante, año, capacidad, uso, valor)
+Tipo: texto libre
+
+RIESGO DE INCENDIOS:
+PROTECCIÓN CONTRA INCENDIOS (Medios materiales)
+
+#Sectores de incendio#
+¿Existen sectores de incendio delimitados dentro del edificio?
+Tipo: booleano (Sí/No)
+Incluir en la respuesta⚠️[CRÍTICO]⚠️ si #Sectores de incendio# = No
+#Descripción sectores#
+Describir los sectores de incendio y la superficie de cada uno.
+Tipo: texto libre
+Preguntar por cada sector de forma independiente, N veces, con N=#Número de edificios#
+Visible si: #Sectores de incendio# = Sí
+#Sectores de incendio en salas técnicas#
+¿Las salas técnicas principales constituyen un sector de incendio independiente (ejemplo sala de transformadores, sala de CGBT, compresores o calderas)?
+Tipo: booleano (Sí/No) 
+#Salas técnicas sectorizadas#
+Describir cada sala técnica sectorizada y los materiales presentes en la construcción, indicando si cuenta con detección de incendios o extinción automática
+Tipo: texto libre
+#Estado muros cortafuegos#
+Estado de los muros cortafuegos
+Tipo: selección (Adecuado, Con deficiencias)
+Visible si: #Sectores de incendio# = Sí 
+#Estado puertas cortafuegos#
+Estado de las puertas cortafuegos
+Tipo: selección (Adecuado, Con deficiencias)
+Visible si: #Sectores de incendio# = Sí 
+#Sellado de paso de cables/instalaciones#
+¿El sellado de los pasos de cables en muros cortafuegos es adecuado?
+Tipo: selección (Adecuado, Con deficiencias)
+Visible si: #Sectores de incendio# = Sí 
+#Franjas cortafuegos#
+¿Existen franjas cortafuegos en la cubierta y están en buen estado?
+Tipo: selección (Adecuado, Con deficiencias)
+Visible si: #Sectores de incendio# = Sí
+#Extintores#
+¿Hay extintores portátiles instalados?
+Tipo: booleano (Sí/No)
+Incluir en la respuesta⚠️[CRÍTICO]⚠️ si #Extintores# = No
+#Cobertura extintores#
+Cobertura de protección mediante extintores
+Tipo: selección (Total, Parcial, Zonas no cubiertas)
+Visible si: #Extintores# = Sí 
+#Tipo de extintores#
+Tipo de extintores instalados
+Tipo: selección múltiple (Polvo ABC 6 kg, Polvo ABC 50 kg, CO₂ 4 kg, Agua/Espuma 6 L)
+Visible si: #Extintores# = Sí 
+#Extintores inaccesibles#
+¿Se observan extintores inaccesibles?
+Tipo: booleano (Sí/No)
+Visible si: #Extintores# = Sí 
+#Extintores en mal estado#
+¿Se observan extintores en mal estado (caducados, descargados, etc.)?
+Tipo: booleano (Sí/No)
+Visible si: #Extintores# = Sí
+#BIEs#
+¿Hay Bocas de Incendio Equipadas (BIE) instaladas?
+Tipo: booleano (Sí/No)
+Incluir en la respuesta⚠️[CRÍTICO]⚠️ si #BIEs# = No
+#Cobertura BIEs#
+Cobertura de la protección mediante BIEs
+Tipo: selección (Total, Parcial, Zonas no cubiertas)
+Visible si: #BIEs# = Sí 
+#Tipo de BIEs#
+Tipo de BIEs instaladas
+Tipo: selección múltiple (BIE 25, BIE 25 con toma de 45 mm, BIE 45)
+Visible si: #BIEs# = Sí 
+#Presión BIEs#
+Presión medida en los manómetros de las BIEs (kg/cm²)
+Tipo: número (kg/cm²)
+Visible si: #BIEs# = Sí 
+#BIEs inaccesibles#
+¿Se observan BIEs inaccesibles?
+Tipo: booleano (Sí/No)
+Visible si: #BIEs# = Sí 
+#BIEs en mal estado#
+¿Se observan BIEs en mal estado (fugas, daños, etc.)?
+Tipo: booleano (Sí/No)
+Visible si: #BIEs# = Sí
+#Hidrantes exteriores#
+¿Hay hidrantes exteriores disponibles cerca de la instalación?
+Tipo: booleano (Sí/No) 
+Incluir en la respuesta⚠️[CRÍTICO]⚠️ si #Hidrantes exteriores# = No
+#Cobertura hidrantes#
+Cobertura que brindan los hidrantes exteriores
+Tipo: selección (Todo el perímetro, Solo en una fachada)
+Visible si: #Hidrantes exteriores# = Sí 
+#Tipo de hidrantes#
+Tipo de hidrantes disponibles
+Tipo: selección (Públicos, Privados)
+Visible si: #Hidrantes exteriores# = Sí
+#Detección automática#
+¿Existe un sistema de detección automática de incendios instalado?
+Tipo: booleano (Sí/No)
+Incluir en la respuesta⚠️[CRÍTICO]⚠️ si #Detección automática# = No
+#Cobertura detección#
+Cobertura de la detección automática
+Tipo: selección (Total, Parcial, Zonas no cubiertas)
+Visible si: #Detección automática# = Sí 
+#Tipo de detectores#
+Tipo de detectores automáticos instalados
+Tipo: selección múltiple (Puntuales, De haz, Aspiración, Cable térmico)
+Visible si: #Detección automática# = Sí 
+#Pulsadores de alarma#
+¿Hay pulsadores manuales de alarma de incendios instalados?
+Tipo: booleano (Sí/No) 
+#Central de incendios#
+¿Existe una central de alarma de incendios instalada (panel de control)?
+Tipo: booleano (Sí/No)
+Visible si: #Detección automática# = Sí o #Pulsadores de alarma# = Sí 
+#Central atendida 24h#
+¿La central de incendios está atendida 24h o conectada a una central receptora de alarmas (CRA)?
+Tipo: booleano (Sí/No)
+Visible si: #Central de incendios# = Sí 
+#Central con fallos#
+¿Presenta la central de incendios fallos activos o zonas deshabilitadas actualmente?
+Tipo: booleano (Sí/No)
+Visible si: #Central de incendios# = Sí 
+#Detectores en techos altos#
+¿Hay detectores puntuales instalados en techos de altura > 12 m (dificulta su eficacia)?
+Tipo: booleano (Sí/No)
+Visible si: #Detección automática# = Sí 
+#Separación detectores#
+¿La separación entre detectores automáticos supera los 9 m (cobertura insuficiente)?
+Tipo: booleano (Sí/No)
+Visible si: #Detección automática# = Sí 
+#Rociadores#
+¿Existe un sistema de rociadores automáticos (sprinklers) contra incendios?
+Tipo: booleano (Sí/No)
+Incluir en la respuesta⚠️[CRÍTICO]⚠️ si #Rociadores# = No
+#Cobertura rociadores#
+Cobertura de la instalación de rociadores
+Tipo: selección (Total, Parcial, Zonas no cubiertas)
+Visible si: #Rociadores# = Sí 
+#Tipo de rociadores#
+Tipo de rociadores instalados
+Tipo: selección múltiple (De control estándar, ESFR, Colgantes, Montantes)
+Visible si: #Rociadores# = Sí 
+#Presión rociadores#
+Presión en el puesto de control de rociadores (kg/cm²)
+Tipo: número (kg/cm²)
+Visible si: #Rociadores# = Sí 
+#Mercancías cerca de rociadores#
+¿Hay mercancías almacenadas a menos de 2 m por debajo de los rociadores (interfieren con el spray)?
+Tipo: booleano (Sí/No)
+Visible si: #Rociadores# = Sí 
+#Tiene exutorios#
+¿Existen exutorios (ventanas de humo) instalados para evacuación de humos?
+Tipo: booleano (Sí/No)
+[CRÍTICO] 
+#Zonas protegidas por exutorios#
+¿Qué zonas o sectores protege el sistema de exutorios?
+Tipo: texto libre
+Visible si: #Tiene exutorios# = Sí 
+#Modo de activación de exutorios#
+Modo de activación de los exutorios de humo
+Tipo: selección (Automática por la central de incendios, Apertura manual por bomberos)
+Visible si: #Tiene exutorios# = Sí
+#Extinción por gases#
+¿Existe algún sistema fijo de extinción automática por gases u otras protecciones especiales contra incendios?
+Tipo: booleano (Sí/No) 
+#Zonas protegidas (gases)#
+¿Qué zonas están protegidas por estos sistemas especiales de extinción?
+Tipo: texto libre
+Visible si: #Extinción por gases# = Sí 
+#Estado extinción especial#
+Estado de la instalación de extinción especial (gases u otro)
+Tipo: texto libre
+Visible si: #Extinción por gases# = Sí
+#Abastecimiento de agua#
+¿Existe un abastecimiento propio de agua para protección contra incendios?
+Tipo: booleano (Sí/No)
+Incluir en la respuesta⚠️[CRÍTICO]⚠️ si #Abastecimiento de agua# = No
+#Tipo de abastecimiento#
+Tipo de abastecimiento de agua contra incendios disponible
+Tipo: selección (Red pública general, Acometida pública exclusiva, Depósito propio exclusivo)
+Visible si: #Abastecimiento de agua# = Sí 
+#Capacidad del depósito#
+Capacidad del depósito de agua contra incendios (en m³)
+Tipo: número (m³)
+Visible si: #Tipo de abastecimiento# = Depósito propio exclusivo 
+#Grupo de bombeo#
+¿Existe un grupo de bombeo (bombas) para el agua contra incendios?
+Tipo: booleano (Sí/No)
+Visible si: #Abastecimiento de agua# = Sí 
+Incluir en la respuesta⚠️[CRÍTICO]⚠️ si #Grupo de bombeo# = No
+#Tipo de bombas#
+Configuración del grupo de bombas contra incendios
+Tipo: selección (1 Eléctrica + jockey, 1 Eléctrica + Diésel + jockey, 2 Eléctricas + jockey, 2 Diésel + jockey, Otros)
+Visible si: #Grupo de bombeo# = Sí 
+#Fabricante bombas#
+Fabricante del grupo de bombeo contra incendios
+Tipo: texto libre
+Visible si: #Grupo de bombeo# = Sí 
+#Caudal bomba#
+Caudal de la bomba principal (en m³/h o l/min)
+Tipo: número
+Visible si: #Grupo de bombeo# = Sí 
+#Presión bomba#
+Presión nominal de la bomba principal (en bar)
+Tipo: número (bar)
+Visible si: #Grupo de bombeo# = Sí 
+#Potencia bomba#
+Potencia del motor de la bomba principal (en kW)
+Tipo: número (kW)
+Visible si: #Grupo de bombeo# = Sí 
+#Arranque periódico#
+¿Se arranca la bomba de incendios periódicamente para pruebas?
+Tipo: booleano (Sí/No)
+Visible si: #Grupo de bombeo# = Sí 
+#Arranque automático#
+¿Están las bombas configuradas para arranque automático al caer la presión?
+Tipo: booleano (Sí/No)
+Visible si: #Grupo de bombeo# = Sí 
+#Buen estado grupo bombeo#
+¿El grupo de bombeo se encuentra en buen estado, sin fugas ni corrosión?
+Tipo: booleano (Sí/No)
+Visible si: #Grupo de bombeo# = Sí 
+#Grupo electrógeno#
+¿Dispone el sistema de un grupo electrógeno de respaldo para alimentar la bomba en caso de corte eléctrico?
+Tipo: booleano (Sí/No)
+Visible si: #Grupo de bombeo# = Sí 
+#Mantenimiento anual PCI#
+¿Se ha realizado el último mantenimiento de las instalaciones PCI en menos de un año?
+Tipo: booleano (Sí/No)
+Incluir en la respuesta⚠️[CRÍTICO]⚠️ si #Mantenimiento anual PCI# = No
+#Curva de bombas#
+¿El mantenimiento anual incluye la curva de P-Q de las bombas?
+Tipo: booleano (SÍ/No)
+Incluir en la respuesta⚠️[CRÍTICO]⚠️ si #Curva de bombas# = No
+Visible si #Mantenimiento anual PCI# = Si
+#Medios en buen estado#
+¿Los medios de protección contra incendios son accesibles, están en buen estado y correctamente señalizados?
+Tipo: booleano (Sí/No) 
+#Empresa mantenedora PCI#
+Empresa encargada del mantenimiento de las instalaciones contra incendios (PCI)
+Tipo: texto libre 
+
+PREVENCION DE INCENDIOS (Gestión y organización)
+
+#Departamento de seguridad#
+Descripción del departamento de seguridad o prevención (posición en organigrama, dependencias)
+Tipo: texto libre 
+#Formación personal seguridad#
+Formación y cualificaciones del personal del departamento de seguridad
+Tipo: texto libre 
+#Especialidades prevención#
+Especialidades de prevención cubiertas internamente (seguridad en el trabajo, higiene industrial, ergonomía, medicina del trabajo)
+Tipo: texto libre 
+#Metodología de riesgos#
+Metodología utilizada para análisis y evaluación de riesgos de proceso e instalación (ej. ATEX, HAZOP, SIL, APR, etc.)
+Tipo: texto libre 
+#Gestión de cambios#
+¿Existe un procedimiento de gestión de cambios en procesos e instalaciones (MOC)?
+Tipo: booleano (Sí/No) 
+#Gestión de by-pass#
+¿Se tiene implantado protocolo LOTO (registro/autorización)?
+Tipo: booleano (Sí/No) 
+#Formación en puesto#
+¿Se imparte formación en seguridad a los operarios, específica del puesto de trabajo (inducción inicial y refrescos periódicos)?
+Tipo: booleano (Sí/No)
+#Investigación de incidentes#
+¿Se investigan los incidentes y accidentes, realizando análisis causa-raíz y lecciones aprendidas?
+Tipo: booleano (Sí/No) 
+#KPI de seguridad#
+¿Se han definido KPI’s (indicadores clave) de seguridad y se les da seguimiento periódico?
+Tipo: booleano (Sí/No) 
+#Actividad afectada por SEVESO III#
+¿La actividad está afectada por la normativa SEVESO III (riesgo de accidente grave)?
+Tipo: booleano (Sí/No)
+[CRÍTICO] 
+#Plan de Emergencia o Plan de Autoprotección#
+¿Existe un Plan de Emergencia o Plan de Autoprotección (plan de respuesta a emergencias dentro de la instalación)?
+Tipo: booleano (Sí/No)
+[CRÍTICO]
+#Plan de Emergencia / Autoprotección#
+¿Se encuentra este Plan actualizado a fecha de hoy?
+Tipo: booleano (Sí/No)
+Visible si: #Plan de Emergencia o Plan de Autoprotección# = Sí 
+#Equipo de primera intervención#
+¿Hay un equipo de primera intervención contra incendios (brigada interna) formado?
+Tipo: booleano (Sí/No) 
+#Formación con fuego real#
+¿Se realiza formación práctica de los equipos o personal utilizando fuego real (simulacros con fuego)?
+Tipo: booleano (Sí/No) 
+#Simulacro anual#
+¿Se realiza al menos un simulacro de emergencia al año?
+Tipo: booleano (Sí/No) 
+#Evacuación señalizada#
+¿Están señalizados correctamente los recorridos de evacuación y las salidas de emergencia?
+Tipo: booleano (Sí/No)
+Acciones de prevención
+#Permiso de trabajos en caliente#
+¿Existe un procedimiento de permiso de trabajo para operaciones de corte, soldadura u otros trabajos en caliente?
+Tipo: booleano (Sí/No)
+[CRÍTICO]
+#Permiso de trabajo en caliente supervisión#
+¿Existe una supervisión de los trabajos hasta 60min tras dar por terminados los trabajos?
+Tipo: booleano (Sí/No)
+Visible si #Permiso de trabajos en caliente# = Si
+#Autoinspecciones de seguridad#
+¿Se realizan autoinspecciones de seguridad de manera periódica en la planta?
+Tipo: booleano (Sí/No) 
+#Notificación de protecciones fuera de servicio#
+¿Existe un procedimiento para notificar y gestionar las protecciones contra incendios que estén fuera de servicio tanto internamente como a compañía aseguradora?
+Tipo: booleano (Sí/No)
+[CRÍTICO]
+#Prohibición de fumar#
+¿Se cumple estrictamente la prohibición de fumar en las zonas de riesgo de la planta?
+Tipo: booleano (Sí/No) 
+#Orden y limpieza#
+Apreciación general del orden y limpieza en la planta
+Tipo: selección (Bueno, Regular, Malo) 
+#Conservación del edificio#
+Estado de conservación y mantenimiento del edificio e instalaciones
+Tipo: selección (Bueno, Regular, Malo) 
+#Almacenamiento exterior#
+¿Existe almacenamiento de materiales combustible en el exterior de los edificios?
+Tipo: booleano (Sí/No) 
+#Distancia almacenamiento#
+Distancia del almacenamiento exterior a los edificios más cercanos (en metros)
+Tipo: número (m)
+Visible si: #Almacenamiento exterior# = Sí 
+#Tipo de producto almacenado#
+Tipo de producto almacenado en el exterior
+Tipo: texto libre
+Visible si: #Almacenamiento exterior# = Sí 
+#Cantidad almacenada#
+Cantidad de material almacenado en el exterior (y unidades, ej. kg, litros, palés)
+Tipo: texto libre
+Visible si: #Almacenamiento exterior# = Sí 
+#Carga de baterías#
+¿Se realiza carga de baterías (por ejemplo, de carretillas eléctricas) en la instalación?
+Tipo: booleano (Sí/No)
+[CRÍTICO]
+#Carga en sala sectorizada#
+¿La zona de carga de baterías está en una sala independiente sectorizada contra incendios?
+Tipo: booleano (Sí/No)
+Visible si: #Carga de baterías# = Sí 
+#Área de carga delimitada#
+Si no es sala cerrada, ¿está la zona de carga de baterías claramente delimitada y aislada de otras áreas?
+Tipo: booleano (Sí/No)
+Visible si: #Carga de baterías# = Sí 
+#Combustibles cerca de carga#
+¿Hay materiales combustibles a menos de 2 m de la zona de carga de baterías?
+Tipo: booleano (Sí/No)
+Visible si: #Carga de baterías# = Sí 
+
+RIESGO DE ROBO
+#Vallado de parcela#
+Estado del vallado perimetral de la parcela
+Tipo: selección (Total, Parcial, No hay, No aplica) 
+#Iluminación exterior#
+¿Existe iluminación exterior durante la noche en la instalación?
+Tipo: booleano (Sí/No) 
+#Protecciones físicas#
+¿Existen protecciones físicas anti-intrusión (rejas, puertas de seguridad, etc.) en el edificio?
+Tipo: booleano (Sí/No)  
+#Protecciones electrónicas#
+¿Existe un sistema electrónico de alarma contra intrusión?
+Tipo: booleano (Sí/No) #Alarma conectada a CRA#
+¿La alarma está conectada a una Central Receptora de Alarmas (CRA)?
+Tipo: booleano (Sí/No)
+Visible si: #Protecciones electrónicas# = Sí 
+#Empresa CRA#
+Empresa proveedora del servicio CRA (monitoreo de alarmas)
+Tipo: texto libre
+Visible si: #Alarma conectada a CRA# = Sí 
+#Zonas protegidas (alarma)#
+Zonas protegidas por la alarma anti-intrusión
+Tipo: selección (Sólo oficinas, Todo el edificio)
+Visible si: #Protecciones electrónicas# = Sí 
+#Tipos de detectores (alarma)#
+Tipos de detectores empleados en el sistema de alarma
+Tipo: selección múltiple (Volumétricos (movimiento), Barreras perimetrales, Detectores puntuales de apertura)
+Visible si: #Protecciones electrónicas# = Sí 
+#Vigilancia (guardias)#
+¿Cuenta la planta con servicio de vigilancia (guardias de seguridad)?
+Tipo: booleano (Sí/No) 
+#Vigilancia 24h#
+¿La vigilancia presencial es permanente 24 horas en el establecimiento?
+Tipo: booleano (Sí/No)
+Visible si: #Vigilancia (guardias)# = Sí 
+#Vigilancia en cierres#
+¿La vigilancia presencial cubre únicamente los periodos de cierre (no 24h)?
+Tipo: booleano (Sí/No)
+Visible si: #Vigilancia (guardias)# = Sí 
+#CCTV#
+¿Existe un sistema de CCTV (cámaras de seguridad) en la instalación?
+Tipo: booleano (Sí/No)
+Visible si: #Vigilancia (guardias)# = Sí 
+#Empresa de seguridad#
+¿El personal de vigilancia es de una empresa de seguridad externa?
+Tipo: booleano (Sí/No)
+Visible si: #Vigilancia (guardias)# = Sí 
+#Personal propio vigilancia#
+¿La vigilancia la realizan empleados propios de la empresa?
+Tipo: booleano (Sí/No)
+Visible si: #Vigilancia (guardias)# = Sí 
+
+INTERRUPCIÓN DE NEGOCIO / PÉRDIDA DE BENEFICIO
+
+MATERIA PRIMA
+
+#Stock de materia prima#
+Stock de materia prima disponible en planta (toneladas u otras unidades, e indicar cobertura en tiempo si aplica)
+Tipo: texto libre 
+#Nº de proveedores#
+Número de proveedores de materia prima
+Tipo: número entero 
+#Stock exigido a proveedores#
+¿Se exige a los proveedores mantener un stock mínimo de materia prima para asegurar el suministro?
+Tipo: booleano (Sí/No) 
+#Origen de proveedores#
+Origen geográfico de los proveedores de materia prima (ej. porcentaje nacional vs importado)
+Tipo: texto libre 
+#Dependencia de un proveedor#
+Porcentaje de materia prima suministrada por el mayor proveedor
+Tipo: número (porcentaje) 
+#Transporte de MMPP#
+Medio de transporte de la materia prima hasta la planta (camión, ferrocarril, tubería, etc.)
+Tipo: texto libre 
+#Alternativa de MP#
+¿Posibilidad de suministro de materia prima por proveedores alternativos? Indicar qué porcentaje del total podrían cubrir
+Tipo: texto libre 
+#Extracoste MMPP alterna#
+Extracoste de producción si se recurre a materia prima de proveedores alternativos o externos
+Tipo: texto libre
+
+PRODUCTO SEMI-ELABORADO 
+
+#Stock de semi-elaborado#
+Stock de producto semi-elaborado en proceso o almacén (cantidad y cobertura temporal)
+Tipo: texto libre #Alternativa de semi-elaborado#
+¿Posibilidad de suministro de producto semi-elaborado desde otras plantas del grupo o proveedores externos? (Indicar porcentaje del total)
+Tipo: texto libre #Extracoste semi-elaborado#
+Extracoste en caso de recurrir a proveedores externos o plantas del grupo para obtener el semi-elaborado
+Tipo: texto libre
+
+PRODUCTO TERMINADO (PT)
+
+#Stock de PT#
+Stock de producto terminado (PT) en planta (cantidad y cobertura en tiempo, ej. días/meses de venta)
+Tipo: texto libre #Nº de clientes#
+Número de clientes de la empresa
+Tipo: número entero 
+#Stock exigido por cliente#
+¿Algún cliente exige mantener stock de producto terminado en planta?
+Tipo: booleano (Sí/No) 
+#Cantidad por exigencia#
+Si existe exigencia de stock por cliente, indicar la cantidad o periodo equivalente que se mantiene (ej. ___ toneladas o ___ días de ventas)
+Tipo: texto libre
+Visible si: #Stock exigido por cliente# = Sí 
+#Sectores de venta#
+Sectores a los que se venden los productos y porcentaje de venta en cada uno
+Tipo: texto libre 
+#Dependencia de mayor cliente#
+Porcentaje de la producción/ventas que se destina al mayor cliente
+Tipo: número (porcentaje) 
+#Transporte de PT#
+Medio de transporte principal para distribuir el producto terminado a clientes
+Tipo: texto libre 
+#Alternativa de PT#
+¿Posibilidad de suministro de producto terminado desde otras plantas del grupo o terceros en caso de siniestro? Indicar porcentaje del total que podrían abastecer
+Tipo: texto libre 
+#Extracoste PT alterno#
+Extracoste de producción si se recurre a otras plantas del grupo o proveedores externos para suministrar el PT
+Tipo: texto libre
+
+PROCESOS Y MAQUINARIA CRÍTICA
+
+#Tipo de proceso#
+El proceso productivo es principalmente lineal (cadena única) o diversificado (varias líneas independientes)
+Tipo: selección (Lineal, Diversificado) 
+#Duplicidad de líneas#
+¿Existen líneas de producción duplicadas (redundantes) que puedan sustituir a la principal en caso de fallo?
+Tipo: booleano (Sí/No) 
+#Cuellos de botella#
+¿Existen cuellos de botella significativos en las líneas de producción o en maquinaria de proceso?
+Tipo: booleano (Sí/No) 
+#Detalle cuellos de botella#
+Describir los equipos o procesos que actúan como cuellos de botella (si los hay) y por qué
+Tipo: texto libre
+Visible si: #Cuellos de botella# = Sí 
+#Dependencia de líneas#
+Porcentaje de la producción (y facturación) que pasa por cada línea de producción o equipo principal (indicar para cada línea/equipo)
+Tipo: texto libre 
+#Reemplazo de equipos#
+Tiempos de reposición y montaje de los equipos principales (incluyendo cuellos de botella) y costo aproximado de reemplazo
+Tipo: texto libre 
+#Reemplazo de auxiliares#
+Tiempo de reposición de las instalaciones de servicios auxiliares principales (transformadores, calderas, sistemas informáticos, etc.) hasta recuperar la operatividad
+Tipo: texto libre
+Interdependencia y Continuidad de Negocio
+#Producción estacional#
+¿La demanda o producción presenta estacionalidad (picos o valles según la época del año)?
+Tipo: selección (Regular todo el año, Estacional) #Meses pico#
+Si la producción es estacional: meses de mayor producción y porcentaje del total anual que representan
+Tipo: texto libre
+Visible si: #Producción estacional# = Estacional #Meses valle#
+Meses de menor producción y porcentaje del total anual
+Tipo: texto libre
+Visible si: #Producción estacional# = Estacional #Producción bajo pedido#
+¿Se produce bajo pedido (solo contra órdenes de cliente)?
+Tipo: booleano (Sí/No) #Porcentaje bajo pedido#
+Porcentaje de la producción que es bajo pedido
+Tipo: número (porcentaje)
+Visible si: #Producción bajo pedido# = Sí #Número de plantas en grupo#
+Número de plantas que tiene la empresa en su grupo (incluyendo esta)
+Tipo: número entero #Interdependencia entre plantas#
+¿Existe interdependencia significativa entre esta planta y otras del grupo? (Ej: un siniestro aquí afectaría a las otras)
+Tipo: booleano (Sí/No)
+Visible si: #Número de plantas en grupo# > 1 #Descripción interdependencia#
+Describir la interdependencia: cómo afectaría un siniestro grave en esta planta a las otras plantas del grupo (paralización total o parcial)
+Tipo: texto libre
+Visible si: #Interdependencia entre plantas# = Sí #Paralización de otras plantas#
+En caso de siniestro en esta planta, porcentaje de paralización estimado en el resto de plantas del grupo (impacto en su producción)
+Tipo: texto libre
+Visible si: #Interdependencia entre plantas# = Sí #Producción alternativa#
+¿Existe posibilidad de reubicar la producción en otras plantas del grupo o con terceros en caso de desastre? Describir opciones
+Tipo: texto libre #Extracoste producción alternativa#
+Extracoste asociado a producir en otras plantas o externalizar la producción (si se aplican alternativas)
+Tipo: texto libre 
+#Plan de continuidad#
+¿Se dispone de un Plan de Continuidad de Negocio formalmente elaborado e implantado?
+Tipo: booleano (Sí/No)
+[CRÍTICO] 
+
+SINIESTRALIDAD
+#Siniestros últimos 3 años#
+¿Ha sufrido la empresa siniestros (incidentes/accidentes relevantes) en los últimos 3 años?
+Tipo: booleano (Sí/No) #Detalles de siniestros#
+En caso afirmativo, indicar fecha, causa, coste y una breve descripción de cada siniestro ocurrido
+Tipo: texto libre
+Visible si: #Siniestros últimos 3 años# = Sí
