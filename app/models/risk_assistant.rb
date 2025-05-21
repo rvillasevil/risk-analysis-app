@@ -20,5 +20,5 @@ class RiskAssistant < ApplicationRecord
                                 :actividad_proceso, :almacenamiento, :instalaciones_auxiliare,
                                 :riesgos_especifico, :siniestralidad, :recomendacione
 
-
+  alias_attribute :initialised?, :initialised   # permite usar “?” al final
 end
