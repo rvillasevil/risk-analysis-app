@@ -10,8 +10,75 @@
       @risk_assistant = current_user.risk_assistants.find(params[:id])
       @messages = @risk_assistant.messages
       @company_name = @messages.where("key LIKE ?", "%Nombre de la empresa%").last
+
+      # 👉 títulos de las secciones en el orden que quieras mostrar
+      @sections = [
+        'Datos identificativos', 'Situación',         'Construcción',
+        'Sectorización',         'Actividad',         'Servicios Auxiliares',
+        'Mantenimiento',         'Medios Activos',    'Medios Humanos',
+        'Pérdida de beneficios', 'CATNAT',            'Reportaje fotográfico'
+      ]
+
+      # ------------------------------------------------------------
+      # 1. Mensajes con clave (key) y valor (value) no vacíos
+      # ------------------------------------------------------------
+      keyed = @risk_assistant
+                .messages
+                .where.not(key: [nil, ""])
+                .where.not(value: [nil, ""])      # evita «valor vacío»
+                .order(:created_at)
+
+      # — normalizamos label → id:
+      completed_by_id = {}
+      keyed.each do |msg|
+        raw_label = msg.key.to_s.strip.downcase          # ej. "nombre de la empresa..."
+        id_sym    = RiskFieldSet.label_to_id[raw_label]  # ⇒ :nombre  |  nil si no mapea
+        next unless id_sym
+
+        completed_by_id[id_sym] = msg.value
+      end
+
+      # ------------------------------------------------------------
+      # 2. Catálogo de secciones
+      # ------------------------------------------------------------
+      catalogue = RiskFieldSet.all
+
+      @sections_data = catalogue.map do |sec_id, sec_h|
+        ids         = sec_h[:fields].map { |f| f[:id].to_sym }
+        completed_h = completed_by_id.slice(*ids)
+        pending_arr = sec_h[:fields].reject { |f| completed_h.key?(f[:id].to_sym) }
+
+        { id: sec_id, title: sec_h[:title], completed: completed_h, pending: pending_arr }
+      end
+
+      # --------------------------
+      # 1) ids de campos completados
+      # --------------------------
+      filled_ids = @risk_assistant
+                    .messages
+                    .where.not(key: nil)          # key guarda el id del campo
+                    .pluck(:key)                  # => ["nombre", "direccion_riesgo", ...]
+                    .map(&:to_sym)
+                    .to_set                        # búsqueda O(1)
+
+      # --------------------------
+      # 2) progreso por sección
+      # --------------------------
+      @progress_by_section = RiskFieldSet.all.each_with_object({}) do |(sec_key, sec_cfg), h|
+        total = sec_cfg[:fields].size
+        done  = sec_cfg[:fields].count { |f| filled_ids.include?(f[:id].to_sym) }
+        pct   = total.zero? ? 0 : ((done * 100.0) / total).round
+        h[sec_key] = { title: sec_cfg[:title], done:, total:, pct: }
+      end
+
+      # --------------------------
+      # 3) progreso global (opcional)
+      # --------------------------
+      total_fields = RiskFieldSet.flat_fields.size
+      total_done   = filled_ids.size
+      @overall_pct = total_fields.zero? ? 0 : ((total_done * 100.0) / total_fields).round      
     end
-  
+
     def new
       @risk_assistant = current_user.risk_assistants.new
     end

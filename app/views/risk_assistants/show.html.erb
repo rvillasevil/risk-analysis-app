@@ -1,147 +1,188 @@
+<!-- app/views/risk_assistants/show.html.erb -->
+<%# -------------------------------------------------------------- %>
+<%#  Hoja de estilo ligera in-page (podrías llevarla a assets)    %>
+<%# -------------------------------------------------------------- %>
 <style>
-  body {
-    background-color: #f9fafb;
-    color: #333;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  :root{
+    --pri:#1f497d;        /* color principal */
+    --pri-light:#275ba0;  /* hover / foco   */
+    --gray-bg:#f4f6f8;    /* gris de fondo  */
+    --radius: .6rem;
   }
-  h1, h2, h3, h4, h5, h6 {
-    color: #2c3e50;
-  }
-  .bg-light {
-    background-color: #ffffff !important;
-  }
-  .btn-outline-primary {
-    border-color: #1f497d;
-    color: #1f497d;
-  }
-  .btn-outline-primary:hover {
-    background-color: #1f497d;
-    color: white;
-  }
-  .btn-success {
-    background-color: #2e7d32;
-    border-color: #2e7d32;
-  }
-  .btn-success:hover {
-    background-color: #27672a;
-    border-color: #27672a;
-  }
-  .btn-secondary {
-    background-color: #7f8c8d;
-    border-color: #7f8c8d;
-    color: white;
-  }
-  .btn-secondary:hover {
-    background-color: #606a6b;
-    border-color: #606a6b;
-  }
-  .list-group-item {
-    border: none;
-    border-bottom: 1px solid #e1e4e8;
-    background-color: transparent;
-    padding: 0.5rem 0;
-  }
-  .badge {
-    background-color: #3498db;
-    font-weight: 400;
-  }
-  .form-card {
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
-  }
-  label {
-    font-weight: 600;
-  }
+  body{background:var(--gray-bg);}
+  h2,h3,h4{color:var(--pri);}
+  .btn-pri     {color:#fff;background:var(--pri);border-color:var(--pri);}
+  .btn-pri:hover{background:var(--pri-light);border-color:var(--pri-light);}
+  .sidebar-header{font-weight:600;}
+  .table-sm td,.table-sm th{padding:.4rem .6rem;}
+  /* Oculta scroll vertical “infinito” en tablas */
+  .scroll-y    {max-height:46vh;overflow-y:auto;}
 </style>
 
-<div class="container py-3">
-  <% sections = ['Datos identificativos', 'Situación', 'Construcción', 'Sectorización', 'Actividad', 'Servicios Auxiliares', 'Mantenimiento', 'Medios Activos', 'Medios Humanos', 'Pérdida de beneficios', 'CATNAT', 'Reportaje fotográfico'] %>
+<%# -------------------------------------------------------------- %>
+<%#           CONTENEDOR PRINCIPAL                                %>
+<%# -------------------------------------------------------------- %>
+<div class="container-xxl py-3" style="background-color:white;">
 
-    <div class="row gx-4 gy-4">
-    <aside class="col-12 col-md-4">
-      <section class="p-3 bg-light rounded shadow-sm mb-4">
-        <h2 class="">Empresa: <%= @risk_assistant.name %></h2>
-        <h5>Instrucciones</h5>
-        <h5>✅ 🔍 🗨️ 🏃‍♂️ 📩 ⌛ 📬 ⚠️</h5>
-        <p><strong>0.</strong> Para empezar, lanzar la orden: <em>empezar</em></p>
-        <p><strong>1.</strong> Para editar un campo, simplemente contesta indicando qué campo quieres cambiar y el nuevo valor.</p>
-        <% @messages.each do |mensaje| %>
-          <h6 class="mt-3 mb-1"><%= mensaje.key %></h6>
-          <small class="text-muted"><%= mensaje.value %></small>
-        <% end %>
-      </section>
+  <%# ---------- BREADCRUMB / TITULAR --------------------------- %>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0"><%= @risk_assistant.name %></h1>
 
-      <section class="p-3 bg-light rounded shadow-sm">
-        <h4 class="mb-3">Resumen por sección</h4>
-        <ul class="list-group list-group-flush" style="max-height: 380px; overflow-y: auto;">
-          <% sections.each do |sec| %>
-            <% key = sec.parameterize(separator: '_') %>
-            <% last = @risk_assistant.messages.where(section: key).order(created_at: :desc).first %>
-            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-              <div><%= sec %></div>
-              <span class="badge rounded-pill text-truncate" style="max-width: 140px;"><%= last&.content&.truncate(25) || '—' %></span>
-            </li>
-          <% end %>
-        </ul>
-      </section>
+    <%#  btn que abre off-canvas sólo < md  %>
+    <button
+      class="btn btn-outline-secondary d-md-none"
+      type="button"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#sidebarCanvas">
+      Menú
+    </button>
+  </div>
+
+  <%# ------------------------------------------------------------ %>
+  <%#     LAYOUT:  SIDEBAR  +  MAIN                               %>
+  <%# ------------------------------------------------------------ %>
+  <div class="row gx-lg-5">
+
+    <%# ============  SIDEBAR  =================================== %>
+    <aside class="col-lg-4 col-md-5">
+
+      <%# — versión fija escritorio — %>
+      <div class="d-none d-md-block">
+        <%= render partial: "sidebar",
+                   locals: { sections: @sections,
+                             progress_by_section: @progress_by_section,
+                             overall_pct: @overall_pct,
+                             risk_assistant: @risk_assistant } %>
+      </div>
+
+      <%# — off-canvas para móvil / tablet — %>
+      <div class="offcanvas offcanvas-start d-md-none"
+           tabindex="-1" id="sidebarCanvas">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title">Menú</h5>
+          <button type="button" class="btn-close"
+                  data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+          <%= render partial: "sidebar",
+                     locals: { sections: @sections,
+                               progress_by_section: @progress_by_section,
+                               overall_pct: @overall_pct,
+                               risk_assistant: @risk_assistant } %>
+        </div>
+      </div>
     </aside>
 
-    <div class="col-12 col-md-8">
+    <%# ============  MAIN  ====================================== %>
+    <main class="col-lg-8 col-md-7">
+      <div class="container-fluid chat-page">
 
-      <div class="row row-cols-2 row-cols-md-4 g-2 mb-3">
-        
-        <% sections.each_with_index do |sec, i| %>
-          <div class="col">
-            <button class="btn btn-outline-primary w-100" data-bs-toggle="collapse" data-bs-target="#form<%= i+1 %>">
-              <strong><%= i+1 %>.</strong> <%= sec %>
+        <!-- HISTÓRICO --------------------------------------------------- -->
+        <div class="chat-history px-3 py-2">
+          <% @risk_assistant.messages.order(:created_at).each do |m| %>
+            <% my_msg  = m.sender == 'user' %>
+            <% bubble  = my_msg ? 'chat-bubble-user' : 'chat-bubble-assistant' %>
+            <% wrap    = my_msg ? 'justify-content-end' : 'justify-content-start' %>
+
+            <div class="d-flex <%= wrap %> mb-2">
+              <div class="<%= bubble %>">
+                <div class="chat-header">
+                  <strong><%= m.sender.capitalize %></strong>
+                  <small class="ms-2 text-muted"><%= l m.created_at, format: :short %></small>
+                </div>
+                <div class="chat-body"><%= simple_format m.content %></div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- FORMULARIO FIJO --------------------------------------------- -->
+        <%= form_with url: risk_assistant_messages_path(@risk_assistant),
+                      method: :post, local: true, multipart: true,
+                      html: { class: 'chat-form p-2' } do |f| %>
+
+          <div class="input-group">
+            <%= f.text_area :content,
+                  name:'message[content]',
+                  rows:1,
+                  required:true,
+                  class:'form-control',
+                  placeholder:'Escribe tu mensaje…' %>
+
+            <%= file_field_tag :file,
+                  class:'form-control-file d-none', id:'fileUpload' %>
+
+            <button class="btn btn-outline-secondary" type="button"
+                    onclick="document.getElementById('fileUpload').click()">
+              📎
+            </button>
+
+            <%= f.submit 'Enviar', class:'btn btn-primary' %>
+          </div>
+        <% end %>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- *** Pega esto justo debajo del <style> o al final de la vista *** -->
+<script>
+  function scrollChatBottom() {
+    const box = document.querySelector('.chat-history');
+    if (box) { box.scrollTop = box.scrollHeight; }
+  }
+
+  // — Al cargar la vista inicial
+  document.addEventListener('DOMContentLoaded', scrollChatBottom);
+
+  // — Cada vez que Turbo actualice la conversación (por ej. al enviar un mensaje)
+  document.addEventListener('turbo:frame-load', scrollChatBottom);
+  document.addEventListener('turbo:render',      scrollChatBottom);
+</script>
+
+
+
+<!-- 
+      <%# -------- BOTONERA RÁPIDA DE SECCIONES ------------------ %>
+      <div class="row g-2 mb-3">
+        <% @sections.each_with_index do |sec,i| %>
+          <div class="col-6 col-sm-4 col-lg-3">
+            <button class="btn btn-outline-primary w-100"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#form<%= i %>">
+              <strong><%= i+1 %>.</strong>
+              <%= truncate(sec, length:22) %>
             </button>
           </div>
         <% end %>
       </div>
 
+      <%# -------- COLLAPSABLES DE FORMULARIOS ------------------- %>
       <div id="formsGroup">
-        <% sections.each_with_index do |sec, i| %>
-        <div class="collapse mb-3" id="form<%= i+1 %>" data-bs-parent="#formsGroup">
-          <div class="card form-card p-3">
-            <div class="form-header"><%= i+1 %>. <%= sec %></div>
-            <%= form_with url: risk_assistant_messages_path(@risk_assistant), method: :post, local: true, multipart: true do |form| %>
-              <%= form.hidden_field :section, name: 'message[section]', value: sec.parameterize(separator: '_') %>
-              <%= form.label :content, 'Escribe tu mensaje:' %>
-              <%= form.text_area :content, name: 'message[content]', rows: 3, required: true, class: 'form-control mb-2', placeholder: 'Escribe tu mensaje aquí...' %>
-              <%= file_field_tag :file, class: 'form-control mb-2' %>
-              <%= form.submit 'Enviar', class: 'btn btn-success' %>
-            <% end %>
-          </div>
-        </div>
-        <% end %>
-      </div>
+        <% @sections.each_with_index do |sec,i| %>
+          <div class="collapse mb-3" id="form<%= i %>"
+               data-bs-parent="#formsGroup">
+            <div class="card p-3 shadow-sm">
+              <h5 class="mb-2"><%= i+1 %>. <%= sec %></h5>
+              <%= form_with url: risk_assistant_messages_path(@risk_assistant),
+                            method: :post, local: true,
+                            multipart: true do |f| %>
+                <%= f.hidden_field :section,
+                                   name:"message[section]",
+                                   value:sec.parameterize(separator:"_") %>
 
-      <%= form_with url: risk_assistant_messages_path(@risk_assistant), method: :post, local: true, multipart: true do |form| %>
-        <div class="my-4">
-          <%= form.label :content, 'Escribe tu mensaje:' %>
-          <%= form.text_area :content, name: 'message[content]', rows: 3, required: true, class: 'form-control mb-2', placeholder: 'Escribe tu mensaje aquí...' %>
-          <%= file_field_tag :file, class: 'form-control mb-2' %>
-          <%= form.submit 'Enviar', class: 'btn btn-success' %>
-        </div>
-      <% end %>
-
-      <div id="messages">
-        <% @risk_assistant.messages.order(created_at: :desc).each do |message| %>
-          <div class="message <%= message.role %>">
-            <strong><%= message.sender %>:</strong> <%= message.content %>
-            <% if @campo.present? %><div><strong><%= @campo %></strong></div><% end %>
+                <div class="mb-2">
+                  <%= f.label :content, "Mensaje" %>
+                  <%= f.text_area :content,
+                                  name:"message[content]",
+                                  rows:3, required:true,
+                                  class:"form-control" %>
+                </div>
+                <%= file_field_tag :file, class:"form-control mb-2" %>
+                <%= f.submit "Enviar", class:"btn btn-pri" %>
+              <% end %>
+            </div>
           </div>
         <% end %>
       </div>
-
-      <% if @first_question %>
-        <p><strong>Pregunta inicial:</strong> <%= @first_question %></p>
-      <% end %>
-
-      <%= link_to 'Volver a Panel general', risk_assistants_path, class: 'btn btn-secondary mt-3' %>
-    </div>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+-->

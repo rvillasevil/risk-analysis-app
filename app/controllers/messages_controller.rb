@@ -39,16 +39,38 @@ class MessagesController < ApplicationController
     # 6) Ejecutamos la run y esperamos
     assistant_text = runner.run_and_wait
 
-    # 7) Parseamos claves + flags
-    key   = assistant_text[/##(.*?)##/, 1]
-    value = assistant_text[/&&(.*?)&&/, 1]
-    flag  = assistant_text[/⚠️(.*?)⚠️/, 1]
+    # --------------------------------------------------------------------
+    # NUEVO  ➜  extraer N-pares  ##campo##   &&valor&&
+    # --------------------------------------------------------------------
+    pairs  = assistant_text.scan(/##(.*?)##.*?&&\s*(.*?)\s*&&/m)   # => [[campo1,val1],[campo2,val2],...]
+    flags  = assistant_text.scan(/⚠️\s*(.*?)\s*⚠️/m)               # => [[flag1],[flag2],...]
 
-    # 8) Guardamos la respuesta
+    # 1. guarda (opcional) el mensaje completo para histórico
     @risk_assistant.messages.create!(
       content: assistant_text, sender: "assistant", role: "assistant",
-      key: key, value: value, thread_id: runner.thread_id
+      thread_id: runner.thread_id
     )
+
+    # 2. un mensaje por cada campo/valor
+    pairs.each do |key, value|
+      @risk_assistant.messages.create!(
+        content: "✅ Perfecto, el campo ##{key}## es &&#{value}&&.",
+        sender:  "assistant", role: "assistant",
+        key: key, value: value, thread_id: runner.thread_id
+      )
+    end
+
+    # 3. un mensaje por cada flag crítico encontrado
+    if flag.present?
+      flags.flatten.each do |txt|
+        @risk_assistant.messages.create!(
+          content: txt,
+          sender:  "red_flag", role: "assistant",
+          key: nil, value: nil, thread_id: runner.thread_id
+        )
+      end
+    end
+
 
     if flag.present?
       @risk_assistant.messages.create!(
@@ -75,13 +97,20 @@ class MessagesController < ApplicationController
     @risk_assistant = current_user.risk_assistants.find(params[:risk_assistant_id])
   end
 
-  # app/controllers/messages_controller.rb
+  # ---------- subida de fichero + asociación al thread ----------
   def uploader_to_openai(file)
-    tmp = Tempfile.new([File.basename(file.original_filename, ".*"),
-                        File.extname(file.original_filename)])
-    tmp.binmode
-    tmp.write(file.read)
+    tmp = Tempfile.new(
+            [File.basename(file.original_filename, '.*'),
+            File.extname(file.original_filename)],
+            binmode: true                                  # ← Windows friendly
+          )
+
+    tmp.write file.read
+    tmp.flush                                            # asegura disco
     tmp.rewind
+    tmp.close                                            # <-- CERRAR ANTES de enviar
+
+    Rails.logger.debug { "Uploader: subiendo #{tmp.path}" }
 
     resp = HTTP
           .headers(
@@ -89,16 +118,27 @@ class MessagesController < ApplicationController
             "OpenAI-Beta"   => "assistants=v2"
           )
           .post(
-            "https://api.openai.com/v1/files",
-            form: { file: HTTP::FormData::File.new(tmp.path),
-                    purpose: "assistants" }
+            "#{AssistantRunner::BASE_URL}/files",
+            form: {
+              file: HTTP::FormData::File.new(tmp.path),  # ya está cerrado
+              purpose: "assistants"
+            }
           )
 
-    tmp.close
-    tmp.unlink
-    JSON.parse(resp.body)["id"]
-  end
+    body    = JSON.parse(resp.body.to_s)
+    file_id = body["id"]
+    Rails.logger.debug { "Uploader: file_id #{file_id}" }
 
+    file_id
+  ensure
+    # Siempre intentar borrar (solo posible si está cerrado)
+    if tmp && !tmp.closed?      # si hubo excepción antes del close
+      tmp.close
+    end
+    tmp&.unlink                # en Windows hay que cerrar *antes* de unlink
+    Rails.logger.debug { "Uploader: eliminado #{tmp.path}" }
+  end
+  
   def attach_to_thread(thread_id, file_id)
     HTTP.headers(AssistantRunner::HEADERS)
         .post("https://api.openai.com/v1/threads/#{thread_id}/files",
