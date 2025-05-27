@@ -1,146 +1,113 @@
-<!-- app/views/risk_assistants/show.html.erb -->
-<%# -------------------------------------------------------------- %>
-<%#  Hoja de estilo ligera in-page (podrías llevarla a assets)    %>
-<%# -------------------------------------------------------------- %>
-<style>
-  :root{
-    --pri:#1f497d;        /* color principal */
-    --pri-light:#275ba0;  /* hover / foco   */
-    --gray-bg:#f4f6f8;    /* gris de fondo  */
-    --radius: .6rem;
-  }
-  body{background:var(--gray-bg);}
-  h2,h3,h4{color:var(--pri);}
-  .btn-pri     {color:#fff;background:var(--pri);border-color:var(--pri);}
-  .btn-pri:hover{background:var(--pri-light);border-color:var(--pri-light);}
-  .sidebar-header{font-weight:600;}
-  .table-sm td,.table-sm th{padding:.4rem .6rem;}
-  /* Oculta scroll vertical “infinito” en tablas */
-  .scroll-y    {max-height:46vh;overflow-y:auto;}
-</style>
+<%#--------------------------------------------------------------%>
+<%#                 CONTENIDO                                    %>
+<%#--------------------------------------------------------------%>
+<div class="container-xxl py-3">
 
-<%# -------------------------------------------------------------- %>
-<%#           CONTENEDOR PRINCIPAL                                %>
-<%# -------------------------------------------------------------- %>
-<div class="container-xxl py-3" style="background-color:white;">
-
-  <%# ---------- BREADCRUMB / TITULAR --------------------------- %>
+  <!-- ───── CABECERA ────────────────────────────────────────── -->
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3 mb-0"><%= @risk_assistant.name %></h1>
+    <h1 class="h4 mb-0"><%= @risk_assistant.name %></h1>
 
-    <%#  btn que abre off-canvas sólo < md  %>
-    <button
-      class="btn btn-outline-secondary d-md-none"
-      type="button"
-      data-bs-toggle="offcanvas"
-      data-bs-target="#sidebarCanvas">
-      Menú
+    <!-- botón hamburguesa visible < md -->
+    <button class="btn btn-outline-secondary d-md-none"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#sidebarCanvas">
+      <i class="bi bi-list"></i>
     </button>
   </div>
 
-  <%# ------------------------------------------------------------ %>
-  <%#     LAYOUT:  SIDEBAR  +  MAIN                               %>
-  <%# ------------------------------------------------------------ %>
   <div class="row gx-lg-5">
-
-    <%# ============  SIDEBAR  =================================== %>
+    <!-- ■■■  SIDEBAR  ■■■ -->
     <aside class="col-lg-4 col-md-5">
 
-      <%# — versión fija escritorio — %>
+      <!-- escritorio -->
       <div class="d-none d-md-block">
-        <%= render partial: "sidebar",
-                   locals: { sections: @sections,
-                             progress_by_section: @progress_by_section,
-                             overall_pct: @overall_pct,
-                             risk_assistant: @risk_assistant } %>
+        <div class="sidebar-box">
+          <%= render partial:"sidebar",
+                     locals:{ sections:@sections,
+                              progress_by_section:@progress_by_section,
+                              overall_pct:@overall_pct,
+                              risk_assistant:@risk_assistant } %>
+        </div>
       </div>
 
-      <%# — off-canvas para móvil / tablet — %>
-      <div class="offcanvas offcanvas-start d-md-none"
-           tabindex="-1" id="sidebarCanvas">
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title">Menú</h5>
-          <button type="button" class="btn-close"
-                  data-bs-dismiss="offcanvas"></button>
+      <!-- off-canvas móvil -->
+      <div class="offcanvas offcanvas-start d-md-none" id="sidebarCanvas">
+        <div class="offcanvas-header border-bottom">
+          <h5 class="offcanvas-title">Panel</h5>
+          <button class="btn-close" data-bs-dismiss="offcanvas"></button>
         </div>
-        <div class="offcanvas-body">
-          <%= render partial: "sidebar",
-                     locals: { sections: @sections,
-                               progress_by_section: @progress_by_section,
-                               overall_pct: @overall_pct,
-                               risk_assistant: @risk_assistant } %>
+        <div class="offcanvas-body p-0">
+          <div class="sidebar-box border-0 rounded-0">
+            <%= render partial:"sidebar",
+                       locals:{ sections:@sections,
+                                progress_by_section:@progress_by_section,
+                                overall_pct:@overall_pct,
+                                risk_assistant:@risk_assistant } %>
+          </div>
         </div>
       </div>
     </aside>
 
-    <%# ============  MAIN  ====================================== %>
+    <!-- ■■■  MAIN / CHAT  ■■■ -->
     <main class="col-lg-8 col-md-7">
-      <div class="container-fluid chat-page">
+      <div class="chat-page">
 
-        <!-- HISTÓRICO --------------------------------------------------- -->
-        <div class="chat-history px-3 py-2">
-          <% @risk_assistant.messages.order(:created_at).each do |m| %>
-            <% my_msg  = m.sender == 'user' %>
-            <% bubble  = my_msg ? 'chat-bubble-user' : 'chat-bubble-assistant' %>
-            <% wrap    = my_msg ? 'justify-content-end' : 'justify-content-start' %>
+        <!---- chat-history ---->
+        <div class="chat-history">
+          <%#  ⬇️  orden correcto: ASC  ⬇️  %>
+          <% @risk_assistant.messages.order(created_at: :asc).each do |m| %>
+            <% css_row = m.sender == 'user' ? 'user' : 'assistant' %>
+            <% css_box = m.sender == 'user' ? 'user' : '' %>
 
-            <div class="d-flex <%= wrap %> mb-2">
-              <div class="<%= bubble %>">
-                <div class="chat-header">
+            <div class="message-row <%= css_row %>">
+              <div class="message-box <%= css_box %>">
+                <div class="header">
                   <strong><%= m.sender.capitalize %></strong>
-                  <small class="ms-2 text-muted"><%= l m.created_at, format: :short %></small>
+                  <small><%= l m.created_at, format: :short %></small>
                 </div>
-                <div class="chat-body"><%= simple_format m.content %></div>
+
+                <div class="body"><%= simple_format m.content %></div>
               </div>
             </div>
           <% end %>
         </div>
 
-        <!-- FORMULARIO FIJO --------------------------------------------- -->
-        <%= form_with url: risk_assistant_messages_path(@risk_assistant),
-                      method: :post, local: true, multipart: true,
-                      html: { class: 'chat-form p-2' } do |f| %>
-
+        <!-- FORMULARIO -->
+        <%= form_with url:risk_assistant_messages_path(@risk_assistant),
+                      method: :post, local:true, multipart:true,
+                      html:{class:'chat-form border-top'} do |f| %>
           <div class="input-group">
-            <%= f.text_area :content,
-                  name:'message[content]',
-                  rows:1,
-                  required:true,
-                  class:'form-control',
-                  placeholder:'Escribe tu mensaje…' %>
+            <%= f.text_area :content, name:'message[content]',
+                  rows:1, required:true,
+                  class:'form-control', placeholder:'Escribe tu mensaje…' %>
 
-            <%= file_field_tag :file,
-                  class:'form-control-file d-none', id:'fileUpload' %>
+            <%= file_field_tag :file, id:'fileUpload', class: 'd-none' %>
 
-            <button class="btn btn-outline-secondary" type="button"
-                    onclick="document.getElementById('fileUpload').click()">
-              📎
-            </button>
+          <button type="button"
+                  class="btn-attach"
+                  onclick="document.getElementById('fileUpload').click()">
+            <i class="bi bi-paperclip"></i>
+          </button>
 
-            <%= f.submit 'Enviar', class:'btn btn-primary' %>
+            <%= f.submit 'Enviar', class:'btn-send' %>
           </div>
         <% end %>
+
       </div>
     </main>
   </div>
 </div>
 
-<!-- *** Pega esto justo debajo del <style> o al final de la vista *** -->
 <script>
-  function scrollChatBottom() {
-    const box = document.querySelector('.chat-history');
-    if (box) { box.scrollTop = box.scrollHeight; }
+  // Auto-scroll al último mensaje
+  function scrollChatBottom(){
+    const hist = document.querySelector('.chat-history');
+    if(hist){ hist.scrollTop = hist.scrollHeight; }
   }
-
-  // — Al cargar la vista inicial
   document.addEventListener('DOMContentLoaded', scrollChatBottom);
-
-  // — Cada vez que Turbo actualice la conversación (por ej. al enviar un mensaje)
   document.addEventListener('turbo:frame-load', scrollChatBottom);
-  document.addEventListener('turbo:render',      scrollChatBottom);
+  document.addEventListener('turbo:render', scrollChatBottom);
 </script>
-
-
 
 <!-- 
       <%# -------- BOTONERA RÁPIDA DE SECCIONES ------------------ %>

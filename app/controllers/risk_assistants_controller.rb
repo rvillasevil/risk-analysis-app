@@ -11,6 +11,10 @@
       @messages = @risk_assistant.messages
       @company_name = @messages.where("key LIKE ?", "%Nombre de la empresa%").last
 
+      #Completados
+      @completed = @risk_assistant.messages
+                                  .where(key: "")
+
       # 👉 títulos de las secciones en el orden que quieras mostrar
       @sections = [
         'Datos identificativos', 'Situación',         'Construcción',
