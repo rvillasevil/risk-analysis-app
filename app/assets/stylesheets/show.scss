@@ -1,0 +1,164 @@
+// app/assets/stylesheets/chat.scss
+
+// ──────────────────────────────────────────────────────────────────
+// Variables de color y tamaño
+// ──────────────────────────────────────────────────────────────────
+$color-bg:         #f8f9fa;
+$color-user-bg:    #e9ecef;
+$color-bot-bg:     #ffffff;
+$color-text:       #343a40;
+$color-muted:      #6c757d;
+$color-primary:    #0d6efd;
+$border-radius:    0.375rem;
+$padding-base:     0.75rem;
+
+// variables rápidas
+$header-h   : 0px;   // alto del navbar
+$sidebar-pad: 1rem;
+$z-chat     : 100;
+
+// ──────────────────────────────────────────────────────────────────
+// Estructura principal
+// ──────────────────────────────────────────────────────────────────
+.chat-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: $color-bg;
+  font-family: "Inter", sans-serif;
+  color: $color-text;
+
+  // ─────────── Historial ───────────
+  .chat-history {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: $padding-base;
+    display: flex;
+    flex-direction: column-reverse; 
+    gap: $padding-base;
+    padding-bottom: 120px;
+  }
+
+  .message-row {
+    display: flex;
+    width: 100%;
+
+    &.user {
+      justify-content: flex-end;
+    }
+    &.assistant {
+      justify-content: flex-start;
+    }
+
+    .message-box {
+      max-width: 70%;
+      padding: $padding-base;
+      border-radius: $border-radius;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      background: $color-bot-bg;
+
+      &.user {
+        background: $color-user-bg;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        color: $color-muted;
+
+        strong {
+          color: $color-text;
+        }
+      }
+
+      .body {
+        font-size: 1rem;
+        line-height: 1.4;
+      }
+    }
+  }
+
+  // ─────────── Formulario fijo ───────────
+  .chat-form {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    padding: $padding-base;
+    background: #fff;
+    border-top: 1px solid #dee2e6;
+    z-index: 100; 
+
+    .form-control {
+      flex: 1;
+      border: 1px solid #dee2e6;
+      border-radius: $border-radius;
+      padding: 0.5rem 1rem;
+      margin-right: 0.5rem;
+      resize: none;
+      font-size: 1rem;
+    }
+
+    .btn-attach {
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: $color-muted;
+      margin-right: 0.5rem;
+      cursor: pointer;
+      &:hover { color: $color-primary; }
+    }
+
+    .btn-send {
+      background: $color-primary;
+      border: none;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: $border-radius;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      &:hover { background: darken($color-primary, 7%); }
+    }
+  }
+}
+
+// ──────────────────────────────────────────────────────────────────
+// Responsive
+// ──────────────────────────────────────────────────────────────────
+@media (max-width: 576px) {
+  .chat-page {
+    .message-box {
+      max-width: 85%;
+    }
+    .chat-form {
+      flex-direction: column;
+      gap: 0.5rem;
+      .form-control { margin-right: 0; }
+    }
+  }
+}
+
+// 1) SIDEBAR ─────────────────────────────────────────────────────
+.sidebar-box {
+  width: auto;
+  top: calc(#{$header-h} + #{$sidebar-pad});
+  max-height: calc(100vh - $header-h - 2*$sidebar-pad);
+  overflow-y: hidden;             // si es muy largo scrollea internamente
+  overflow-x: hidden; 
+}
+
+@media (min-width: 768px) {
+  .sidebar-box{
+    position: sticky;              /* se “pega” al viewport            */
+    top: calc(56px + 10rem);         /* 56 px ≈ navbar / botón + margen   */
+    max-height: calc(100vh - 56px - 2rem);
+    overflow-y: auto;               /* sólo el sidebar scrollea dentro  */
+  }
+}
+
+

@@ -18,7 +18,7 @@
   </div>
 
   <!-- Listado de risk_assistants -->
-  <% @risk_assistants.each do |risk_assistant| %>
+  <% @risk_assistants.order(created_at: :asc).each do |risk_assistant| %>
     <div class="row align-items-center py-2 border-bottom">
       <div class="col-md-4 text-start">
         <%= link_to "Toma de datos de: #{risk_assistant.name}", risk_assistant_path(risk_assistant), class: "text-decoration-none" %>

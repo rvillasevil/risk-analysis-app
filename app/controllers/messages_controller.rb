@@ -60,6 +60,7 @@ class MessagesController < ApplicationController
       )
     end
 
+=begin
     # 3. un mensaje por cada flag crítico encontrado
     if flag.present?
       flags.flatten.each do |txt|
@@ -78,7 +79,8 @@ class MessagesController < ApplicationController
         key: key, value: value, thread_id: runner.thread_id
       )
     end
-
+<%
+=end
     redirect_to @risk_assistant
 
   rescue => e

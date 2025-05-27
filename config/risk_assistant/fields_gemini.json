@@ -1,0 +1,1851 @@
+[
+  {
+    "id": "initial_info_revisado",
+    "type": "info",
+    "prompt": "Este informe de inspección de riesgos ha sido revisado por:\n- Allianz (Rafael Rioboo): Descripcion general / Construccion, Descripcion del proceso productivo, Almacenamiento, Instalaciones de Servicio, Gerencia de seguridad/Procedimientos de seguridad (prevencion)/Planes de emergencia, Mantenimiento.\n- Zurich (Jose Luis Garcia Lopez): Descripcion general / Construccion, Descripcion del proceso productivo, Instalaciones de Servicio, Gerencia de seguridad/Procedimientos de seguridad (prevencion)/Planes de emergencia."
+  },
+  {
+    "id": "descripcion_general_de_la_instalacion_start",
+    "type": "section_start",
+    "prompt": "Vamos a comenzar con la 'DESCRIPCIÓN GENERAL DE LA INSTALACIÓN'."
+  },
+  {
+    "id": "actividad_tipos_de_productos",
+    "type": "question",
+    "prompt": "¿Cuál es la actividad principal y los tipos de productos de la instalación?",
+    "yaml_path": "descripcion_general_de_la_instalacion.actividad_tipos_de_productos"
+  },
+  {
+    "id": "tamano_de_la_empresa_n_trabajadores",
+    "type": "question",
+    "prompt": "¿Cuál es el tamaño de la empresa y el número de trabajadores?",
+    "yaml_path": "descripcion_general_de_la_instalacion.tamano_de_la_empresa_n_trabajadores",
+    "validation_hint": "Texto y número"
+  },
+  {
+    "id": "situacion_de_riesgo",
+    "type": "question",
+    "prompt": "Describa la situación de riesgo.",
+    "yaml_path": "descripcion_general_de_la_instalacion.direccion_del_riesgo"
+  },
+  {
+    "id": "capacidad_total_de_produccion",
+    "type": "question",
+    "prompt": "¿Cuál es la capacidad total de producción?",
+    "yaml_path": "descripcion_general_de_la_instalacion.capacidad_total_de_produccion"
+  },
+  {
+    "id": "tipo_de_mercado",
+    "type": "question",
+    "prompt": "¿A qué tipo de mercado se dirige la empresa?",
+    "yaml_path": "descripcion_general_de_la_instalacion.tipo_de_mercado"
+  },
+  {
+    "id": "venta_negocio_nacional_o_internacional",
+    "type": "question",
+    "prompt": "La venta/negocio, ¿es nacional o internacional?",
+    "yaml_path": "descripcion_general_de_la_instalacion.venta_negocio_nacional_o_internacional",
+    "validation_hint": "Nacional/Internacional"
+  },
+  {
+    "id": "nombre_y_cargo_de_las_personas_que_redactan_el_informe",
+    "type": "question",
+    "prompt": "Indique el nombre y cargo de las personas que redactan el informe.",
+    "yaml_path": "descripcion_general_de_la_instalacion.nombre_y_cargo_de_las_personas_que_redactan_el_informe"
+  },
+  {
+    "id": "localizacion_exposicion_start",
+    "type": "section_start",
+    "prompt": "Hablemos de la 'Localización /Exposición. Riesgos colindantes /Lay out'."
+  },
+  {
+    "id": "situacion.senas_y_coordenadas",
+    "type": "question",
+    "prompt": "Proporcione las señas y coordenadas de la instalación (Ej: C/ XXXXXX, Polig.XXXX (XXXX)).",
+    "yaml_path": "descripcion_general_de_la_instalacion.localizacion_exposicion_riesgos_colindantes_lay_out.situacion.senas_y_coordenadas"
+  },
+  {
+    "id": "situacion.ubicacion",
+    "type": "question",
+    "prompt": "¿Cuál es la ubicación de la instalación (Zona industrial, aislada, urbana, etc.)?",
+    "yaml_path": "descripcion_general_de_la_instalacion.localizacion_exposicion_riesgos_colindantes_lay_out.situacion.ubicacion"
+  },
+  {
+    "id": "situacion.fotografias_aereas",
+    "type": "question",
+    "prompt": "Información sobre Fotografías aéreas (¿Disponibles? ¿Dónde se adjuntan?):",
+    "yaml_path": "descripcion_general_de_la_instalacion.localizacion_exposicion_riesgos_colindantes_lay_out.situacion.fotografias_aereas"
+  },
+  {
+    "id": "situacion.planos.lay_out_exterior",
+    "type": "question",
+    "prompt": "Información sobre Planos: Lay out exterior (edificaciones e instalaciones exteriores) (¿Disponibles? ¿Dónde se adjuntan?):",
+    "yaml_path": "descripcion_general_de_la_instalacion.localizacion_exposicion_riesgos_colindantes_lay_out.situacion.planos.lay_out_exterior"
+  },
+  {
+    "id": "situacion.planos.lay_out_interior",
+    "type": "question",
+    "prompt": "Información sobre Planos: Lay out interior (Equipos y líneas de producción/salas interiores) (¿Disponibles? ¿Dónde se adjuntan?):",
+    "yaml_path": "descripcion_general_de_la_instalacion.localizacion_exposicion_riesgos_colindantes_lay_out.situacion.planos.lay_out_interior"
+  },
+  {
+    "id": "situacion.colindantes_info",
+    "type": "question",
+    "prompt": "Describa los colindantes (Terceros, exposición a ríos, mares, etc. / Distancia a ríos, mares, etc.).",
+    "yaml_path": "descripcion_general_de_la_instalacion.localizacion_exposicion_riesgos_colindantes_lay_out.situacion.colindantes_terceros_exposicion_a_rios_mares_etc_distancia_a_rios_mares_etc"
+  },
+  {
+    "id": "situacion.actividad_riesgos_colindantes",
+    "type": "question",
+    "prompt": "Describa la actividad y riesgos de los colindantes y la distancia a ellos (en metros).",
+    "yaml_path": "descripcion_general_de_la_instalacion.localizacion_exposicion_riesgos_colindantes_lay_out.situacion.actividad_y_riesgos_de_los_colindates_distancia_a_colindates_m",
+    "validation_hint": "Texto y número (metros)"
+  },
+  {
+    "id": "situacion.aeropuertos_proximos",
+    "type": "question",
+    "prompt": "Información sobre aeropuertos próximos:",
+    "yaml_path": "descripcion_general_de_la_instalacion.localizacion_exposicion_riesgos_colindantes_lay_out.situacion.aeropuertos_proximos"
+  },
+  {
+    "id": "descripcion_general_edificaciones_start",
+    "type": "section_start",
+    "prompt": "Ahora, la 'Descripción general de las edificaciones/instalaciones'."
+  },
+  {
+    "id": "descripcion_actividades_por_edificio",
+    "type": "question",
+    "prompt": "Describa las actividades por edificio y/o zonas.",
+    "yaml_path": "descripcion_general_de_la_instalacion.descripcion_general_de_las_edificaciones_instalaciones.descripcion_de_actividades_por_edificio_y_o_zonas"
+  },
+  {
+    "id": "congestion_exterior",
+    "type": "question",
+    "prompt": "Describa la congestión de edificios, instalaciones y almacenamientos por el exterior.",
+    "yaml_path": "descripcion_general_de_la_instalacion.descripcion_general_de_las_edificaciones_instalaciones.congestion_de_edificios_instalaciones_y_almacenamientos_por_el_exterior"
+  },
+  {
+    "id": "distancia_entre_edificaciones",
+    "type": "question",
+    "prompt": "¿Cuál es la distancia entre edificaciones?",
+    "yaml_path": "descripcion_general_de_la_instalacion.descripcion_general_de_las_edificaciones_instalaciones.distancia_entre_edificaciones",
+    "validation_hint": "Numérico (metros)"
+  },
+  {
+    "id": "distancias_separacion_exterior",
+    "type": "question",
+    "prompt": "Describa las distancias de separación entre edificaciones e instalaciones exteriores.",
+    "yaml_path": "descripcion_general_de_la_instalacion.descripcion_general_de_las_edificaciones_instalaciones.distancias_de_separacion_entre_edificaciones_e_instalaciones_exteriores",
+    "validation_hint": "Numérico (metros)"
+  },
+  {
+    "id": "congestion_interior",
+    "type": "question",
+    "prompt": "Describa la congestión de instalaciones y almacenamientos en el interior de los edificios.",
+    "yaml_path": "descripcion_general_de_la_instalacion.descripcion_general_de_las_edificaciones_instalaciones.congestion_de_instalaciones_y_almacenamientos_en_el_interior_de_los_edificios"
+  },
+  {
+    "id": "construccion_start",
+    "type": "section_start",
+    "prompt": "Pasemos a 'Construcción (tipo de construcción, compartimentación, sellado de paso de huecos)'."
+  },
+  {
+    "id": "tipo_establecimientos_industriales_start",
+    "type": "section_start",
+    "prompt": "Respecto al tipo de establecimientos industriales:"
+  },
+  {
+    "id": "tipo_establecimientos.parcialmente_edificio",
+    "type": "question",
+    "prompt": "¿El establecimiento ocupa parcialmente un edificio que tiene, además, otros establecimientos de terceros (industriales o de otros usos)? (Si/No/Descripción)",
+    "yaml_path": "descripcion_general_de_la_instalacion.construccion_tipo_de_construccion_compartimentacion_sellado_de_paso_de_huecos.tipo_de_establecimientos_industriales.ubicados_en_un_edificio_que_ocupan.parcialmente_un_edificio_con_otros_establecimientos",
+    "validation_hint": "Si/No/Texto"
+  },
+  {
+    "id": "tipo_establecimientos.totalmente_adosado",
+    "type": "question",
+    "prompt": "¿El establecimiento ocupa totalmente un edificio que está adosado a otro u otros edificios de terceros, o a una distancia igual o inferior a tres metros de otro u otros edificios (industriales o de otros usos)? (Si/No/Descripción)",
+    "yaml_path": "descripcion_general_de_la_instalacion.construccion_tipo_de_construccion_compartimentacion_sellado_de_paso_de_huecos.tipo_de_establecimientos_industriales.ubicados_en_un_edificio_que_ocupan.totalmente_un_edificio_adosado_a_otros",
+    "validation_hint": "Si/No/Texto"
+  },
+  {
+    "id": "tipo_establecimientos.totalmente_separado",
+    "type": "question",
+    "prompt": "¿El establecimiento ocupa totalmente un edificio, o varios, que está a una distancia mayor de tres metros del edificio más próximo de otros establecimientos? (Si/No/Descripción)",
+    "yaml_path": "descripcion_general_de_la_instalacion.construccion_tipo_de_construccion_compartimentacion_sellado_de_paso_de_huecos.tipo_de_establecimientos_industriales.ubicados_en_un_edificio_que_ocupan.totalmente_un_edificio_o_varios_a_distancia_mayor_de_tres_metros.descripcion",
+    "validation_hint": "Si/No/Texto"
+  },
+  {
+    "id": "tipo_establecimientos.totalmente_separado_nota",
+    "type": "info",
+    "prompt": "Nota: Si la respuesta anterior es afirmativa, recuerde que dicha distancia deberá estar libre de mercancías combustibles elementos intermedios susceptibles de propagar el incendio."
+  },
+  {
+    "id": "tipo_establecimientos.espacios_abiertos_totalmente_cubierto",
+    "type": "question",
+    "prompt": "¿El establecimiento está ubicado en un espacio abierto que puede estar totalmente cubierto, alguna de cuyas fachadas carece totalmente de cerramiento lateral? (Si/No/Descripción)",
+    "yaml_path": "descripcion_general_de_la_instalacion.construccion_tipo_de_construccion_compartimentacion_sellado_de_paso_de_huecos.tipo_de_establecimientos_industriales.ubicados_en_espacios_abiertos_que_no_constituyen_un_edificio_y_ocupa.un_espacio_abierto_totalmente_cubierto_sin_cerramiento_lateral",
+    "validation_hint": "Si/No/Texto"
+  },
+  {
+    "id": "tipo_establecimientos.espacios_abiertos_parcialmente_cubierto",
+    "type": "question",
+    "prompt": "¿El establecimiento está ubicado en un espacio abierto que puede estar parcialmente cubierto (hasta un 50 por ciento de su superficie), alguna de cuyas fachadas en la parte cubierta carece totalmente de cerramiento lateral? (Si/No/Descripción)",
+    "yaml_path": "descripcion_general_de_la_instalacion.construccion_tipo_de_construccion_compartimentacion_sellado_de_paso_de_huecos.tipo_de_establecimientos_industriales.ubicados_en_espacios_abiertos_que_no_constituyen_un_edificio_y_ocupa.un_espacio_abierto_parcialmente_cubierto_hasta_50_por_ciento_sin_cerramiento_lateral_en_parte_cubierta",
+    "validation_hint": "Si/No/Texto"
+  },
+  {
+    "id": "superficie_total_parcela_construida",
+    "type": "question",
+    "prompt": "Indique la Superficie Total Parcela / Superficie Total Construida (en m2).",
+    "yaml_path": "descripcion_general_de_la_instalacion.construccion_tipo_de_construccion_compartimentacion_sellado_de_paso_de_huecos.superficie_total_parcela_superficie_total_construida",
+    "validation_hint": "Numérico (m2)"
+  },
+  {
+    "id": "edificaciones_propiedad_alquilados",
+    "type": "question",
+    "prompt": "Las edificaciones, ¿son en Propiedad o Alquilados?",
+    "yaml_path": "descripcion_general_de_la_instalacion.construccion_tipo_de_construccion_compartimentacion_sellado_de_paso_de_huecos.edificaciones_en_propiedad_alquilados",
+    "validation_hint": "Propiedad/Alquilados"
+  },
+  {
+    "id": "ano_construccion_edificaciones",
+    "type": "question",
+    "prompt": "¿Cuál es el año de construcción de las edificaciones/instalaciones?",
+    "yaml_path": "descripcion_general_de_la_instalacion.construccion_tipo_de_construccion_compartimentacion_sellado_de_paso_de_huecos.ano_de_construccion_de_las_edificaciones_instalaciones",
+    "validation_hint": "Año"
+  },
+  {
+    "id": "necesidad_norma_sismo_resistente",
+    "type": "question",
+    "prompt": "¿Existe necesidad de cumplimiento de Norma Sismo-resistente? (Si/No)",
+    "yaml_path": "descripcion_general_de_la_instalacion.construccion_tipo_de_construccion_compartimentacion_sellado_de_paso_de_huecos.necesidad_de_cumplimiento_norma_sismo_resistente_si_no",
+    "validation_hint": "Si/No"
+  },
+  {
+    "id": "cumple_norma_sismo_resistente",
+    "type": "question",
+    "prompt": "En caso de ser necesario el cumplimiento Norma Sismo-resistente, ¿la cumple? (Si/No)",
+    "yaml_path": "descripcion_general_de_la_instalacion.construccion_tipo_de_construccion_compartimentacion_sellado_de_paso_de_huecos.en_caso_de_ser_necesario_el_cumplimiento_norma_sismo_resistente_la_cumple_si_no",
+    "validation_hint": "Si/No",
+    "conditional_logic": {
+        "triggered_by_answer_to_id": "necesidad_norma_sismo_resistente",
+        "condition": "is_yes"
+      }
+  },
+  {
+    "id": "n_edificios_plantas_altura",
+    "type": "question",
+    "prompt": "Indique el Nº Edificios / Nº de plantas /Altura de los edificios.",
+    "yaml_path": "descripcion_general_de_la_instalacion.construccion_tipo_de_construccion_compartimentacion_sellado_de_paso_de_huecos.n_edificios_n_de_plantas_altura_de_los_edificios"
+  },
+  {
+    "id": "distancias_seguridad_sectores_exteriores",
+    "type": "question",
+    "prompt": "Describa las distancias de seguridad entre edificios y si están libres de almacenamientos / Sectores exteriores.",
+    "yaml_path": "descripcion_general_de_la_instalacion.construccion_tipo_de_construccion_compartimentacion_sellado_de_paso_de_huecos.distancias_de_seguridad_entre_edificios_y_libre_de_almacenamientos_sectores_exteriores"
+  },
+  {
+    "id": "n_sectores_incendio_interior",
+    "type": "question",
+    "prompt": "Indique el Nº Sectores de incendio interior edificios y describa la compartimentación interior.",
+    "yaml_path": "descripcion_general_de_la_instalacion.construccion_tipo_de_construccion_compartimentacion_sellado_de_paso_de_huecos.n_sectores_de_incendio_interior_edificios_compartimentacion_interior.descripcion"
+  },
+  {
+    "id": "n_sectores_incendio_interior_nota",
+    "type": "info",
+    "prompt": "Nota: Para la pregunta anterior, se debe definir algo más lo que es un sector y aspectos a considerar para denominar un sector."
+  },
+  {
+    "id": "resistencia_fuego_paredes_puertas_huecos",
+    "type": "question",
+    "prompt": "Describa la resistencia al fuego de paredes, puertas y huecos. (Incluir paredes por encima de cubierta).",
+    "yaml_path": "descripcion_general_de_la_instalacion.construccion_tipo_de_construccion_compartimentacion_sellado_de_paso_de_huecos.resistencia_al_fuego_de_paredes_puertas_y_huecos_paredes_por_encima_de_cubierta"
+  },
+  {
+    "id": "medios_comunicacion_vertical",
+    "type": "question",
+    "prompt": "Describa los medios de comunicación vertical (escaleras, ascensores/montacargas, patinillos/conductos verticales, etc.).",
+    "yaml_path": "descripcion_general_de_la_instalacion.construccion_tipo_de_construccion_compartimentacion_sellado_de_paso_de_huecos.medios_de_comunicacion_vertical_escaleras_ascensores_montacargas_patinillos_conductos_verticales_etc"
+  },
+  {
+    "id": "tabla_tipo_construccion",
+    "type": "table_start",
+    "prompt": "Vamos a detallar el 'TIPO DE CONSTRUCCIÓN' por sector. ¿Desea añadir el primer sector?",
+    "yaml_path": "descripcion_general_de_la_instalacion.construccion_tipo_de_construccion_compartimentacion_sellado_de_paso_de_huecos.tipo_de_construccion_tabla",
+    "table_columns": [
+      {"id": "sector_edificios_areas", "label": "Sector, Edificios/Areas (Ej: Sector 1: Edificio 1 (Producción), Edificio B, Edificio C):", "yaml_key": "sector_edificios_areas"},
+      {"id": "superficie_del_sector", "label": "Superficie del sector (m2):", "yaml_key": "superficie_del_sector", "validation_hint": "Numérico (m2)"},
+      {"id": "cubierta", "label": "Cubierta (*) (Describa tipo y % o m2. Ej: 20%/5000 m2 Panel simple metálico, 80%/20.000 m2 Panel tipo sándwich con aislamiento (PUR)):", "yaml_key": "cubierta", "validation_hint": "Texto, %, m2"},
+      {"id": "cerramiento", "label": "Cerramiento (*) (Describa tipo y % o m2. Ej: 100%/25000 m2 panel tipo sándwich PIR certificado FM):", "yaml_key": "cerramiento", "validation_hint": "Texto, %, m2"},
+      {"id": "particiones_interiores", "label": "Particiones interiores (*) (Describa tipo y % o m2. Ej: 100% Bloques de hormigón):", "yaml_key": "particiones_interiores", "validation_hint": "Texto, %, m2"},
+      {"id": "estructuras", "label": "Estructuras (Ej: Metálica):", "yaml_key": "estructuras"}
+    ],
+    "add_row_prompt": "¿Desea añadir otro sector para 'TIPO DE CONSTRUCCIÓN'?"
+  },
+  {
+    "id": "importante_construccion_planos_fotos",
+    "type": "info",
+    "prompt": "IMPORTANTE para la sección de construcción:\n- Facilitar plano de la ubicación de las edificaciones e indicar los sectores, y marcar sobre plano construcciones combustibles.\n- Incluir fotos generales de la construcción según sector."
+  },
+  {
+    "id": "clasificacion_allianz_construccion_info",
+    "type": "info",
+    "prompt": "Recordatorio: Allianz clasifica la construcción como No combustible, ligeramente combustible y combustible. Puede indicar el tipo de material y cada aseguradora hará sus estimaciones, o indicar directamente los porcentajes."
+  },
+  {
+    "id": "formato_relleno_tabla_construccion_info",
+    "type": "info",
+    "prompt": "La tabla de tipo de construcción puede rellenarse con porcentajes (%) o áreas (m2), según el caso."
+  },
+  {
+    "id": "sugerencia_tabla_materiales_info",
+    "type": "info",
+    "prompt": "Sugerencia: Se podría usar una tabla de ayuda para identificar tipo de materiales de construcción. Por ejemplo:\n- No combustible: Ladrillo, bloques de hormigón, chapa metálica simple, lana de roca, fibra de vidrio, etc. (Estructura: Metálica, hormigón, metálica protegida)\n- Ligeramente combustible: PIR (Certificado FM) (Estructura: No combustibles recubiertas de material combustible)\n- Combustible: PIR (No certificado FM), PUR, EPS, etc. (Estructura: Madera)"
+  },
+  {
+    "id": "camaras_frigorificas_start",
+    "type": "section_start",
+    "prompt": "Ahora, información sobre 'Cámaras frigoríficas', si existen."
+  },
+  {
+    "id": "tabla_camaras_frigorificas",
+    "type": "table_start",
+    "prompt": "¿Desea añadir información sobre la primera cámara frigorífica?",
+    "yaml_path": "descripcion_general_de_la_instalacion.construccion_tipo_de_construccion_compartimentacion_sellado_de_paso_de_huecos.camaras_frigorificas.tabla_camaras_frigorificas",
+    "table_columns": [
+      {"id": "n_camara", "label": "Número identificador de la cámara:", "yaml_key": "n_camaras", "validation_hint": "Numérico o Texto"},
+      {"id": "superficie_m2_camara", "label": "Superficie (m2):", "yaml_key": "superficie_m2", "validation_hint": "Numérico (m2)"},
+      {"id": "tipo_aislamiento_panel_camara", "label": "Tipo de aislamiento del panel (Ej: Lana de roca, PIR Certificado FM, PUR, EPS, etc.):", "yaml_key": "tipo_aislamiento_panel"},
+      {"id": "sector_de_incendio_camara", "label": "Sector de Incendio donde se ubica:", "yaml_key": "sector_de_incendio"},
+      {"id": "colindantes_camara", "label": "Colindantes de la cámara (Ej: Producción, Almacén):", "yaml_key": "colindantes"}
+    ],
+    "add_row_prompt": "¿Desea añadir información sobre otra cámara frigorífica?"
+  },
+  {
+    "id": "importante_camaras_frigorificas_planos_fotos",
+    "type": "info",
+    "prompt": "IMPORTANTE para cámaras frigoríficas:\n- Facilitar plano de la ubicación de las cámaras frigoríficas.\n- Adjuntar fotos del exterior e interior de las cámaras frigoríficas."
+  },
+  {
+    "id": "actividad_operacional_start",
+    "type": "section_start",
+    "prompt": "Continuemos con 'Actividad operacional'."
+  },
+  {
+    "id": "organigrama_general",
+    "type": "question",
+    "prompt": "Describa o indique dónde adjuntar el organigrama general.",
+    "yaml_path": "descripcion_general_de_la_instalacion.actividad_operacional.organigrama_general"
+  },
+  {
+    "id": "n_trabajadores_operacional",
+    "type": "question",
+    "prompt": "Número total de trabajadores (operacional):",
+    "yaml_path": "descripcion_general_de_la_instalacion.actividad_operacional.n_trabajadores",
+    "validation_hint": "Numérico"
+  },
+  {
+    "id": "turnos_de_trabajo",
+    "type": "question",
+    "prompt": "Describa los turnos de trabajo.",
+    "yaml_path": "descripcion_general_de_la_instalacion.actividad_operacional.turnos_de_trabajo"
+  },
+  {
+    "id": "horarios_de_trabajo",
+    "type": "question",
+    "prompt": "Describa los horarios de trabajo.",
+    "yaml_path": "descripcion_general_de_la_instalacion.actividad_operacional.horarios_de_trabajo"
+  },
+  {
+    "id": "indicado_por_allianz_info",
+    "type": "info",
+    "prompt": "Nota de Allianz: Se suele pedir información sobre inversiones realizadas (tipo) o nuevos proyectos que pueden mejorar el riesgo o incrementarlo durante su realización."
+  },
+  {
+    "id": "cambios_ultimos_anos",
+    "type": "question",
+    "prompt": "¿Ha habido cambios significativos en los últimos años (inversiones, proyectos, etc.)?",
+    "yaml_path": "descripcion_general_de_la_instalacion.actividad_operacional.cambios_en_los_ultimos_anos"
+  },
+  {
+    "id": "nuevos_proyectos",
+    "type": "question",
+    "prompt": "Describa los nuevos proyectos.",
+    "yaml_path": "descripcion_general_de_la_instalacion.actividad_operacional.nuevos_proyectos"
+  },
+  {
+    "id": "descripcion_proceso_productivo_start",
+    "type": "section_start",
+    "prompt": "Pasamos a 'DESCRIPCIÓN DEL PROCESO PRODUCTIVO'."
+  },
+  {
+    "id": "tipo_actividad_proceso",
+    "type": "question",
+    "prompt": "Tipo de actividad del proceso productivo:",
+    "yaml_path": "descripcion_del_proceso_productivo.tipo_de_actividad"
+  },
+  {
+    "id": "diagrama_proceso",
+    "type": "question",
+    "prompt": "Información sobre el Diagrama del proceso (¿Disponible? ¿Dónde se adjunta?):",
+    "yaml_path": "descripcion_del_proceso_productivo.diagrama_del_proceso"
+  },
+  {
+    "id": "descripcion_general_proceso_productivo",
+    "type": "question",
+    "prompt": "Proporcione una descripción general del proceso: Fases principales, aportes de calor, presiones de trabajo, manejo de productos peligrosos (inflamables/explosivos, etc.). (Según Allianz: Resumen del proceso).",
+    "yaml_path": "descripcion_del_proceso_productivo.descripcion_general_del_proceso.resumen"
+  },
+  {
+    "id": "materias_primas_productos_intermedios_finales",
+    "type": "question",
+    "prompt": "Liste las principales materias primas, productos intermedios y productos finales.",
+    "yaml_path": "descripcion_del_proceso_productivo.materias_primas_y_productos_intermedios_productos_finales"
+  },
+  {
+    "id": "productos_auxiliares_proceso",
+    "type": "question",
+    "prompt": "Liste los productos auxiliares de proceso.",
+    "yaml_path": "descripcion_del_proceso_productivo.productos_auxiliares_de_proceso"
+  },
+  {
+    "id": "riesgos_principales_proceso",
+    "type": "question",
+    "prompt": "Describa los riesgos principales de proceso. (¿Lo analizará un ingeniero especializado?)",
+    "yaml_path": "descripcion_del_proceso_productivo.riesgos_principales_de_proceso_analisis_ingeniero_especializado"
+  },
+  {
+    "id": "producto_de_terceros",
+    "type": "question",
+    "prompt": "Si se maneja producto de terceros, ¿de qué tipo es?",
+    "yaml_path": "descripcion_del_proceso_productivo.tipo_de_producto_de_terceros_si_lo_hubiese"
+  },
+  {
+    "id": "lineas_equipo_principal_proceso",
+    "type": "section_start",
+    "prompt": "Hablemos de las 'Líneas/Equipo principal del proceso'."
+  },
+  {
+    "id": "tabla_principales_equipos_produccion",
+    "type": "table_start",
+    "prompt": "¿Desea añadir el primer equipo principal de producción?",
+    "yaml_path": "descripcion_del_proceso_productivo.lineas_equipo_principal_del_proceso.tabla_principales_equipos_produccion",
+    "table_columns": [
+      {"id": "equipo_nombre", "label": "Nombre o identificador del equipo:", "yaml_key": "equipo"},
+      {"id": "fabricante", "label": "Fabricante:", "yaml_key": "fabricante"},
+      {"id": "ano_fabricacion_equipo", "label": "Año Fabricación:", "yaml_key": "ano_fabricacion", "validation_hint": "Año"},
+      {"id": "capacidad_produccion_nominal", "label": "Capacidad Producción Nominal unitaria:", "yaml_key": "capacidad_produccion_nominal_unitaria"},
+      {"id": "factor_utilizacion", "label": "Factor de utilización (%):", "yaml_key": "factor_de_utilizacion_porcentaje", "validation_hint": "Porcentaje"},
+      {"id": "valor_eur_equipo", "label": "Valor (€):", "yaml_key": "valor_eur", "validation_hint": "Numérico (€)"},
+      {"id": "equipos_adicionales_info", "label": "Información adicional sobre equipos (si aplica):", "yaml_key": "equipos_adicionales"}
+    ],
+    "add_row_prompt": "¿Desea añadir otro equipo principal de producción?"
+  },
+  {
+    "id": "control_seguridad_proceso",
+    "type": "question",
+    "prompt": "Describa el control y la seguridad del proceso.",
+    "yaml_path": "descripcion_del_proceso_productivo.control_seguridad_de_proceso"
+  },
+  {
+    "id": "almacenamiento_start",
+    "type": "section_start",
+    "prompt": "Continuamos con 'ALMACENAMIENTO'."
+  },
+  {
+    "id": "productos_a_granel",
+    "type": "question",
+    "prompt": "¿Se almacenan productos a granel? (Si/No)",
+    "yaml_path": "almacenamiento.productos_a_granel_si_no",
+    "validation_hint": "Si/No"
+  },
+  {
+    "id": "productos_peligrosos_inflamables_ex",
+    "type": "question",
+    "prompt": "¿Se almacenan productos PELIGROSOS/inflamables/EX? (Si/No)",
+    "yaml_path": "almacenamiento.productos_peligrosos_inflamables_ex_si_no",
+    "validation_hint": "Si/No"
+  },
+  {
+    "id": "productos_aerosoles",
+    "type": "question",
+    "prompt": "¿Se almacenan productos aerosoles? (Si/No)",
+    "yaml_path": "almacenamiento.productos_aerosoles_si_no",
+    "validation_hint": "Si/No"
+  },
+  {
+    "id": "info_ver_tablas_siguientes_almacenamiento",
+    "type": "info",
+    "prompt": "La información detallada para los tipos de almacenamiento anteriores se recogerá en las siguientes tablas."
+  },
+  {
+    "id": "tabla_materia_prima",
+    "type": "table_start",
+    "prompt": "Vamos a detallar el almacenamiento de 'MATERIA PRIMA'. ¿Desea añadir la primera materia prima?",
+    "yaml_path": "almacenamiento.materia_prima.tabla_materia_prima",
+    "table_columns": [
+      {"id": "tipo_mp", "label": "Tipo de materia prima (Ej: Ropa, Harina, Mantequilla):", "yaml_key": "tipo"},
+      {"id": "producto_mp", "label": "Producto específico (si aplica):", "yaml_key": "producto"},
+      {"id": "riesgo_mp", "label": "Riesgo principal (Ej: Incendios, Explosión):", "yaml_key": "riesgo"},
+      {"id": "tipo_almacenamiento_mp", "label": "Tipo de almacenamiento (Ej: Palets de madera en estantería hasta 8 m., Silos, A granel sobre el suelo):", "yaml_key": "tipo_de_almacenamiento"},
+      {"id": "embalaje_mp", "label": "Embalaje (Ej: Cajas de cartón + retractilado, ---):", "yaml_key": "embalaje"},
+      {"id": "cantidad_mp", "label": "Cantidad (Ej: 5.000 kg/1000 piezas, 3 unidades x 10.000 kg):", "yaml_key": "cantidad"},
+      {"id": "ubicacion_mp", "label": "Ubicación (Ej: En área compartimentada junto a producción, En el exterior junto a fachada, En nave separada 15 metros, En cámara frigorífica nº 3):", "yaml_key": "ubicacion"},
+      {"id": "proteccion_mp", "label": "Protección (Ej: Rociadores, Sistema agua pulverizada y sistemas de venteo, Extintores / Monitores):", "yaml_key": "proteccion"}
+    ],
+    "add_row_prompt": "¿Desea añadir otra materia prima?"
+  },
+  {
+    "id": "importante_materia_prima_planos_fotos",
+    "type": "info",
+    "prompt": "IMPORTANTE para Materia Prima: Facilitar plano con la ubicación de los almacenes de MP. Adjuntar fotos."
+  },
+  {
+    "id": "tabla_producto_intermedio",
+    "type": "table_start",
+    "prompt": "Ahora, el almacenamiento de 'PRODUCTO INTERMEDIO'. ¿Desea añadir el primer producto intermedio?",
+    "yaml_path": "almacenamiento.producto_intermedio.tabla_producto_intermedio",
+    "table_columns": [
+      {"id": "tipo_pi", "label": "Tipo de producto intermedio:", "yaml_key": "tipo"},
+      {"id": "producto_pi", "label": "Producto específico:", "yaml_key": "producto"},
+      {"id": "riesgo_pi", "label": "Riesgo principal:", "yaml_key": "riesgo"},
+      {"id": "tipo_almacenamiento_pi", "label": "Tipo de almacenamiento:", "yaml_key": "tipo_de_almacenamiento"},
+      {"id": "embalaje_pi", "label": "Embalaje:", "yaml_key": "embalaje"},
+      {"id": "cantidad_pi", "label": "Cantidad:", "yaml_key": "cantidad"},
+      {"id": "ubicacion_pi", "label": "Ubicación:", "yaml_key": "ubicacion"},
+      {"id": "proteccion_pi", "label": "Protección:", "yaml_key": "proteccion"}
+    ],
+    "add_row_prompt": "¿Desea añadir otro producto intermedio?"
+  },
+  {
+    "id": "importante_producto_intermedio_planos_fotos",
+    "type": "info",
+    "prompt": "IMPORTANTE para Producto Intermedio: Facilitar plano con la ubicación de los almacenes de PI. Adjuntar fotos."
+  },
+  {
+    "id": "tabla_producto_final",
+    "type": "table_start",
+    "prompt": "Detallemos el almacenamiento de 'PRODUCTO FINAL'. ¿Desea añadir el primer producto final?",
+    "yaml_path": "almacenamiento.producto_final.tabla_producto_final",
+    "table_columns": [
+      {"id": "tipo_pt", "label": "Tipo de producto final:", "yaml_key": "tipo"},
+      {"id": "producto_pt", "label": "Producto específico:", "yaml_key": "producto"},
+      {"id": "riesgo_pt", "label": "Riesgo principal:", "yaml_key": "riesgo"},
+      {"id": "tipo_almacenamiento_pt", "label": "Tipo de almacenamiento:", "yaml_key": "tipo_de_almacenamiento"},
+      {"id": "embalaje_pt", "label": "Embalaje:", "yaml_key": "embalaje"},
+      {"id": "cantidad_pt", "label": "Cantidad:", "yaml_key": "cantidad"},
+      {"id": "ubicacion_pt", "label": "Ubicación:", "yaml_key": "ubicacion"},
+      {"id": "proteccion_pt", "label": "Protección:", "yaml_key": "proteccion"}
+    ],
+    "add_row_prompt": "¿Desea añadir otro producto final?"
+  },
+  {
+    "id": "importante_producto_final_planos_fotos",
+    "type": "info",
+    "prompt": "IMPORTANTE para Producto Final: Facilitar plano con la ubicación de los almacenes de PT. Adjuntar fotos."
+  },
+  {
+    "id": "tabla_producto_auxiliar",
+    "type": "table_start",
+    "prompt": "Pasemos al almacenamiento de 'PRODUCTO AUXILIAR'. ¿Desea añadir el primer producto auxiliar?",
+    "yaml_path": "almacenamiento.producto_auxiliar.tabla_producto_auxiliar",
+    "table_columns": [
+      {"id": "tipo_pa", "label": "Tipo de producto auxiliar:", "yaml_key": "tipo"},
+      {"id": "producto_pa", "label": "Producto específico:", "yaml_key": "producto"},
+      {"id": "riesgo_pa", "label": "Riesgo principal:", "yaml_key": "riesgo"},
+      {"id": "tipo_almacenamiento_pa", "label": "Tipo de almacenamiento:", "yaml_key": "tipo_almacenamiento"},
+      {"id": "embalaje_pa", "label": "Embalaje:", "yaml_key": "embalaje"},
+      {"id": "cantidad_pa", "label": "Cantidad:", "yaml_key": "cantidad"},
+      {"id": "ubicacion_pa", "label": "Ubicación:", "yaml_key": "ubicacion"},
+      {"id": "proteccion_pa", "label": "Protección:", "yaml_key": "proteccion"}
+    ],
+    "add_row_prompt": "¿Desea añadir otro producto auxiliar?"
+  },
+  {
+    "id": "importante_producto_auxiliar_planos_fotos",
+    "type": "info",
+    "prompt": "IMPORTANTE para Producto Auxiliar: Facilitar plano con la ubicación de los almacenes de PA. Adjuntar fotos."
+  },
+  {
+    "id": "checklist_evaluacion_x_info",
+    "type": "info",
+    "prompt": "Recordatorio: Para la evaluación de almacenamiento, se puede usar un Check-list de evaluación 'X' con columna de comentarios."
+  },
+  {
+    "id": "tabla_almacenamiento_camaras_frigorificas",
+    "type": "table_start",
+    "prompt": "Detalles sobre 'Almacenamiento en Cámaras Frigoríficas'. ¿Desea añadir la primera cámara?",
+    "yaml_path": "almacenamiento.almacenamiento_en_camaras_frigorificas.tabla_almacenamiento_camaras",
+    "table_columns": [
+      {"id": "n_camara_almac", "label": "Número identificador de la cámara frigorífica:", "yaml_key": "n_camaras_frigorificas"},
+      {"id": "tipo_producto_almacenado_camara", "label": "Tipo de producto almacenado (Ej: Leche líquida, Aditivos):", "yaml_key": "tipo_de_producto_almacenado"},
+      {"id": "tipo_almacenamiento_camara", "label": "Tipo de almacenamiento dentro de la cámara:", "yaml_key": "tipo_almacenamiento"},
+      {"id": "embalaje_camara", "label": "Embalaje (Ej: botellas de plástico, En sacos):", "yaml_key": "embalaje"},
+      {"id": "cantidad_camara", "label": "Cantidad:", "yaml_key": "cantidad"},
+      {"id": "ubicacion_camara_almac", "label": "Ubicación específica:", "yaml_key": "ubicacion"},
+      {"id": "proteccion_camara_almac", "label": "Protección:", "yaml_key": "proteccion"}
+    ],
+    "add_row_prompt": "¿Desea añadir otra cámara para almacenamiento?"
+  },
+  {
+    "id": "importante_almacenamiento_camaras_planos_fotos",
+    "type": "info",
+    "prompt": "IMPORTANTE para Almacenamiento en Cámaras Frigoríficas: (Aunque no se especifica, se asume que planos y fotos son útiles, similar a otras secciones de almacenamiento)."
+  },
+  {
+    "id": "instalaciones_de_servicio_start",
+    "type": "section_start",
+    "prompt": "Vamos a la sección 'INSTALACIONES DE SERVICIO'."
+  },
+  {
+    "id": "instalaciones_servicio_discrepancias_info",
+    "type": "info",
+    "prompt": "Nota: Hay discrepancias entre Zurich y Allianz en este apartado. Zurich incluye mantenimiento y cómo afecta a la PB aquí, mientras que Allianz lo describe aparte."
+  },
+  {
+    "id": "instalaciones_acuerdo_norma",
+    "type": "question",
+    "prompt": "Las instalaciones, ¿están de acuerdo a norma (Industrial/seguridadindustrial/instalacionesindustriales/Paginas/index.aspx)? Describa.",
+    "yaml_path": "instalaciones_de_servicio.instalaciones_de_acuerdo_a_norma"
+  },
+  {
+    "id": "instalacion_electrica_start",
+    "type": "section_start",
+    "prompt": "Detalles de la 'Instalación eléctrica'."
+  },
+  {
+    "id": "instalacion_electrica_descripcion",
+    "type": "question",
+    "prompt": "Describa la instalación eléctrica (subestaciones eléctricas, salas eléctricas, instalación de puesta a tierra y pararrayos, grupos electrógenos, etc.). Incluya aspectos como compartimentación, ubicación, reactiva. ¿Se incluirá información de mantenimiento aquí?",
+    "yaml_path": "instalaciones_de_servicio.instalacion_electrica.descripcion_completa"
+  },
+  {
+    "id": "instalacion_electrica_backup_redundancias",
+    "type": "question",
+    "prompt": "Describa el back-up y redundancias de la instalación eléctrica.",
+    "yaml_path": "instalaciones_de_servicio.instalacion_electrica.back_up_y_redundancias"
+  },
+  {
+    "id": "instalacion_electrica_criticidad_equipos",
+    "type": "question",
+    "prompt": "Defina la criticidad de equipos eléctricos (Paralización del 25, 50, 75, 100%):",
+    "yaml_path": "instalaciones_de_servicio.instalacion_electrica.definir_criticidad_de_equipos_paralizacion_porcentaje"
+  },
+  {
+    "id": "instalacion_electrica_n_lineas_acometida",
+    "type": "question",
+    "prompt": "Número de líneas de acometida eléctrica (Ej: Dos líneas eléctricas a 60kV):",
+    "yaml_path": "instalaciones_de_servicio.instalacion_electrica.n_de_lineas_de_acometida_electrica"
+  },
+  {
+    "id": "instalacion_electrica_potencia_instalada",
+    "type": "question",
+    "prompt": "Potencia instalada:",
+    "yaml_path": "instalaciones_de_servicio.instalacion_electrica.potencia_instalada"
+  },
+  {
+    "id": "instalacion_electrica_potencia_consumida",
+    "type": "question",
+    "prompt": "Potencia consumida:",
+    "yaml_path": "instalaciones_de_servicio.instalacion_electrica.potencia_consumida"
+  },
+  {
+    "id": "instalacion_electrica_n_subestaciones",
+    "type": "question",
+    "prompt": "Número y tipo de Subestaciones (Ej: 1 x subestación principal (Area exterior, zona norte de la parcela. Separada de edificaciones e instalaciones); y 2 x Subestaciones secundarias.):",
+    "yaml_path": "instalaciones_de_servicio.instalacion_electrica.n_subestaciones"
+  },
+  {
+    "id": "instalacion_electrica_relacion_transformacion",
+    "type": "question",
+    "prompt": "Relación de transformación (Ej: Subestación principal 60kV/6kV; 2 subestaciones secundarias 6kV/400v.):",
+    "yaml_path": "instalaciones_de_servicio.instalacion_electrica.relacion_transformacion"
+  },
+  {
+    "id": "instalacion_electrica_transformadores_total_desc",
+    "type": "question",
+    "prompt": "Número total de transformadores y descripción breve (Ej: total 3. 1 x subestación principal, 1 x subestación secundaria; y 1 x subestación secundaria (el original dice 2, pero luego lista 4, siendo uno repuesto)):",
+    "yaml_path": "instalaciones_de_servicio.instalacion_electrica.transformadores_total_descripcion"
+  },
+  {
+    "id": "tabla_transformadores",
+    "type": "table_start",
+    "prompt": "Vamos a detallar los 'Transformadores'. ¿Desea añadir el primer transformador?",
+    "yaml_path": "instalaciones_de_servicio.instalacion_electrica.tabla_transformadores",
+    "table_columns": [
+      {"id": "n_transformador", "label": "Nº Identificador del Transformador:", "yaml_key": "n"},
+      {"id": "caracteristicas_tecnicas_trafo", "label": "Características técnicas (Relación transformación, potencia. Ej: 20MVA (60kV/6kV), ONAF. Refrigerado por aceite. Volumen interior cuba 2.000 litros aceite):", "yaml_key": "caracteristicas_tecnicas"},
+      {"id": "fabricante_trafo", "label": "Fabricante (Ej: ABB):", "yaml_key": "fabricante"},
+      {"id": "ano_fabricacion_trafo", "label": "Año Fabricación (Ej: 2000):", "yaml_key": "ano_fabricacion", "validation_hint": "Año"},
+      {"id": "ubicacion_trafo", "label": "Ubicación (Ej: Subestación principal, Subestación secundaria nº 1 en sala sectorizada):", "yaml_key": "ubicacion"},
+      {"id": "proteccion_trafo", "label": "Protección (Ej: Diluvio, Detección de incendios, ---):", "yaml_key": "proteccion"}
+    ],
+    "add_row_prompt": "¿Desea añadir otro transformador?"
+  },
+  {
+    "id": "instalaciones_generacion_electrica",
+    "type": "question",
+    "prompt": "Describa las instalaciones de generación eléctrica (Ciclos combinados, Motores de generación, Paneles fotovoltaicos, aerogeneradores, etc.):",
+    "yaml_path": "instalaciones_de_servicio.instalaciones_de_generacion_electrica.descripcion"
+  },
+  {
+    "id": "bateria_litio_almacenamiento",
+    "type": "question",
+    "prompt": "Información sobre baterías de litio para almacenamiento de energía eléctrica (si existen):",
+    "yaml_path": "instalaciones_de_servicio.instalaciones_de_generacion_electrica.bateria_de_litio_almacenamiento_energia_electrica"
+  },
+  {
+    "id": "aparatos_a_presion",
+    "type": "question",
+    "prompt": "Describa los aparatos a presión:",
+    "yaml_path": "instalaciones_de_servicio.aparatos_a_presion"
+  },
+  {
+    "id": "sistema_calentamiento_proceso",
+    "type": "question",
+    "prompt": "Describa el sistema de calentamiento de proceso:",
+    "yaml_path": "instalaciones_de_servicio.sistema_de_calentamiento_de_proceso"
+  },
+  {
+    "id": "redes_gas_erm",
+    "type": "question",
+    "prompt": "Describa las redes de gas / Estación de regulación y medición (ERM):",
+    "yaml_path": "instalaciones_de_servicio.redes_de_gas_estacion_de_regulacion_y_medicion_erm"
+  },
+  {
+    "id": "caldera_agua_vapor",
+    "type": "question",
+    "prompt": "Describa la caldera generadora de agua caliente y/o vapor:",
+    "yaml_path": "instalaciones_de_servicio.caldera_generadora_de_agua_caliente_y_o_vapor"
+  },
+  {
+    "id": "compresores_aire",
+    "type": "question",
+    "prompt": "Describa los compresores de aire:",
+    "yaml_path": "instalaciones_de_servicio.compresores_de_aire"
+  },
+  {
+    "id": "sistema_refrigeracion",
+    "type": "question",
+    "prompt": "Describa el sistema de refrigeración:",
+    "yaml_path": "instalaciones_de_servicio.sistema_de_refrigeracion"
+  },
+  {
+    "id": "sistemas_transporte_start",
+    "type": "section_start",
+    "prompt": "Hablemos de 'Sistemas de transporte'."
+  },
+  {
+    "id": "sistemas_transporte_gruas",
+    "type": "question",
+    "prompt": "Información sobre Grúas:",
+    "yaml_path": "instalaciones_de_servicio.sistemas_de_transporte.gruas"
+  },
+  {
+    "id": "sistemas_transporte_carretillas",
+    "type": "question",
+    "prompt": "Información sobre Carretillas y áreas de carga y tipos de baterías:",
+    "yaml_path": "instalaciones_de_servicio.sistemas_de_transporte.carretillas_y_areas_de_carga_y_tipos_de_baterias"
+  },
+  {
+    "id": "sistemas_transporte_camiones",
+    "type": "question",
+    "prompt": "Información sobre Camiones y surtidores de combustible:",
+    "yaml_path": "instalaciones_de_servicio.sistemas_de_transporte.camiones_y_surtidores_de_combustible"
+  },
+  {
+    "id": "sistemas_transporte_etc",
+    "type": "question",
+    "prompt": "Otros sistemas de transporte:",
+    "yaml_path": "instalaciones_de_servicio.sistemas_de_transporte.etc"
+  },
+  {
+    "id": "otros_servicios",
+    "type": "question",
+    "prompt": "Otras instalaciones de servicio no mencionadas:",
+    "yaml_path": "instalaciones_de_servicio.otros"
+  },
+  {
+    "id": "riesgos_instalaciones_servicios_analisis",
+    "type": "question",
+    "prompt": "Sobre los riesgos de instalaciones de servicios, ¿Lo analizará el ingeniero especializado? (Si/No)",
+    "yaml_path": "instalaciones_de_servicio.riesgos_instalaciones_de_servicios_analisis_ingeniero_especializado_si",
+    "validation_hint": "Si/No"
+  },
+  {
+    "id": "instaladores_cualificados_certificadas_info",
+    "type": "info",
+    "prompt": "Nota: Algunos no incluirían si las instalaciones fueron realizadas por instaladores cualificados e inst. certificadas en esta sección."
+  },
+  {
+    "id": "cambios_extensiones_instaladores_cualificados_info",
+    "type": "info",
+    "prompt": "Nota: Algunos no incluirían si los cambios, extensiones y/o ampliaciones fueron realizados por instaladores cualificados en esta sección."
+  },
+  {
+    "id": "manipulacion_instalaciones_personal_propio",
+    "type": "question",
+    "prompt": "La manipulación de instalaciones, ¿es por personal propio?",
+    "yaml_path": "instalaciones_de_servicio.manipulacion_de_instalaciones_por_personal_propio.realizada_por_personal_propio"
+  },
+  {
+    "id": "personal_propio_formado",
+    "type": "question",
+    "prompt": "Si la manipulación es por personal propio, ¿está formado? (Formado/No Formado/Descripción)",
+    "yaml_path": "instalaciones_de_servicio.manipulacion_de_instalaciones_por_personal_propio.formado_o_no",
+    "validation_hint": "Formado/No Formado/Texto",
+    "conditional_logic": {
+        "triggered_by_answer_to_id": "manipulacion_instalaciones_personal_propio",
+        "condition": "is_yes_or_contains_propio"
+      }
+  },
+  {
+    "id": "gestion_seguridad_start",
+    "type": "section_start",
+    "prompt": "Pasamos a 'GESTION DE LA SEGURIDAD / PROCEDIMIENTOS DE SEGURIDAD (PREVENCIÓN) /PLANES DE EMERGENCIA'."
+  },
+  {
+    "id": "dependencia_dpto_seguridad",
+    "type": "question",
+    "prompt": "A nivel organizativo, ¿de quién depende el departamento de seguridad?",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.a_nivel_organizativo_dependencia_del_departamento_de_seguridad"
+  },
+  {
+    "id": "cumplimiento_reg_seguridad_salud",
+    "type": "question",
+    "prompt": "Describa el cumplimiento del Reg. disposiciones mínimas de seguridad y salud en los lugares de trabajo (Ley de Prevención de Riesgos Laborales (LPRL) y del Reglamento de los Servicios de Prevención (RSP)).",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.cumplimiento_reg_disposiciones_minimas_de_seguridad_y_salud_en_los_lugares_de_trabajo"
+  },
+  {
+    "id": "n_personas_dpto_seguridad",
+    "type": "question",
+    "prompt": "¿Número de personas del departamento de seguridad?",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.n_personas_del_departamento_de_seguridad",
+    "validation_hint": "Numérico"
+  },
+  {
+    "id": "formacion_personas_dpto_seguridad",
+    "type": "question",
+    "prompt": "Describa la formación de las personas del departamento de seguridad.",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.formacion_de_las_personas_del_departamento_de_seguridad"
+  },
+  {
+    "id": "especialidades_seguridad_info",
+    "type": "info",
+    "prompt": "Las especialidades en seguridad incluyen: seguridad en el trabajo, higiene industrial, ergonomía y medicina en el trabajo. Indique cuáles aplican."
+  },
+  {
+    "id": "especialidades_seguridad",
+    "type": "question",
+    "prompt": "Especialidades en seguridad cubiertas internamente o externamente:",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.especialidades_en_seguridad_descripcion"
+  },
+  {
+    "id": "empresa_externa_servicio_prevencion",
+    "type": "question",
+    "prompt": "¿Se utiliza una empresa externa de servicio de prevención? Si es así, ¿cuál?",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.empresa_externa_de_servicio_de_prevencion"
+  },
+  {
+    "id": "metodologia_analisis_riesgos",
+    "type": "question",
+    "prompt": "Describa la metodología de análisis y evaluación de riesgos de proceso y de la instalación (Hazop, SIL, etc.).",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.metodologia_de_analisis_y_evaluacion_de_riesgos_de_proceso_y_de_la_instalacion_hazop_sil_etc"
+  },
+  {
+    "id": "gestion_seguridad_proceso_cambios_bypasses",
+    "type": "question",
+    "prompt": "Describa la gestión de seguridad en el proceso (gestión de cambios, gestión de by-passes).",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.gestion_de_seguridad_en_el_proceso_gestion_de_cambios_gestion_de_by_passes"
+  },
+  {
+    "id": "procedimientos_seguridad_implementacion",
+    "type": "question",
+    "prompt": "Describa los procedimientos y la implementación de procedimientos de seguridad (permisos de trabajos en caliente, prohibición de fumar, orden y limpieza, etc.).",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.procedimientos_implementacion_de_procedimientos_de_seguridad"
+  },
+  {
+    "id": "formacion_operarios_seguridad",
+    "type": "question",
+    "prompt": "Describa la formación de operarios a nivel de puesto de trabajo y seguridad en la planta.",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.formacion_de_operarios_a_nivel_de_puesto_de_trabajo_y_seguridad_en_la_planta"
+  },
+  {
+    "id": "programa_formacion_trabajo_induccion_refresco",
+    "type": "question",
+    "prompt": "Describa el programa de formación de puesto de trabajo/Inducción/Refresco.",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.programa_de_formacion_de_puesto_de_trabajo_induccion_refresco"
+  },
+  {
+    "id": "estudio_incidentes_accidentes",
+    "type": "question",
+    "prompt": "Describa el estudio de incidentes y accidentes / Estudios causa-raíz / Lecciones aprendidas.",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.estudio_de_incidentes_y_accidentes_estudios_causa_raiz_lecciones_aprendidas"
+  },
+  {
+    "id": "kpis_seguridad",
+    "type": "question",
+    "prompt": "KPI‘s de seguridad:",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.kpis"
+  },
+  {
+    "id": "plan_autoproteccion_start",
+    "type": "section_start",
+    "prompt": "Hablemos del 'Plan de autoprotección'."
+  },
+  {
+    "id": "plan_autoproteccion_elaboracion",
+    "type": "question",
+    "prompt": "El Plan de autoprotección, ¿es elaborado interna o externamente?",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.plan_de_autoproteccion.elaborado_interna_o_externamente"
+  },
+  {
+    "id": "plan_autoproteccion_n_personas_intervencion",
+    "type": "question",
+    "prompt": "Número de personas de primera y segunda intervención (por turno, según día semana, etc.):",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.plan_de_autoproteccion.n_personas_de_primera_y_segunda_intervencion_por_turno_segun_dia_semana_etc"
+  },
+  {
+    "id": "plan_autoproteccion_formacion",
+    "type": "question",
+    "prompt": "Formación del personal de intervención:",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.plan_de_autoproteccion.formacion"
+  },
+  {
+    "id": "actividad_afectada_seveso_iii",
+    "type": "question",
+    "prompt": "La actividad, ¿está afectada por SEVESO III? (Si / No)",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.actividad_afectada_por_seveso_iii_si_no",
+    "validation_hint": "Si/No"
+  },
+  {
+    "id": "plan_emergencia_interior_exterior",
+    "type": "question",
+    "prompt": "En caso afirmativo para SEVESO III, ¿existe Plan de emergencia interior / Exterior? Describa.",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.plan_de_emergencia_interior_exterior",
+    "conditional_logic": {
+        "triggered_by_answer_to_id": "actividad_afectada_seveso_iii",
+        "condition": "is_yes"
+      }
+  },
+  {
+    "id": "simulacros_periodicos",
+    "type": "question",
+    "prompt": "¿Se realizan simulacros periódicos? Describa frecuencia y tipo.",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.simulacros_periodicos"
+  },
+  {
+    "id": "bomberos_profesionales_propios_start",
+    "type": "section_start",
+    "prompt": "Información sobre 'Bomberos profesionales propios', si existen."
+  },
+  {
+    "id": "bomberos_propios_n",
+    "type": "question",
+    "prompt": "Número de bomberos propios:",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.bomberos_profesionales_propios.n_de_bomberos",
+    "validation_hint": "Numérico"
+  },
+  {
+    "id": "bomberos_propios_equipos",
+    "type": "question",
+    "prompt": "Equipos para la primera y segunda intervención de bomberos propios:",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.bomberos_profesionales_propios.equipos_para_la_primera_y_segunda_intervencion"
+  },
+  {
+    "id": "bomberos_propios_camiones",
+    "type": "question",
+    "prompt": "Camiones de bomberos propios, etc.:",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.bomberos_profesionales_propios.camiones_de_bomberos_etc"
+  },
+  {
+    "id": "bomberos_profesionales_publicos_start",
+    "type": "section_start",
+    "prompt": "Información sobre 'Bomberos profesionales públicos'."
+  },
+  {
+    "id": "bomberos_publicos_distancia",
+    "type": "question",
+    "prompt": "Distancia a los bomberos públicos:",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.bomberos_profesionales_publicos.distancia"
+  },
+  {
+    "id": "bomberos_publicos_tiempo_intervencion",
+    "type": "question",
+    "prompt": "Tiempo estimado de intervención de los bomberos públicos:",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.bomberos_profesionales_publicos.tiempo_de_intervencion"
+  },
+  {
+    "id": "bomberos_publicos_visita_planta",
+    "type": "question",
+    "prompt": "¿Han visitado la planta los bomberos públicos? Otros detalles relevantes:",
+    "yaml_path": "gestion_de_la_seguridad_procedimientos_de_seguridad_prevencion_planes_de_emergencia.bomberos_profesionales_publicos.han_visitado_la_planta_etc"
+  },
+  {
+    "id": "medios_proteccion_incendios_start",
+    "type": "section_start",
+    "prompt": "Sección 'MEDIOS DE PROTECCIÓN CONTRA INCENDIOS'."
+  },
+  {
+    "id": "reglamentacion_pci_considerada",
+    "type": "question",
+    "prompt": "Reglamentación de protección contra incendios considerada (ej: reglamento de PCI de establecimientos industriales RCPIEI (Año XXX), NFPA, FM, otros):",
+    "yaml_path": "medios_de_proteccion_contra_incendios.reglamentacion_de_proteccion_contra_incendios_considerada_a_la_hora_de_la_proteccion_contra_incendios_reglamento_de_pci_de_establecimientos_industriales_rcpiei_ano_xxx_nfpa_fm_otros"
+  },
+  {
+    "id": "medios_manuales_extincion_start",
+    "type": "section_start",
+    "prompt": "Sobre 'Medios manuales de extinción contra incendios'."
+  },
+  {
+    "id": "extintores_descripcion",
+    "type": "question",
+    "prompt": "Extintores: Tipo de extintores, agente extintor, número de extintores, ubicación y si están sin obstaculizar.",
+    "yaml_path": "medios_de_proteccion_contra_incendios.medios_manuales_de_extincion_contra_incendios.extintores.descripcion_completa"
+  },
+  {
+    "id": "bies_descripcion",
+    "type": "question",
+    "prompt": "Bocas de incendio equipadas (BIEs): Tipo de BIE‘s, número de BIE`S, presión estática en la BIE más alejada de la fuente de suministro, ubicación, si están sin obstaculizar.",
+    "yaml_path": "medios_de_proteccion_contra_incendios.medios_manuales_de_extincion_contra_incendios.bocas_de_incendio_equipadas.descripcion_completa"
+  },
+  {
+    "id": "hidrantes_start",
+    "type": "section_start",
+    "prompt": "Información sobre 'Hidrantes'."
+  },
+  {
+    "id": "hidrantes_tipo_propiedad",
+    "type": "question",
+    "prompt": "Hidrantes: ¿Públicos y/o propios (interior en la parcela)? Tipo de hidrantes.",
+    "yaml_path": "medios_de_proteccion_contra_incendios.medios_manuales_de_extincion_contra_incendios.hidrantes.publicos_y_o_propios_interior_en_la_parcela_tipo_de_hidrantes"
+  },
+  {
+    "id": "hidrantes_numero_ubicacion",
+    "type": "question",
+    "prompt": "Número de hidrantes, ubicación, y si están sin obstaculizar.",
+    "yaml_path": "medios_de_proteccion_contra_incendios.medios_manuales_de_extincion_contra_incendios.hidrantes.numero_de_hidrantes_ubicacion_sin_obstaculizar"
+  },
+  {
+    "id": "otros_medios_manuales_extincion",
+    "type": "question",
+    "prompt": "Otros medios manuales (columnas secas, lanzas, monitores,etc.). Describir:",
+    "yaml_path": "medios_de_proteccion_contra_incendios.medios_manuales_de_extincion_contra_incendios.otros_medios_manuales_columnas_secas_lanzas_monitores_etc_describir"
+  },
+  {
+    "id": "sistemas_deteccion_alarma_start",
+    "type": "section_start",
+    "prompt": "Sobre 'Sistemas de detección y alarma'."
+  },
+  {
+    "id": "sistemas_deteccion_incendios_existen",
+    "type": "question",
+    "prompt": "¿Existen sistemas de detección de incendios? (Si/NO)",
+    "yaml_path": "medios_de_proteccion_contra_incendios.sistemas_de_deteccion_y_alarma.sistemas_de_deteccion_de_incendios_si_no",
+    "validation_hint": "Si/No"
+  },
+  {
+    "id": "tipo_sistemas_deteccion_areas_protegidas",
+    "type": "question",
+    "prompt": "Si existen, tipo de sistemas de detección (de humos, de llama, sistemas de detección de incendios tipo video-detección, etc.) y áreas protegidas:",
+    "yaml_path": "medios_de_proteccion_contra_incendios.sistemas_de_deteccion_y_alarma.tipo_de_sistemas_de_deteccion_de_humos_de_llama_sistemas_de_deteccion_de_incendios_tipo_video_deteccion_etc_areas_protegidas",
+    "conditional_logic": {
+        "triggered_by_answer_to_id": "sistemas_deteccion_incendios_existen",
+        "condition": "is_yes"
+      }
+  },
+  {
+    "id": "reglamento_diseno_sistemas_deteccion",
+    "type": "question",
+    "prompt": "Reglamento considerado para el diseño de los sistemas de detección de incendios:",
+    "yaml_path": "medios_de_proteccion_contra_incendios.sistemas_de_deteccion_y_alarma.reglamento_considerado_para_el_diseno_de_los_sistemas_de_deteccion_de_incendios",
+    "conditional_logic": {
+        "triggered_by_answer_to_id": "sistemas_deteccion_incendios_existen",
+        "condition": "is_yes"
+      }
+  },
+  {
+    "id": "transmision_alarmas_incendio",
+    "type": "question",
+    "prompt": "Transmisión de las alarmas de incendio: ¿A zona permanentemente ocupada 24 horas o central receptora de alarmas (CRA) 24 horas?",
+    "yaml_path": "medios_de_proteccion_contra_incendios.sistemas_de_deteccion_y_alarma.transmision_de_las_alarmas_de_incendio_a_zona_permanentemente_ocupada_24_horas_o_central_receptora_de_alarmas_cra_24_horas",
+    "conditional_logic": {
+        "triggered_by_answer_to_id": "sistemas_deteccion_incendios_existen",
+        "condition": "is_yes"
+      }
+  },
+  {
+    "id": "medios_automaticos_extincion_start",
+    "type": "section_start",
+    "prompt": "Sobre 'Medios automáticos de extinción de incendios'."
+  },
+  {
+    "id": "tipo_instalaciones_extincion_areas_protegidas",
+    "type": "question",
+    "prompt": "Tipo de instalaciones de extinción de incendios y áreas protegidas:",
+    "yaml_path": "medios_de_proteccion_contra_incendios.medios_automaticos_de_extincion_de_incendios.tipo_de_instalaciones_de_extincion_de_incendios_areas_protegidas"
+  },
+  {
+    "id": "diseno_medios_automaticos_extincion",
+    "type": "question",
+    "prompt": "Describa el diseño de los medios automáticos de extinción de incendios.",
+    "yaml_path": "medios_de_proteccion_contra_incendios.medios_automaticos_de_extincion_de_incendios.diseno_de_los_medios_automaticos_de_extincion_de_incendios.descripcion"
+  },
+  {
+    "id": "diseno_adecuado_medios_automaticos",
+    "type": "question",
+    "prompt": "El diseño de los medios automáticos de extinción, ¿es adecuado? (Si/No)",
+    "yaml_path": "medios_de_proteccion_contra_incendios.medios_automaticos_de_extincion_de_incendios.diseno_de_los_medios_automaticos_de_extincion_de_incendios.diseno_adecuado_si_no",
+    "validation_hint": "Si/No"
+  },
+  {
+    "id": "inspeccion_mantenimiento_medios_automaticos",
+    "type": "question",
+    "prompt": "Inspección y mantenimiento de medios automáticos: ¿Estado y mantenimiento adecuado?",
+    "yaml_path": "medios_de_proteccion_contra_incendios.medios_automaticos_de_extincion_de_incendios.inspeccion_y_mantenimiento_estado_y_mantenimiento_adecuado"
+  },
+  {
+    "id": "sistema_abastecimiento_agua_pci_start",
+    "type": "section_start",
+    "prompt": "Sobre el 'Sistema de abastecimiento de agua de protección contra incendios'."
+  },
+  {
+    "id": "fuente_alimentacion_agua_pci",
+    "type": "question",
+    "prompt": "Fuente de alimentación del sistema de abastecimiento de agua PCI:",
+    "yaml_path": "medios_de_proteccion_contra_incendios.sistema_de_abastecimiento_de_agua_de_proteccion_contra_incendios.fuente_de_alimentacion"
+  },
+  {
+    "id": "redes_suministro_agua_pci",
+    "type": "question",
+    "prompt": "Redes de suministro de agua (Externo e interno) (Diámetros, redes en anillo o no, etc.):",
+    "yaml_path": "medios_de_proteccion_contra_incendios.sistema_de_abastecimiento_de_agua_de_proteccion_contra_incendios.redes_de_suministro_de_agua_externo_e_interno_diametros_redes_en_anillo_o_no_etc"
+  },
+  {
+    "id": "equipos_bombeo_pci",
+    "type": "question",
+    "prompt": "Equipos de bombeo (exclusivos para incendio o no, nº de bombas, tipo de bombas, etc.):",
+    "yaml_path": "medios_de_proteccion_contra_incendios.sistema_de_abastecimiento_de_agua_de_proteccion_contra_incendios.equipos_de_bombeo_exclusivos_para_ncendio_o_no_n_de_bombas_tipo_de_bombas_etc"
+  },
+  {
+    "id": "inspeccion_mantenimiento_bombas_pci",
+    "type": "question",
+    "prompt": "Inspección y mantenimiento de equipos de bombeo: ¿Estado y mantenimiento adecuado? ¿Se realizan pruebas de bombas?",
+    "yaml_path": "medios_de_proteccion_contra_incendios.sistema_de_abastecimiento_de_agua_de_proteccion_contra_incendios.inspeccion_y_mantenimiento.estado_y_mantenimiento_adecuado_pruebas_de_bombas"
+  },
+  {
+    "id": "inspeccion_mantenimiento_general_medios_extincion",
+    "type": "question",
+    "prompt": "Describa la inspección y mantenimiento general de los medios de extinción.",
+    "yaml_path": "medios_de_proteccion_contra_incendios.inspeccion_y_mantenimiento_de_los_medios_de_extincion.general"
+  },
+  {
+    "id": "cumplimiento_reglamentacion_pci_medios_extincion",
+    "type": "question",
+    "prompt": "¿Se cumple la reglamentación de instalaciones de protección contra incendios (Año XXX) u otros reglamentos (NFPA,...)?",
+    "yaml_path": "medios_de_proteccion_contra_incendios.inspeccion_y_mantenimiento_de_los_medios_de_extincion.cumplimiento_reglamentacion_de_instalaciones_de_proteccion_contra_incendios_ano_xxx_u_otros_reglamentos_nfpa"
+  },
+  {
+    "id": "seguridad_fisica_vigilancia_start",
+    "type": "section_start",
+    "prompt": "Pasamos a 'SEGURIDAD FÍSICA/VIGILANCIA'."
+  },
+  {
+    "id": "proteccion_fisica_parcela",
+    "type": "question",
+    "prompt": "Describa la protección física de la parcela (vallados/muros perimetrales/Rejas de parcela, bolardos anti impacto, etc.).",
+    "yaml_path": "seguridad_fisica_vigilancia.proteccion_fisica_de_la_parcela_vallados_muros_perimetrales_rejas_de_parcela_bolardos_anti_impacto_etc"
+  },
+  {
+    "id": "n_accesos_parcela",
+    "type": "question",
+    "prompt": "Número de accesos a la parcela:",
+    "yaml_path": "seguridad_fisica_vigilancia.n_de_accesos_a_la_parcela",
+    "validation_hint": "Numérico"
+  },
+  {
+    "id": "control_accesos_parcela",
+    "type": "question",
+    "prompt": "Describa el control de accesos a la parcela.",
+    "yaml_path": "seguridad_fisica_vigilancia.control_de_accesos_a_la_parcela"
+  },
+  {
+    "id": "iluminacion_interior_parcela_alrededores",
+    "type": "question",
+    "prompt": "Describa la iluminación interior de la parcela y alrededor de los edificios.",
+    "yaml_path": "seguridad_fisica_vigilancia.iluminacion_interior_de_la_parcela_y_alrededor_de_los_edificios"
+  },
+  {
+    "id": "medidas_fisicas_intrusion_edificios",
+    "type": "question",
+    "prompt": "Describa las medidas físicas adecuadas frente a intrusión en los edificios (puertas de seguridad, cerraduras, rejas en ventanas, vidrio de seguridad, etc.).",
+    "yaml_path": "seguridad_fisica_vigilancia.medidas_fisicas_adecuadas_frente_a_intrusion_en_los_edificios_puertas_de_seguridad_cerraduras_rejas_en_ventanas_vidrio_de_seguridad_etc"
+  },
+  {
+    "id": "control_acceso_edificios",
+    "type": "question",
+    "prompt": "Describa el control de acceso a los edificios.",
+    "yaml_path": "seguridad_fisica_vigilancia.control_de_acceso_a_los_edificios.descripcion"
+  },
+  {
+    "id": "sistemas_deteccion_intrusion",
+    "type": "question",
+    "prompt": "Sistemas de detección de intrusión (perimetral, periférica volumétrica):",
+    "yaml_path": "seguridad_fisica_vigilancia.sistemas_de_deteccion_de_intrusion_perimetral_periferica_volumetrica"
+  },
+  {
+    "id": "transmision_alarmas_intrusion",
+    "type": "question",
+    "prompt": "Transmisión de alarmas de intrusión: ¿A zona permanentemente ocupada 24 horas o central receptora de alarmas (CRA) 24 horas?",
+    "yaml_path": "seguridad_fisica_vigilancia.transmision_de_alarmas_de_intrusion_a_zona_permanentemente_ocupada_24_horas_o_central_receptora_de_alarmas_cra_24_horas"
+  },
+  {
+    "id": "otros_sistemas_proteccion_fisica",
+    "type": "question",
+    "prompt": "Otros sistema de protección (C.C.T.V., cajas fuertes, etc.):",
+    "yaml_path": "seguridad_fisica_vigilancia.otros_sistemas_de_proteccion_cctv_cajas_fuertes_etc"
+  },
+  {
+    "id": "vigilancia_descripcion",
+    "type": "question",
+    "prompt": "Describa la vigilancia (Empresa de vigilancia, nº de vigilantes por turno, control de accesos, rondas (exterior en la parcela, dentro de las edificaciones), autorizados a llevar pistolas, actuación en emergencias, etc.).",
+    "yaml_path": "seguridad_fisica_vigilancia.vigilancia.descripcion_completa"
+  },
+  {
+    "id": "mantenimiento_start",
+    "type": "section_start",
+    "prompt": "Sección 'MANTENIMIENTO'."
+  },
+  {
+    "id": "gestion_mantenimiento_descripcion",
+    "type": "question",
+    "prompt": "Describa la gestión de mantenimiento.",
+    "yaml_path": "mantenimiento.gestion_de_mantenimiento.descripcion"
+  },
+  {
+    "id": "dependencia_dpto_mantenimiento",
+    "type": "question",
+    "prompt": "A nivel organizativo, ¿de quién depende el departamento de mantenimiento de la planta?",
+    "yaml_path": "mantenimiento.dependencia_del_departamento_de_mantenimiento_a_nivel_organizativo_de_la_planta"
+  },
+  {
+    "id": "programa_mantenimiento_maquinaria_proceso",
+    "type": "question",
+    "prompt": "Describa el programa de mantenimiento de maquinaria de proceso.",
+    "yaml_path": "mantenimiento.programa_de_mantenimiento_de_maquinaria_de_proceso"
+  },
+  {
+    "id": "programa_mantenimiento_instalaciones_servicio",
+    "type": "question",
+    "prompt": "Describa el programa de mantenimiento de instalaciones de servicio.",
+    "yaml_path": "mantenimiento.programa_de_mantenimiento_de_instalaciones_de_servicio"
+  },
+  {
+    "id": "tecnicos_mantenimiento_propio_start",
+    "type": "section_start",
+    "prompt": "Sobre 'Técnicos de mantenimiento propio'."
+  },
+  {
+    "id": "tecnicos_mantenimiento_propio_numero",
+    "type": "question",
+    "prompt": "Número de técnicos de mantenimiento propio:",
+    "yaml_path": "mantenimiento.tecnicos_de_mantenimiento_propio.numero_de_tecnicos_de_mantenimiento",
+    "validation_hint": "Numérico"
+  },
+  {
+    "id": "tecnicos_mantenimiento_propio_formacion",
+    "type": "question",
+    "prompt": "Formación de los técnicos de mantenimiento propio:",
+    "yaml_path": "mantenimiento.tecnicos_de_mantenimiento_propio.formacion_tecnicos"
+  },
+  {
+    "id": "tecnicos_mantenimiento_propio_experiencia",
+    "type": "question",
+    "prompt": "Experiencia de los técnicos de mantenimiento propio:",
+    "yaml_path": "mantenimiento.tecnicos_de_mantenimiento_propio.experiencia_tecnicos"
+  },
+  {
+    "id": "mantenimiento_propio_maquinaria_instalaciones",
+    "type": "question",
+    "prompt": "Describa el mantenimiento propio de la maquinaria e instalaciones.",
+    "yaml_path": "mantenimiento.mantenimiento_propio_de_la_maquinaria_e_instalaciones.descripcion"
+  },
+  {
+    "id": "mantenimiento_externo_start",
+    "type": "section_start",
+    "prompt": "Sobre 'Mantenimiento externo de maquinaria e instalaciones'."
+  },
+  {
+    "id": "tecnicos_mantenimiento_externo_info",
+    "type": "question",
+    "prompt": "Información sobre técnicos de mantenimiento externo:",
+    "yaml_path": "mantenimiento.mantenimiento_externo_de_maquinaria_e_instalaciones.tecnicos_de_mantenimiento_externo"
+  },
+  {
+    "id": "empresas_mantenimiento_externo_prestigio",
+    "type": "question",
+    "prompt": "Empresas de mantenimiento externo de reconocido prestigio técnico:",
+    "yaml_path": "mantenimiento.mantenimiento_externo_de_maquinaria_e_instalaciones.empresas_de_mantenimiento_de_reconocido_prestigio_tecnico"
+  },
+  {
+    "id": "formacion_experiencia_tecnicos_externos",
+    "type": "question",
+    "prompt": "Formación y experiencia de técnicos de mantenimiento externo:",
+    "yaml_path": "mantenimiento.mantenimiento_externo_de_maquinaria_e_instalaciones.formacion_y_experiencia_de_tecnicos_de_mantenimiento_externo"
+  },
+  {
+    "id": "herramienta_gestion_mantenimiento_gmao",
+    "type": "question",
+    "prompt": "Herramienta de gestión de mantenimiento GMAO. ¿Se usan órdenes de trabajo? Describa.",
+    "yaml_path": "mantenimiento.herramienta_de_gestion_de_mantenimiento_gmao_ordenes_de_trabajo"
+  },
+  {
+    "id": "formacion_personal_mantenimiento_general",
+    "type": "question",
+    "prompt": "Formación general del personal de mantenimiento (propio y externo si aplica):",
+    "yaml_path": "mantenimiento.formacion_del_personal_de_mantenimiento"
+  },
+  {
+    "id": "experiencia_personal_mantenimiento_general",
+    "type": "question",
+    "prompt": "Experiencia general del personal de mantenimiento:",
+    "yaml_path": "mantenimiento.experiencia_del_personal_de_mantenimiento"
+  },
+  {
+    "id": "tipo_mantenimiento_tecnicas_inspecciones_start",
+    "type": "section_start",
+    "prompt": "Sobre 'Tipo de mantenimiento / Técnicas de mantenimiento e inspecciones'."
+  },
+  {
+    "id": "tipo_mantenimiento_preventivo_predictivo_correctivo",
+    "type": "question",
+    "prompt": "Tipo de mantenimiento realizado (preventivo, predictivo y correctivo). Describa.",
+    "yaml_path": "mantenimiento.tipo_de_mantenimiento_tecnicas_de_mantenimiento_e_inspecciones.tipo_de_mantenimiento_preventivo_predictivo_y_correctivo"
+  },
+  {
+    "id": "mantenimiento_preventivo_fabricante_experiencia",
+    "type": "question",
+    "prompt": "Mantenimiento preventivo: ¿Según fabricante y/o experiencia del mantenedor?",
+    "yaml_path": "mantenimiento.tipo_de_mantenimiento_tecnicas_de_mantenimiento_e_inspecciones.mantenimiento_preventivo_segun_fabricante_y_o_experiencia_del_mantenedor"
+  },
+  {
+    "id": "monitorizacion_variables_maquinas",
+    "type": "question",
+    "prompt": "Monitorización de variables de máquinas (vibraciones, etc.). Describa.",
+    "yaml_path": "mantenimiento.tipo_de_mantenimiento_tecnicas_de_mantenimiento_e_inspecciones.monitorizacion_de_variables_de_maquinas_vibraciones_etc"
+  },
+  {
+    "id": "inspecciones_mantenimiento_periodico_personal_especializado",
+    "type": "question",
+    "prompt": "Inspecciones y mantenimiento periódico de maquinaria e instalaciones, ¿por personal especializado (propio/terceros)? Describa.",
+    "yaml_path": "mantenimiento.inspecciones_y_mantenimiento_periodico_de_maquinaria_e_instalaciones_por_personal_especializado_propio_terceros"
+  },
+  {
+    "id": "inspecciones_periodicas_maquinaria_instalaciones_si_no",
+    "type": "question",
+    "prompt": "¿Se realizan inspecciones periódicas de maquinaria e instalaciones? (Si/No)",
+    "yaml_path": "mantenimiento.inspecciones_periodicas_de_maquinaria_e_instalaciones_si_no",
+    "validation_hint": "Si/No"
+  },
+  {
+    "id": "empresas_encargadas_inspecciones_periodicas",
+    "type": "question",
+    "prompt": "Si se realizan, ¿qué empresas están encargadas de las inspecciones periódicas de maquinaria e instalaciones?",
+    "yaml_path": "mantenimiento.empresas_encargadas_de_la_inspecciones_periodicas_de_maquinaria_e_instalaciones",
+    "conditional_logic": {
+        "triggered_by_answer_to_id": "inspecciones_periodicas_maquinaria_instalaciones_si_no",
+        "condition": "is_yes"
+      }
+  },
+  {
+    "id": "parada_anual_mantenimiento",
+    "type": "question",
+    "prompt": "¿Existe parada anual de mantenimiento? Describa.",
+    "yaml_path": "mantenimiento.parada_anual_de_mantenimiento"
+  },
+  {
+    "id": "estado_conservacion_instalaciones",
+    "type": "question",
+    "prompt": "Describa el estado de conservación de las instalaciones.",
+    "yaml_path": "mantenimiento.estado_de_conservacion_de_las_instalaciones"
+  },
+  {
+    "id": "perdida_de_beneficio_start",
+    "type": "section_start",
+    "prompt": "Sección 'PÉRDIDA DE BENEFICIO'."
+  },
+  {
+    "id": "pb_materia_prima_start",
+    "type": "section_start",
+    "prompt": "Relacionado con 'Materia prima'."
+  },
+  {
+    "id": "pb_proveedores_mp",
+    "type": "question",
+    "prompt": "Proveedores de Materia Prima (MP):",
+    "yaml_path": "perdida_de_beneficio.materia_prima.proveedores_mp"
+  },
+  {
+    "id": "pb_stock_mp",
+    "type": "question",
+    "prompt": "Stock de MP (toneladas/días, semanas, meses) en planta/Almacén (Fijo más flotante):",
+    "yaml_path": "perdida_de_beneficio.materia_prima.stock_mp_toneladas_dias_semanas_meses_en_planta_almacen_fijo_mas_flotante"
+  },
+  {
+    "id": "pb_n_proveedores_mp",
+    "type": "question",
+    "prompt": "Número de Proveedores de MP:",
+    "yaml_path": "perdida_de_beneficio.materia_prima.n_proveedores",
+    "validation_hint": "Numérico"
+  },
+  {
+    "id": "pb_exigencia_stocks_proveedores",
+    "type": "question",
+    "prompt": "¿Se exige mantener a los proveedores unos stocks determinados de MP? (Si/No/Describa)",
+    "yaml_path": "perdida_de_beneficio.materia_prima.se_exige_mantener_a_los_proveedores_unos_stocks_determinados",
+    "validation_hint": "Si/No/Texto"
+  },
+  {
+    "id": "pb_origen_proveedores_mp",
+    "type": "question",
+    "prompt": "Origen de los proveedores de MP (nacional/internacional, geografía):",
+    "yaml_path": "perdida_de_beneficio.materia_prima.origen_de_los_proveedores"
+  },
+  {
+    "id": "pb_porcentaje_mp_mayor_proveedor",
+    "type": "question",
+    "prompt": "% de MP suministrada por el mayor proveedor:",
+    "yaml_path": "perdida_de_beneficio.materia_prima.porcentaje_de_mp_suministrada_por_el_mayor_proveedor",
+    "validation_hint": "Porcentaje"
+  },
+  {
+    "id": "pb_transporte_mp",
+    "type": "question",
+    "prompt": "Transporte de MP:",
+    "yaml_path": "perdida_de_beneficio.materia_prima.transporte_mp"
+  },
+  {
+    "id": "pb_posibilidad_suministro_alternativo_mp",
+    "type": "question",
+    "prompt": "Posibilidad de suministro de MP de otros proveedores, y porcentaje de suministro sobre el total:",
+    "yaml_path": "perdida_de_beneficio.materia_prima.posibilidad_de_suministro_de_mp_de_otros_proveedores_y_porcentaje_de_suministro_sobre_el_total"
+  },
+  {
+    "id": "pb_extracoste_produccion_terceros_mp",
+    "type": "question",
+    "prompt": "Extra-coste de producción por terceros o plantas (relacionado con MP):",
+    "yaml_path": "perdida_de_beneficio.materia_prima.extra_coste_de_produccion_por_terceros_o_plantas"
+  },
+  {
+    "id": "pb_producto_semielaborado_start",
+    "type": "section_start",
+    "prompt": "Relacionado con 'Producto semi elaborado'."
+  },
+  {
+    "id": "pb_stock_producto_semielaborado",
+    "type": "question",
+    "prompt": "Stock de Producto Semielaborado (toneladas/días, semanas, meses) en planta/Almacén (Fijo más flotante):",
+    "yaml_path": "perdida_de_beneficio.producto_semi_elaborado.stock_mp_toneladas_dias_semanas_meses_en_planta_almacen_fijo_mas_flotante"
+  },
+  {
+    "id": "pb_posibilidad_suministro_alternativo_semielaborado",
+    "type": "question",
+    "prompt": "Posibilidad de suministro de Producto Semielaborado de otras plantas del grupo y/o proveedores externos:",
+    "yaml_path": "perdida_de_beneficio.producto_semi_elaborado.posibilidad_de_suministro_de_producto_semielaborado_de_otras_plantas_del_grupo_y_o_proveedores_externos"
+  },
+  {
+    "id": "pb_extracoste_proveedores_semielaborado",
+    "type": "question",
+    "prompt": "Extra-coste en el caso de proveedores externos y/o del grupo para Producto Semielaborado:",
+    "yaml_path": "perdida_de_beneficio.producto_semi_elaborado.extra_coste_en_el_caso_de_proveedores_externos_y_o_del_grupo"
+  },
+  {
+    "id": "pb_producto_terminado_clientes_start",
+    "type": "section_start",
+    "prompt": "Relacionado con 'Producto terminado (PT). Clientes.'"
+  },
+  {
+    "id": "pb_stock_pt",
+    "type": "question",
+    "prompt": "Stock de PT (toneladas/días, semanas, meses) en planta:",
+    "yaml_path": "perdida_de_beneficio.producto_terminado_pt_clientes.stock_pt_toneladas_dias_semanas_meses_en_planta"
+  },
+  {
+    "id": "pb_n_clientes",
+    "type": "question",
+    "prompt": "Número de Clientes:",
+    "yaml_path": "perdida_de_beneficio.producto_terminado_pt_clientes.n_clientes",
+    "validation_hint": "Numérico"
+  },
+  {
+    "id": "pb_exigencia_stocks_cliente",
+    "type": "question",
+    "prompt": "¿Se exige por parte del cliente mantener unos stocks determinados de PT en planta? (Si/No)",
+    "yaml_path": "perdida_de_beneficio.producto_terminado_pt_clientes.se_exige_por_parte_del_cliente_mantener_unos_stocks_determinados_en_planta_si_no",
+    "validation_hint": "Si/No"
+  },
+  {
+    "id": "pb_cantidades_stock_exigido_cliente",
+    "type": "question",
+    "prompt": "Si se exige stock por cliente, ¿qué cantidades (toneladas/días, semanas, meses)?",
+    "yaml_path": "perdida_de_beneficio.producto_terminado_pt_clientes.cantidades_toneladas_dias_semanas_meses",
+    "conditional_logic": {
+        "triggered_by_answer_to_id": "pb_exigencia_stocks_cliente",
+        "condition": "is_yes"
+      }
+  },
+  {
+    "id": "pb_sectores_venta",
+    "type": "question",
+    "prompt": "Sectores de venta:",
+    "yaml_path": "perdida_de_beneficio.producto_terminado_pt_clientes.sectores_de_venta"
+  },
+  {
+    "id": "pb_porcentaje_venta_sector",
+    "type": "question",
+    "prompt": "% de venta según sector:",
+    "yaml_path": "perdida_de_beneficio.producto_terminado_pt_clientes.porcentaje_de_venta_segun_sector",
+    "validation_hint": "Porcentaje, la suma debe ser 100%"
+  },
+  {
+    "id": "pb_porcentaje_pt_mayor_cliente",
+    "type": "question",
+    "prompt": "% de PT vendido al mayor cliente:",
+    "yaml_path": "perdida_de_beneficio.producto_terminado_pt_clientes.porcentaje_de_pt_vendido_al_mayor_cliente",
+    "validation_hint": "Porcentaje"
+  },
+  {
+    "id": "pb_transporte_pt",
+    "type": "question",
+    "prompt": "Transporte de PT:",
+    "yaml_path": "perdida_de_beneficio.producto_terminado_pt_clientes.transporte_pt"
+  },
+  {
+    "id": "pb_posibilidad_suministro_alternativo_pt",
+    "type": "question",
+    "prompt": "Posibilidad de suministro de PT de otras plantas del grupo o de terceros, y porcentaje de suministro sobre el total necesario:",
+    "yaml_path": "perdida_de_beneficio.producto_terminado_pt_clientes.posibilidad_de_suministro_de_pt_de_otras_plantas_del_grupo_o_de_terceros_y_porcentaje_de_suministro_sobre_el_total_necesario"
+  },
+  {
+    "id": "pb_extracoste_produccion_terceros_pt",
+    "type": "question",
+    "prompt": "Extra-coste de producción por otras plantas del grupo o por terceros para PT:",
+    "yaml_path": "perdida_de_beneficio.producto_terminado_pt_clientes.extra_coste_de_produccion_por_otras_plantas_del_grupo_o_por_terceros"
+  },
+  {
+    "id": "pb_flexibilidad_redundancia_procesos_instalaciones",
+    "type": "question",
+    "prompt": "Describa la flexibilidad y redundancia de los procesos productivos e instalaciones auxiliares.",
+    "yaml_path": "perdida_de_beneficio.flexibilidad_y_redundancia_de_los_procesos_productivos_e_instalaciones_auxiliares"
+  },
+  {
+    "id": "pb_tiempos_reemplazo_instalaciones_criticas",
+    "type": "question",
+    "prompt": "Tiempos de reemplazo de instalaciones críticas:",
+    "yaml_path": "perdida_de_beneficio.tiempos_de_reemplazo_de_instalaciones_criticas"
+  },
+  {
+    "id": "pb_tipo_proceso_lineal_diversificado",
+    "type": "question",
+    "prompt": "Tipo de Proceso (lineal o diversificado):",
+    "yaml_path": "perdida_de_beneficio.tipo_de_proceso_lineal_o_diversificado"
+  },
+  {
+    "id": "pb_lineas_unicas_duplicidad",
+    "type": "question",
+    "prompt": "¿Líneas únicas de producción o duplicidad de líneas de producción?",
+    "yaml_path": "perdida_de_beneficio.lineas_unicas_de_produccion_o_duplicidad_de_lineas_de_produccion"
+  },
+  {
+    "id": "pb_cuellos_botella_proceso",
+    "type": "question",
+    "prompt": "Cuellos de botella en líneas o maquinaria de proceso:",
+    "yaml_path": "perdida_de_beneficio.cuellos_de_botella_en_lineas_o_maquinaria_de_proceso"
+  },
+  {
+    "id": "pb_maquinaria_nacional_internacional",
+    "type": "question",
+    "prompt": "Maquinaria: ¿Nacional/Internacional?",
+    "yaml_path": "perdida_de_beneficio.maquinaria_nacional_internacional"
+  },
+  {
+    "id": "tabla_pb_produccion_facturacion_linea",
+    "type": "table_start",
+    "prompt": "Vamos a detallar el % de producción y % de facturación que pasa por cada línea de proceso o equipo principal. ¿Desea añadir la primera línea/maquinaria?",
+    "yaml_path": "perdida_de_beneficio.porcentaje_de_produccion_y_facturacion_por_linea_o_equipo.tabla_produccion_facturacion_linea_maquinaria",
+    "table_columns": [
+      {"id": "linea_maquinaria_pb", "label": "Línea de producción / maquinaria:", "yaml_key": "linea_produccion_maquinaria"},
+      {"id": "porcentaje_produccion_total_pb", "label": "% Producción Total que pasa por la línea/maquinaria:", "yaml_key": "porcentaje_produccion_total", "validation_hint": "Porcentaje"},
+      {"id": "porcentaje_facturacion_total_pb", "label": "% Facturación total que pasa por la línea/maquinaria:", "yaml_key": "porcentaje_facturacion_total", "validation_hint": "Porcentaje"}
+    ],
+    "add_row_prompt": "¿Desea añadir otra línea/maquinaria para el análisis de producción/facturación?"
+  },
+  {
+    "id": "pb_tiempo_reposicion_equipos_cuello_botella",
+    "type": "section_start",
+    "prompt": "Sobre el 'Tiempo reposición equipos principales y cuello de botella hasta la vuelta a normalidad'."
+  },
+  {
+    "id": "tabla_pb_reposicion_equipos",
+    "type": "table_start",
+    "prompt": "¿Desea añadir información sobre la reposición del primer equipo principal/cuello de botella?",
+    "yaml_path": "perdida_de_beneficio.tiempo_reposicion_equipos_principales_y_cuello_de_botella_hasta_normalidad.tabla_reposicion_equipos",
+    "table_columns": [
+      {"id": "linea_maquinaria_reposicion", "label": "Línea de producción/Maquinaria:", "yaml_key": "linea_produccion_maquinaria"},
+      {"id": "tiempo_reposicion_equipo", "label": "Tiempo de reposición:", "yaml_key": "tiempo_de_reposicion"},
+      {"id": "tiempo_montaje_equipo", "label": "Tiempo de montaje:", "yaml_key": "tiempo_de_montaje"},
+      {"id": "coste_reemplazo_equipo", "label": "Coste de reemplazo (€):", "yaml_key": "coste_de_reemplazo", "validation_hint": "Numérico (€)"}
+    ],
+    "add_row_prompt": "¿Desea añadir otro equipo para el análisis de reposición?"
+  },
+  {
+    "id": "pb_tiempo_reposicion_instalaciones_servicio",
+    "type": "section_start",
+    "prompt": "Sobre el 'Tiempo reposición instalaciones de servicios/auxiliares principales y cuello de botella hasta la vuelta a normalidad'."
+  },
+  {
+    "id": "tabla_pb_produccion_facturacion_instalaciones_servicio",
+    "type": "table_start",
+    "prompt": "Vamos a detallar el % de producción y % de facturación que pasa por cada instalación de servicio principal. ¿Desea añadir la primera instalación (Ej: Transformadores, Calderas)?",
+    "yaml_path": "perdida_de_beneficio.tiempo_reposicion_instalaciones_de_servicios_auxiliares_principales_y_cuello_de_botella_hasta_normalidad.tabla_produccion_facturacion_instalaciones_servicio",
+    "table_columns": [
+      {"id": "instalacion_servicio_pb", "label": "Instalación de servicio (Ej: Transformadores, Calderas):", "yaml_key": "instalacion_servicio"},
+      {"id": "porcentaje_produccion_total_is_pb", "label": "% Producción Total que pasa por la instalación:", "yaml_key": "porcentaje_produccion_total", "validation_hint": "Porcentaje"},
+      {"id": "porcentaje_facturacion_total_is_pb", "label": "% Facturación total que pasa por la instalación:", "yaml_key": "porcentaje_facturacion_total", "validation_hint": "Porcentaje"}
+    ],
+    "add_row_prompt": "¿Desea añadir otra instalación de servicio para el análisis de producción/facturación?"
+  },
+  {
+    "id": "pb_equipos_informaticos",
+    "type": "question",
+    "prompt": "Equipos informáticos (backup, protecciones, etc.):",
+    "yaml_path": "perdida_de_beneficio.equipos_informaticos_backup_protecciones_etc"
+  },
+  {
+    "id": "tabla_pb_reposicion_instalaciones_servicio_criticas",
+    "type": "table_start",
+    "prompt": "Detalles sobre el 'Tiempo reposición instalaciones de servicios/auxiliares CRÍTICAS y cuello de botella hasta la vuelta a normalidad'. ¿Desea añadir la primera instalación crítica?",
+    "yaml_path": "perdida_de_beneficio.tiempo_reposicion_instalaciones_de_servicios_auxiliares_criticas_hasta_normalidad.tabla_reposicion_instalaciones_servicio_criticas",
+    "table_columns": [
+      {"id": "instalacion_servicio_critica_reposicion", "label": "Instalación de servicio/auxiliar CRÍTICA:", "yaml_key": "linea_produccion_maquinaria"},
+      {"id": "tiempo_reposicion_is_critica", "label": "Tiempo de reposición:", "yaml_key": "tiempo_de_reposicion"},
+      {"id": "tiempo_montaje_is_critica", "label": "Tiempo de montaje:", "yaml_key": "tiempo_de_montaje"},
+      {"id": "coste_reemplazo_is_critica", "label": "Coste de reemplazo (€):", "yaml_key": "coste_de_reemplazo", "validation_hint": "Numérico (€)"}
+    ],
+    "add_row_prompt": "¿Desea añadir otra instalación de servicio crítica para el análisis de reposición?"
+  },
+  {
+    "id": "pb_produccion_interdependencia_plantas",
+    "type": "question",
+    "prompt": "Producción /Interdependencia entre plantas del grupo. Describa.",
+    "yaml_path": "perdida_de_beneficio.produccion_interdependencia_entre_plantas_del_grupo"
+  },
+  {
+    "id": "pb_turnos_trabajo",
+    "type": "question",
+    "prompt": "Turnos de trabajo (desde la perspectiva de PB):",
+    "yaml_path": "perdida_de_beneficio.turnos_de_trabajo"
+  },
+  {
+    "id": "pb_estabilidad_ventas_produccion",
+    "type": "question",
+    "prompt": "Estabilidad anual de ventas: ¿Producción regular o estacionaria?",
+    "yaml_path": "perdida_de_beneficio.estabilidad_anual_de_ventas_produccion_regular_o_estacionaria"
+  },
+  {
+    "id": "pb_produccion_estacionaria_start",
+    "type": "section_start",
+    "prompt": "En el caso de producción estacionaria:"
+  },
+  {
+    "id": "pb_meses_mayor_produccion",
+    "type": "question",
+    "prompt": "Meses de mayor producción y porcentaje del total de producción y facturación:",
+    "yaml_path": "perdida_de_beneficio.en_el_caso_de_produccion_estacionaria.meses_de_mayor_produccion_y_porcentaje_del_total_de_produccion_y_facturacion",
+    "conditional_logic": {
+        "triggered_by_answer_to_id": "pb_estabilidad_ventas_produccion",
+        "condition": "contains_estacionaria"
+      }
+  },
+  {
+    "id": "pb_meses_menor_produccion",
+    "type": "question",
+    "prompt": "Meses de menor producción y porcentaje del total de producción y facturación:",
+    "yaml_path": "perdida_de_beneficio.en_el_caso_de_produccion_estacionaria.meses_de_menor_produccion_y_porcentaje_del_total_de_produccion_y_facturacion",
+    "conditional_logic": {
+        "triggered_by_answer_to_id": "pb_estabilidad_ventas_produccion",
+        "condition": "contains_estacionaria"
+      }
+  },
+  {
+    "id": "pb_produccion_bajo_pedido",
+    "type": "question",
+    "prompt": "¿Producción bajo pedido? (Si/No)",
+    "yaml_path": "perdida_de_beneficio.produccion_bajo_pedido_si_no",
+    "validation_hint": "Si/No"
+  },
+  {
+    "id": "pb_porcentaje_produccion_bajo_pedido",
+    "type": "question",
+    "prompt": "Si producen bajo pedido, ¿qué porcentaje de producción es bajo pedido?",
+    "yaml_path": "perdida_de_beneficio.porcentaje_de_produccion_bajo_pedido",
+    "validation_hint": "Porcentaje",
+    "conditional_logic": {
+        "triggered_by_answer_to_id": "pb_produccion_bajo_pedido",
+        "condition": "is_yes"
+      }
+  },
+  {
+    "id": "pb_numero_plantas_grupo_una",
+    "type": "question",
+    "prompt": "Número de plantas del grupo: ¿Es una única planta? (Si/No)",
+    "yaml_path": "perdida_de_beneficio.numero_de_plantas_del_grupo.una_si_no",
+    "validation_hint": "Si/No"
+  },
+  {
+    "id": "pb_numero_plantas_grupo_varias",
+    "type": "question",
+    "prompt": "Si no es única, ¿son varias plantas? Describa.",
+    "yaml_path": "perdida_de_beneficio.numero_de_plantas_del_grupo.varias_si_no_describir",
+    "conditional_logic": {
+        "triggered_by_answer_to_id": "pb_numero_plantas_grupo_una",
+        "condition": "is_no"
+      }
+  },
+  {
+    "id": "pb_interdependencia_planta_resto_grupo",
+    "type": "question",
+    "prompt": "Interdependencia entre la planta y el resto de las plantas del grupo. (Si/No) Describa.",
+    "yaml_path": "perdida_de_beneficio.interdependencia_entre_la_planta_y_el_resto_de_las_plantas_del_grupo_si_no_describir",
+    "validation_hint": "Si/No/Texto"
+  },
+  {
+    "id": "pb_diagrama_interdependencia_centros",
+    "type": "question",
+    "prompt": "Información sobre el Diagrama de interdependencia entre centros de fabricación del grupo (¿Disponible? ¿Dónde se adjunta?):",
+    "yaml_path": "perdida_de_beneficio.diagrama_de_interdependencia_entre_centros_de_fabricacion_del_grupo"
+  },
+  {
+    "id": "pb_paralizacion_otras_plantas_por_siniestro_esta",
+    "type": "question",
+    "prompt": "Los otros centros de fabricación o distribución, ¿sufrirían paralización total o parcial en caso de siniestro en esta planta? % de paralización para el resto de plantas del grupo.",
+    "yaml_path": "perdida_de_beneficio.los_otros_centros_de_fabricacion_o_distribucion_sufririan_paralizacion_total_o_parcial_en_caso_de_siniestro_en_esta_planta_porcentaje_de_paralizacion_para_el_resto_de_plantas_del_grupo",
+    "validation_hint": "Texto y Porcentaje"
+  },
+  {
+    "id": "pb_posibilidad_produccion_alternativa_grupo_terceros",
+    "type": "question",
+    "prompt": "Posibilidad de producción alternativa en plantas del grupo o de terceros. Describa.",
+    "yaml_path": "perdida_de_beneficio.posibilidad_de_produccion_alternativa_en_plantas_del_grupo_o_de_terceros.descripcion"
+  },
+  {
+    "id": "pb_extracoste_produccion_alternativa",
+    "type": "question",
+    "prompt": "Extracoste de la producción alternativa:",
+    "yaml_path": "perdida_de_beneficio.posibilidad_de_produccion_alternativa_en_plantas_del_grupo_o_de_terceros.extracoste"
+  },
+  {
+    "id": "pb_plan_continuidad_negocio_elaborado_implantado",
+    "type": "question",
+    "prompt": "¿Existe un Plan de continuidad de negocio elaborado e implantado? (Si/No/Describa)",
+    "yaml_path": "perdida_de_beneficio.plan_de_continuidad_de_negocio_elaborado_e_implantado",
+    "validation_hint": "Si/No/Texto"
+  },
+  {
+    "id": "pb_sgcn_start",
+    "type": "section_start",
+    "prompt": "Sobre el 'Sistema de Gestión continuidad de negocio (SGCN)'."
+  },
+  {
+    "id": "pb_sgcn_alcance_politica_roles",
+    "type": "question",
+    "prompt": "Describa el SGCN: definición del alcance, política, definición de roles, etc.",
+    "yaml_path": "perdida_de_beneficio.sistema_de_gestion_continuidad_de_negocio_sgcn.definicion_del_alcance_politica_definicion_de_roles_etc"
+  },
+  {
+    "id": "pb_gcn_operacion_start",
+    "type": "section_start",
+    "prompt": "Sobre 'Continuidad de negocio · Operación (GCN)'."
+  },
+  {
+    "id": "pb_gcn_bia_estrategias_respuesta",
+    "type": "question",
+    "prompt": "Describa la operación GCN: Business Impact Analysis, estrategias, estructuras de respuesta, etc.",
+    "yaml_path": "perdida_de_beneficio.continuidad_de_negocio_operacion_gcn.business_impact_analysis_estrategias_estructuras_de_respuesta_etc"
+  },
+  {
+    "id": "pb_analisis_impacto_perdida_negocio",
+    "type": "question",
+    "prompt": "¿Existe un análisis de impacto de pérdida de negocio (suministradores, clientes, productos principales, etc.)? Describa.",
+    "yaml_path": "perdida_de_beneficio.existe_un_analisis_de_impacto_de_perdida_de_negocio_suministradores_clientes_productos_principales_etc"
+  },
+  {
+    "id": "pb_productos_principales_facturacion_impacto",
+    "type": "question",
+    "prompt": "Productos principales relacionados con la facturación y áreas geográficas. Impacto financiero, escenarios críticos, etc. Describa.",
+    "yaml_path": "perdida_de_beneficio.productos_principales_relacionados_con_la_facturacion_y_areas_geograficas_impacto_financiero_escenarios_criticos_etc"
+  },
+  {
+    "id": "pb_estrategia_minimizacion_perdidas",
+    "type": "question",
+    "prompt": "Describa la estrategia de minimización de pérdidas.",
+    "yaml_path": "perdida_de_beneficio.estrategia_de_minimizacion_de_perdidas"
+  },
+  {
+    "id": "pb_plan_contingencia_continuidad",
+    "type": "question",
+    "prompt": "Describa el Plan de contingencia/Plan de Continuidad de Negocio.",
+    "yaml_path": "perdida_de_beneficio.plan_de_contingencia_plan_de_continuidad_de_negocio.descripcion"
+  },
+  {
+    "id": "pb_implementacion_adecuada_plan_contingencia",
+    "type": "question",
+    "prompt": "La implementación del plan de contingencia, ¿es adecuada?",
+    "yaml_path": "perdida_de_beneficio.implementacion_adecuada"
+  },
+  {
+    "id": "pb_revision_periodica_plan_contingencia",
+    "type": "question",
+    "prompt": "¿Hay revisión periódica del plan de contingencia?",
+    "yaml_path": "perdida_de_beneficio.revision_periodica_del_plan_de_contingencia"
+  },
+  {
+    "id": "sostenibilidad_esg_start",
+    "type": "section_start",
+    "prompt": "Sección 'SOSTENIBILIDAD /ESG'."
+  },
+  {
+    "id": "sostenibilidad_esg_descripcion",
+    "type": "question",
+    "prompt": "Describa las iniciativas o aspectos relevantes de Sostenibilidad / ESG.",
+    "yaml_path": "sostenibilidad_esg.descripcion"
+  },
+  {
+    "id": "escenarios_perdidas_riesgos_start",
+    "type": "section_start",
+    "prompt": "Sección 'ESCENARIOS DE PERDIDAS/RIESGOS (DAÑOS MATERIALES, AVERIA MAQUINARIA, PB)'."
+  },
+  {
+    "id": "escenarios_perdidas_riesgos_descripcion",
+    "type": "question",
+    "prompt": "Describa los principales escenarios de pérdidas/riesgos identificados.",
+    "yaml_path": "escenarios_de_perdidas_riesgos_danos_materiales_averia_maquinaria_pb.descripcion"
+  },
+  {
+    "id": "otros_start",
+    "type": "section_start",
+    "prompt": "Sección 'OTROS'."
+  },
+  {
+    "id": "otros_descripcion",
+    "type": "question",
+    "prompt": "Cualquier otra información relevante no cubierta anteriormente.",
+    "yaml_path": "otros.descripcion"
+  },
+  {
+    "id": "final_questionnaire",
+    "type": "info",
+    "prompt": "Hemos llegado al final del cuestionario. Muchas gracias."
+  }
+]
