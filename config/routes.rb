@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       get   :tabla_datos
       patch :update_message
       post :create_message
+      get :summary
     end
   end
 

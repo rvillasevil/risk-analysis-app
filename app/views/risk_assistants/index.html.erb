@@ -1,5 +1,5 @@
 <div class="container py-4">
-  <h2 class="mb-4">Mis RiskAssistants</h2>
+  <h2 class="h3 mb-3">Mis RiskAssistants</h2>
 
   <% if notice %>
     <div class="alert alert-success"><%= notice %></div>
@@ -21,7 +21,7 @@
   <% @risk_assistants.order(created_at: :asc).each do |risk_assistant| %>
     <div class="row align-items-center py-2 border-bottom">
       <div class="col-md-4 text-start">
-        <%= link_to "Toma de datos de: #{risk_assistant.name}", risk_assistant_path(risk_assistant), class: "text-decoration-none" %>
+        <%= link_to "#{risk_assistant.name}", risk_assistant_path(risk_assistant), class: "text-decoration-none" %>
       </div>
       <div class="col-md-2 text-center">
         <%= link_to "Report", report_risk_assistant_path(risk_assistant), class: "btn btn-outline-primary btn-sm" %>

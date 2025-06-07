@@ -37,25 +37,28 @@ class PolicyAnalysesController < ApplicationController
     redirect_to policy_analyses_path, notice: 'Análisis eliminado con éxito.'
   end
 
-  # POST /policy_analyses/:id/ask
+    # POST /policy_analyses/:id/ask
   def ask
-    pregunta = params.require(:question)
-    contexto = @policy_analysis.extractions.to_s
+    pregunta = params.require(:question).strip
+
+    # Usamos el texto completo con marcadores de página para que ChatGPT cite las páginas reales
+    contexto = @policy_analysis.documents.map do |doc|
+      "== Documento: #{doc.filename} ==\n" +
+      TextExtractor.call(doc)
+    end.join("\n\n")
 
     system_prompt = <<~SYS
-      Eres un asistente experto en seguros. Tienes este texto extraído de una póliza,
+      Eres un asistente experto en seguros. Tienes este texto íntegro de varias pólizas,
       con marcadores de página "== Página X ==" insertados. Cuando respondas:
-      - Contesta sólo a la pregunta.
-      - Cita siempre la página en formato [página X].
-      - No inventes nada.
-
-      Contexto:
+      - Contesta solo a la pregunta.
+      - Cita siempre el número de página real entre corchetes, p.ej. [3].
+      - No inventes datos ni añadas explicaciones.
+      CONTEXTO:
       #{contexto}
     SYS
 
     ai_answer = call_openai(system_prompt, "Pregunta: #{pregunta}")
 
-    # Guardamos la respuesta en flash y redirigimos a show
     flash[:policy_answer] = ai_answer
     redirect_to policy_analysis_path(@policy_analysis)
   end

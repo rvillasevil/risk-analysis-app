@@ -1,6 +1,6 @@
   class RiskAssistantsController < ApplicationController
     before_action :authenticate_user!
-    before_action :set_risk_assistant, only: [:show, :generate_report, :report, :resume, :update_message, :create_message]
+    before_action :set_risk_assistant, only: [:show, :generate_report, :report, :resume, :update_message, :create_message, :summary]
   
     def index
       @risk_assistants = current_user.risk_assistants
@@ -177,6 +177,13 @@
         render :resume
       end
     end
+
+    def summary
+      # Aquí cargamos todo lo que necesitemos para la vista
+      @sections = RiskFieldSet.all
+      @messages = @risk_assistant.messages
+      render :summary
+    end    
 
 
     private

@@ -16,6 +16,8 @@ class RiskAssistant < ApplicationRecord
   has_one :siniestralidad, dependent: :destroy
   has_one :recomendacione, dependent: :destroy
 
+  has_many_attached :uploaded_files
+
   accepts_nested_attributes_for :identificacion, :ubicacion_configuracion, :edificios_construccion,
                                 :actividad_proceso, :almacenamiento, :instalaciones_auxiliare,
                                 :riesgos_especifico, :siniestralidad, :recomendacione

@@ -3,5 +3,10 @@ class Message < ApplicationRecord
 
   validates :sender, presence: true
   validates :content, presence: true
-  validates :role, inclusion: { in: %w[user assistant] }
+  enum role: {
+    user:       "user",
+    assistant:  "assistant",
+    developer:  "developer"
+  }, _suffix: true  
+  validates :role, inclusion: { in: %w[user assistant developer] }
 end
