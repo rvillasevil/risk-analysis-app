@@ -1,36 +1,60 @@
-<%#--------------------------------------------------------------%>
-<%#                 CONTENIDO                                    %>
-<%#--------------------------------------------------------------%>
+<%# -------------------------------------------------------------- %>
+<%# Chat Page – Bootstrap 5 Responsive con Sidebar intacto         %>
+<%# -------------------------------------------------------------- %>
 <div class="container-xxl py-3">
-
-  <!-- ───── CABECERA ────────────────────────────────────────── -->
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h4 mb-0"><%= @risk_assistant.name %></h1>
-
-    <!-- botón hamburguesa visible < md -->
+  <!-- CABECERA + Botón hamburguesa -->
+  <div class="d-flex justify-content-between align-items-center mb-3" style="margin-bottom:0px !important;">
     <button class="btn btn-outline-secondary d-md-none"
             data-bs-toggle="offcanvas"
             data-bs-target="#sidebarCanvas">
-      <i class="bi bi-list"></i>
+      <i class="bi bi-list"><h1 class="h4 mb-0"><%= @risk_assistant.name %></h1></i>
     </button>
   </div>
 
   <div class="row gx-lg-5">
-    <!-- ■■■  SIDEBAR  ■■■ -->
+    <!-- SIDEBAR -->
     <aside class="col-lg-4 col-md-5">
-
-      <!-- escritorio -->
+      <!-- Desktop -->
       <div class="d-none d-md-block">
         <div class="sidebar-box">
-          <%= render partial:"sidebar",
-                     locals:{ sections:@sections,
-                              progress_by_section:@progress_by_section,
-                              overall_pct:@overall_pct,
-                              risk_assistant:@risk_assistant } %>
+          <%#── Sección de “Archivos subidos” ──────────────────────────────────── %>
+          <h4 class="text-lg font-semibold mb-2">Archivos subidos</h6>
+          <% if @risk_assistant.uploaded_files.attached? %>
+            <div class="uploaded-files-section p-4 mb-6 border rounded bg-gray-50">
+              <h2 class="text-lg font-semibold mb-2">Archivos subidos</h2>
+              <ul class="list-unstyled">
+                <% @risk_assistant.uploaded_files.each do |file| %>
+                  <li class="mb-2">
+                    <i class="bi bi-file-earmark-pdf-fill text-red-600"></i>
+                    <%= link_to file.filename.to_s,
+                                url_for(file),
+                                target: "_blank",
+                                class: "text-blue-600 hover:underline" %>
+                    (<%= number_to_human_size(file.byte_size) %>)
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          <% else %>
+            <div class="uploaded-files-section p-4 mb-6 border rounded bg-gray-50">
+              <h2 class="text-lg font-semibold mb-2">Archivos subidos</h2>
+              <p class="text-muted">No hay archivos subidos.</p>
+            </div>
+          <% end %>
+          <div class="mt-4">
+            <%= link_to "📋 Ver resumen de datos", summary_risk_assistant_path(@risk_assistant),
+                        class: "btn btn-outline-primary w-100" %>
+          </div>          
+          <%= render partial: "sidebar",
+                     locals: {
+                       sections: @sections,
+                       progress_by_section: @progress_by_section,
+                       overall_pct: @overall_pct,
+                       risk_assistant: @risk_assistant
+                     } %>
         </div>
       </div>
-
-      <!-- off-canvas móvil -->
+      <!-- Offcanvas móvil -->
       <div class="offcanvas offcanvas-start d-md-none" id="sidebarCanvas">
         <div class="offcanvas-header border-bottom">
           <h5 class="offcanvas-title">Panel</h5>
@@ -38,68 +62,79 @@
         </div>
         <div class="offcanvas-body p-0">
           <div class="sidebar-box border-0 rounded-0">
-            <%= render partial:"sidebar",
-                       locals:{ sections:@sections,
-                                progress_by_section:@progress_by_section,
-                                overall_pct:@overall_pct,
-                                risk_assistant:@risk_assistant } %>
+            <%= render partial: "sidebar",
+                       locals: {
+                         sections: @sections,
+                         progress_by_section: @progress_by_section,
+                         overall_pct: @overall_pct,
+                         risk_assistant: @risk_assistant
+                       } %>
           </div>
         </div>
       </div>
     </aside>
 
-    <!-- ■■■  MAIN / CHAT  ■■■ -->
-    <main class="col-lg-8 col-md-7">
-      <div class="chat-page">
-
-        <!---- chat-history ---->
-        <div class="chat-history">
-          <%#  ⬇️  orden correcto: ASC  ⬇️  %>
-          <% @risk_assistant.messages.order(created_at: :asc).each do |m| %>
-            <% css_row = m.sender == 'user' ? 'user' : 'assistant' %>
-            <% css_box = m.sender == 'user' ? 'user' : '' %>
-
-            <div class="message-row <%= css_row %>">
-              <div class="message-box <%= css_box %>">
-                <div class="header">
-                  <strong><%= m.sender.capitalize %></strong>
-                  <small><%= l m.created_at, format: :short %></small>
-                </div>
-
-                <div class="body"><%= simple_format m.content %></div>
+    <!-- MAIN / CHAT -->
+    <main class="col-lg-8 col-md-7 d-flex flex-column chat-page">
+      <h1 class="h1 mb-0"><%= @risk_assistant.name %></h1>
+      <div class="chat-history">
+        <%# Mensajes en orden ascendente pero invertidos vía flex-column-reverse %>
+        <% @risk_assistant.messages.order(created_at: :asc).each do |m| %>
+          <% row_cls = m.sender == 'user' ? 'user' : 'assistant' %>
+          <div class="message-row <%= row_cls %>">
+            <div class="message-box <%= row_cls %>">
+              <div class="header">
+                <strong><%= m.sender.capitalize %></strong>
+                <small><%= l m.created_at, format: :short %></small>
               </div>
+              <div class="body"><%= simple_format m.content %></div>
             </div>
-          <% end %>
-        </div>
+          </div>
+        <% end %>
+      </div>
 
-        <!-- FORMULARIO -->
-        <%= form_with url:risk_assistant_messages_path(@risk_assistant),
-                      method: :post, local:true, multipart:true,
-                      html:{class:'chat-form border-top'} do |f| %>
+      <!-- FORMULARIO fijo abajo -->
+      <%= form_with url: risk_assistant_messages_path(@risk_assistant),
+                      method: :post,
+                      local: true,
+                      html: { multipart: true, class: "chat-form" } do |f| %>
+
+          <%#— Contenedor donde mostraremos el nombre del archivo seleccionado —%>
+          <div id="selected-file-container" class="mb-2" style="display: none;">
+            <small class="text-muted">Archivo adjunto: <span id="selected-file-name"></span></small>
+          </div>
+
           <div class="input-group">
-            <%= f.text_area :content, name:'message[content]',
-                  rows:1, required:true,
-                  class:'form-control', placeholder:'Escribe tu mensaje…' %>
+            <%= f.text_area :content,
+                           name: 'message[content]',
+                           rows: 1,
+                           required: true,
+                           class: 'form-control',
+                           placeholder: 'Escribe tu mensaje…' %>
 
-            <%= file_field_tag :file, id:'fileUpload', class: 'd-none' %>
+            <%#— Campo de subida de archivo oculto —%>
+            <%= file_field_tag :file,
+                               id: 'fileUpload',
+                               accept: '.pdf,.doc,.docx,.txt',
+                               class: 'd-none' %>
 
-          <button type="button"
-                  class="btn-attach"
-                  onclick="document.getElementById('fileUpload').click()">
-            <i class="bi bi-paperclip"></i>
-          </button>
+            <%#— Botón para disparar el selector de archivos —%>
+            <button type="button"
+                    class="btn btn-outline-secondary"
+                    onclick="document.getElementById('fileUpload').click()">
+              <i class="bi bi-paperclip"></i>
+            </button>
 
-            <%= f.submit 'Enviar', class:'btn-send' %>
+            <%= f.submit 'Enviar', class: 'btn btn-primary ms-1' %>
           </div>
         <% end %>
 
-      </div>
     </main>
   </div>
 </div>
 
 <script>
-  // Auto-scroll al último mensaje
+  // Auto-scroll al fondo de la conversación
   function scrollChatBottom(){
     const hist = document.querySelector('.chat-history');
     if(hist){ hist.scrollTop = hist.scrollHeight; }
@@ -107,7 +142,26 @@
   document.addEventListener('DOMContentLoaded', scrollChatBottom);
   document.addEventListener('turbo:frame-load', scrollChatBottom);
   document.addEventListener('turbo:render', scrollChatBottom);
+
+  // Mostrar nombre de archivo seleccionado antes de enviar
+  document.addEventListener('DOMContentLoaded', () => {
+    const fileInput = document.getElementById('fileUpload');
+    const container = document.getElementById('selected-file-container');
+    const nameSpan = document.getElementById('selected-file-name');
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files && fileInput.files.length > 0) {
+        const filename = fileInput.files[0].name;
+        nameSpan.textContent = filename;
+        container.style.display = 'block';
+      } else {
+        container.style.display = 'none';
+        nameSpan.textContent = '';
+      }
+    });
+  });
 </script>
+
 
 <!-- 
       <%# -------- BOTONERA RÁPIDA DE SECCIONES ------------------ %>

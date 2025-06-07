@@ -1,96 +1,138 @@
 # lib/risk_field_set.rb
 # frozen_string_literal: true
-#
-#  ▸ Carga la definición de campos desde:
-#      – config/risk_assistant/fields.yml      (YAML clásico)
-#      – config/risk_assistant/*.json          (nuevo formato Gemini)
-#  ▸ Expone la MISMA API que usaba el resto de la app:
-#      RiskFieldSet.flat_fields
-#      RiskFieldSet.by_id
-#      RiskFieldSet.label_for(:id)
-#      RiskFieldSet.question_for(:id)
-#
+
 require "yaml"
 require "json"
+require "pathname"
+
 
 class RiskFieldSet
-  CONFIG_DIR  = Rails.root.join("config", "risk_assistant")
-  YAML_PATH   = CONFIG_DIR.join("fields.yml")
-  # → 1) averiguamos si existe algún JSON en la carpeta
+  CONFIG_DIR = Rails.root.join("config", "risk_assistant")
+  YAML_PATH  = CONFIG_DIR.join("fields.yml")
   FIRST_JSON = Dir[CONFIG_DIR.join("*.json")].first
-
-  # → 2) lo convertimos en Pathname (o nil si no hay ninguno)
   JSON_PATH  = FIRST_JSON && Pathname.new(FIRST_JSON)
 
-  # ----------------------  CACHES  ----------------------
-  @sections     = nil   # Hash seccion → {title:, fields:[]}
-  @flat         = nil   # Array de campos
-  @by_id        = nil   # Hash id_sym → campo
-  @label_to_id  = nil   # Hash label.downcase → id_sym
-  @id_to_label  = nil   # Hash id_sym → label
-
-  # ------------------------------------------------------------
-  # Dominio del CAMPO (estructura in-memory)
-  # ------------------------------------------------------------
   Field = Struct.new(
-    :id,       :label,  :prompt,  :type, :options, :example,
-    :why,      :context,:section, :position, :validations,
+    :id, :label, :prompt, :type, :options, :example,
+    :why, :context, :section, :validation, :assistant_instructions, :parent, :array_of_objects,
     keyword_init: true
   )
 
   class << self
-    # -------------- 1. Carga única (secciones + campos) ----------
+    # Devuelve el hash de secciones con sus campos ya procesados
     def all
       @sections ||= load_data!
     end
 
-    # -------------- 2. Array plano ------------------------------
+    # Array plano de TODOS los campos (sin subsecciones)
     def flat_fields
-      @flat ||= all.values.flat_map { |s| s[:fields] }
+      @flat ||= all.values.flat_map { |sec| sec[:fields] }
     end
 
-    # -------------- 3. Índices rápidos --------------------------
+    # Índice rápido id_sym -> campo
     def by_id
       @by_id ||= flat_fields.index_by { |f| f[:id].to_sym }
     end
 
+    # Índice label.downcase -> id_sym
     def label_to_id
       @label_to_id ||= flat_fields
                          .index_by { |f| f[:label].strip.downcase }
                          .transform_values { |f| f[:id].to_sym }
     end
 
+    # Label legible dado un id
     def label_for(id_sym)
       @id_to_label ||= flat_fields.index_by { |f| f[:id].to_sym }
       (@id_to_label[id_sym.to_sym] || {})[:label] || id_sym.to_s.humanize
     end
 
-    # -------------- 4. Prompt enriquecido -----------------------
+    # Construye el prompt enriquecido, incluyendo siempre las opciones
     def question_for(id_sym)
+      id_str = id_sym.to_s
+      if id_str =~ /\A(?<array_id>[^.]+)\.(?<idx>\d+)\.(?<child_id>.+)\z/
+        array_id  = Regexp.last_match[:array_id]
+        idx       = Regexp.last_match[:idx].to_i
+        child_id  = Regexp.last_match[:child_id]
+        # Búsqueda del campo “array_id.child_id” en by_id
+        full_child_key = "#{array_id}.#{child_id}".to_sym
+        f = by_id[full_child_key] or return "¿?"
+        item_label = "Edificio #{idx + 1}"
+        parts = ["#{item_label}: #{f[:prompt].to_s.strip}"]
+        if f[:options]&.any?
+          parts << "Opciones disponibles: #{f[:options].join(', ')}."
+        end
+        parts << "Contexto: #{f[:context]}." if f[:context].present?
+        parts << "Ejemplo: #{f[:example]}."    if f[:example].present?
+        parts << "Importancia: #{f[:why]}."    if f[:why].present?
+        return parts.join(" ")
+      end
+
+      # Caso “normal” (no pertenece a un array indexado)
       f = by_id[id_sym.to_sym] or return "¿?"
       parts = [f[:prompt].to_s.strip]
-
-      parts << "Opciones disponibles: #{f[:options].join(', ')}." \
-        if f[:options]&.any?
-      parts << "Ejemplo: #{f[:example]}."  if f[:example].present?
-      parts << "Importancia: #{f[:why]}."  if f[:why].present?
+      if f[:options]&.any?
+        parts << "Opciones disponibles: #{f[:options].join(', ')}."
+      end
       parts << "Contexto: #{f[:context]}." if f[:context].present?
-
+      parts << "Ejemplo: #{f[:example]}."    if f[:example].present?
+      parts << "Importancia: #{f[:why]}."    if f[:why].present?
       parts.join(" ")
     end
 
-    # -------------- 5. Forzar recarga ---------------------------
+    # --------------------------------------------------------------------------
+    # Devuelve la lista de hashes (structs) de todos los subcampos (hijos)
+    # de un array con id = array_id. Esto equivale a buscar en flat_fields
+    # aquellos f[:parent] == array_id.
+    # --------------------------------------------------------------------------
+    def children_of_array(array_id)
+      flat_fields.select { |f| f[:parent] == array_id }
+    end    
+
+    def validate_answer(field, value)
+      v = field[:validation] || {}
+
+      return "Este campo es obligatorio" if v[:required] && value.blank?
+      return "El valor mínimo es #{v[:min]}" if v[:min] && value.to_f < v[:min]
+      return "El valor máximo es #{v[:max]}" if v[:max] && value.to_f > v[:max]
+
+      if field[:type] == :select && field[:options].any?
+        return "Elige una de las opciones: #{field[:options].join(', ')}" unless field[:options].include?(value)
+      end
+
+      if field[:type] == :boolean
+        return "Responde Sí o No" unless %w[Sí No true false].include?(value)
+      end
+
+      nil
+    end
+
+    # Limpia todos los caches — útil tras actualizar el fichero
     def reset_cache!
-      instance_variables.each { |iv| remove_instance_variable(iv) }
+      @sections    =
+      @flat        =
+      @by_id       =
+      @label_to_id =
+      @id_to_label = nil
     end
     public :reset_cache!
 
-    # ============================================================
-    #                     PRIVATE HELPERS
-    # ============================================================
+        # ------- NUEVO: helpers para el siguiente campo -----------------
+    def next_field_hash(answered_keys = [])
+      answered = answered_keys.map(&:to_s)
+      flat_fields.find { |f| !answered.include?(f[:id].to_s) }
+    end
+
+    def next_field_id(answered_keys = [])
+      h = next_field_hash(answered_keys)
+      h && h[:id]
+    end    
+
+    public :next_field_hash, :next_field_id   # ← AÑADE ESTA LÍNEA
+
     private
 
-    # Detecta si hay JSON → lo usa, si no lee YAML
+    # Decide parsear JSON o YAML según presencia de JSON_PATH
     def load_data!
       if JSON_PATH && File.exist?(JSON_PATH)
         Rails.logger.info "RiskFieldSet: cargando #{JSON_PATH.basename}"
@@ -101,82 +143,124 @@ class RiskFieldSet
       end
     end
 
-    # ---------- YAML -------------
+    # --- YAML clásico ---
     def parse_yaml(path)
-      raw = YAML.safe_load(File.read(path),
-                           aliases: true,
-                           symbolize_names: true)
+      raw = YAML.safe_load(
+        File.read(path),
+        aliases: true,
+        symbolize_names: true
+      )
       symbolize_deep!(raw)
     rescue Psych::Exception => e
       raise "YAML mal formado en #{path}: #{e.message}"
     end
 
-    # ---------- JSON (formato Gemini) -------------
-    #
-    #  Espera un ARRAY de objetos:
-    #  [
-    #    {
-    #      "id":        "direccion_riesgo",
-    #      "label":     "Dirección de riesgo",
-    #      "prompt":    "...",
-    #      "type":      "select",
-    #      "options":   ["A","B"],
-    #      "example":   "...",
-    #      "why":       "...",
-    #      "context":   "...",
-    #      "section":   "identificacion"
-    #    },
-    #    ...
-    #  ]
-    #
+    # --- JSON formato Gemini ---
+    # Espera raíz { "sections": [ { id, title, fields: [...] }, ... ] }
     def parse_json(path)
-      arr = JSON.parse(File.read(path))
-      raise "El JSON raíz debe ser un Array" unless arr.is_a?(Array)
-
-      # 1) Agrupar por sección (nil ⇒ :general)
-      grouped = arr.group_by { |n| n["section"].presence || "general" }
-
-      # 2) Transformar a la misma estructura que devolvía el YAML
+      doc = JSON.parse(File.read(path))
       sections = {}
-      grouped.each do |sec_name, nodes|
-        sections[sec_name.to_sym] = {
-          title:  sec_name.titleize,
-          fields: nodes.map.with_index(1) { |node, idx| json_to_field(node, sec_name, idx) }
+      unless doc["sections"].is_a?(Array)
+        raise "El JSON raíz debe contener key 'sections' con un Array"
+      end
+
+      doc["sections"].each do |sec|
+        sec_id = sec["id"] || sec["title"].parameterize.underscore
+        sections[sec_id.to_sym] = {
+          title:  sec["title"] || sec_id.to_s.humanize,
+          fields: walk_fields_rec(sec["fields"] || [], sec_id.to_sym)
         }
       end
+
       sections
     rescue JSON::ParserError => e
       raise "JSON mal formado en #{path}: #{e.message}"
     end
 
-    def json_to_field(node, sec_name, idx)
+    # lib/risk_field_set.rb
+    # ------------------------------------------------------------------
+    # Recorre recursivamente las secciones.  Para los nodos
+    # type:"array_of_objects" añade:
+    #   • el propio campo-array  (p. ej. constr_edificios_detalles_array)
+    #   • un campo por cada columna (p. ej. constr_edificios_detalles.edif_superficie)
+    # ------------------------------------------------------------------
+    def walk_fields_rec(nodes, section, parent_array_id = nil)
+      nodes.flat_map do |node|
+
+        case node["type"]
+        when "subsection"
+          walk_fields_rec(node["fields"] || [], section, parent_array_id)
+
+        when "array_of_objects"
+          array_id   = node["id"]
+          array_field = json_to_field(node, section, parent: parent_array_id)
+
+          # ► Procesar columnas (item_schema.fields)
+          cols = (node.dig("item_schema", "fields") || []).flat_map do |col|
+            json_to_field(col, section,
+                          id_override: "#{array_id}.#{col['id']}",
+                          parent:      array_id,
+                          in_array:    true)
+          end
+
+          [array_field] + cols
+
+        else
+          [json_to_field(node, section, parent: parent_array_id)]
+        end
+      end
+    end
+
+
+    # ------------------------------------------------------------------
+    # Convierte un nodo JSON a nuestro Hash interno
+    # ------------------------------------------------------------------
+    def json_to_field(node, section,
+                      id_override: nil,
+                      parent: nil,
+                      in_array: false)
+
+      opts =
+        if node["options"].is_a?(Array)
+          node["options"].map { |o| o["label"].to_s }
+        elsif node["type"] == "boolean"
+          %w[Sí No]                          # por defecto para boolean
+        else
+          []
+        end
+
       Field.new(
-        id:          node["id"],
-        label:       node["label"]   || node["prompt"],
-        prompt:      node["prompt"]  || node["label"],
+        id:          id_override || node["id"],
+        label:       node["label"].to_s,
+        prompt:      node["label"].to_s,
         type:        node["type"]&.to_sym || :string,
-        options:     node["options"],
+        options:     opts,
         example:     node["example"],
         why:         node["why"],
-        context:     node["context"],
-        section:     sec_name,
-        position:    idx,
-        validations: Array(node["validations"])
+        context:     node["context"] || node["tooltip"],
+        section:     section,
+        validation:  node["validation"] || {},
+        # ---- metadatos extra ----
+        parent:      parent,            # id del array padre
+        array_of_objects: in_array,     # true si es columna de tabla
+        assistant_instructions: node["assistant_instructions"]
       ).to_h
     end
 
-    # ---------- util ---------- #
+    # Convierte Hashes/Arrays con claves String a símbolos
     def symbolize_deep!(obj)
       case obj
       when Hash
-        obj.transform_keys!(&:to_sym)
-        obj.each_value { |v| symbolize_deep!(v) }
+        obj.keys.each { |k| obj[k.to_sym] = obj.delete(k) }
+        obj.values.each { |v| symbolize_deep!(v) }
       when Array
         obj.each { |v| symbolize_deep!(v) }
       end
       obj
     end
+   
   end
 end
+
 
 

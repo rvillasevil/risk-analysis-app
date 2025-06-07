@@ -1,0 +1,27 @@
+/* app/assets/stylesheets/risk_assistant_summary.css */
+
+.chat-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chat-history {
+  overflow-y: auto;
+}
+
+/* Dar un estilo sutil a filas de tabla */
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* Badge personalizado (opcional) */
+.badge {
+  font-size: 0.9rem;
+  padding: 0.4em 0.7em;
+}
+
+/* Ajustar cards para que tengan sombra ligera */
+.card {
+  border: none;
+}
