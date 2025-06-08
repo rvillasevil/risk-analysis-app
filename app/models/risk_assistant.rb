@@ -2,6 +2,8 @@ class RiskAssistant < ApplicationRecord
   belongs_to :user
   has_many :messages, dependent: :destroy
 
+  has_secure_token :share_token
+
   has_one :report
 
   validates :name, presence: true

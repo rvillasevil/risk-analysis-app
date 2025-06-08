@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
   get  'risk_assistants/:id/report', to: "risk_assistants#report", as: 'risk_assistant_report'
   get  'risk_assistants/:id/resume', to: "risk_assistants#resume", as: 'risk_assistant_resume'
+  get  'risk_assistants/:id/external/:token', to: 'risk_assistants#external_show', as: 'risk_assistant_external'
 
   root 'static_pages#home'
 end

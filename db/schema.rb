@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_05_29_172557) do
+ActiveRecord::Schema[7.0].define(version: 2025_06_01_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -179,7 +179,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_29_172557) do
     t.jsonb "sections_completed"
     t.string "thread_id"
     t.boolean "initialised", default: false, null: false
+    t.string "share_token"
     t.index ["user_id"], name: "index_risk_assistants_on_user_id"
+    t.index ["share_token"], name: "index_risk_assistants_on_share_token", unique: true
   end
 
   create_table "siniestralidads", force: :cascade do |t|
@@ -232,3 +234,4 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_29_172557) do
   add_foreign_key "siniestralidads", "risk_assistants"
   add_foreign_key "ubicacion_configuracions", "risk_assistants"
 end
+
