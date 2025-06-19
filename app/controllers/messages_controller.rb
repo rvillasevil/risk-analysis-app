@@ -122,7 +122,7 @@ class MessagesController < ApplicationController
                                             .where(thread_id: current_thread)
                                             .where.not(key: nil)
                                             .order(:created_at)
-                                            .map { |m| "#{m.key}: #{m.value}" }
+                                            .map { |m| "#{RiskFieldSet.label_for(m.key)}: #{m.value}" }
                                             .join("\n")
 
         # 4.2) Llamar a SemanticGuard para detectar contradicciones
@@ -165,6 +165,16 @@ class MessagesController < ApplicationController
     # 5.4) Ejecutar la run principal y esperamos su respuesta
     assistant_text = runner.run_and_wait
 
+    last_q = @risk_assistant.messages
+            .where(sender:    "assistant",
+                  role:      "assistant",
+                  thread_id: runner.thread_id)
+            .where.not(field_asked: nil)
+            .where(key: nil)
+            .order(:created_at)
+            .last
+
+
      # Opcional: guardar la respuesta completa del asistente para auditoría
     @risk_assistant.messages.create!(
       sender:    "assistant",
@@ -173,27 +183,42 @@ class MessagesController < ApplicationController
       thread_id: runner.thread_id
     )
 
-
     # 6) Procesar la respuesta del asistente (igual que antes)
     pairs = assistant_text.scan(/##(?<field_id>[^#()]+?)(?:\s*\((?<item_label>[^)]+)\))?##.*?&&\s*(?<value>.*?)\s*&&/m)    
     flags = assistant_text.scan(/⚠️\s*(.*?)\s*⚠️/m).flatten
 
     # 6.A) Guardar confirmaciones crudas
-  if pairs.any?
-    pairs.each do |field_id, item_label, value|
-      clean_id = field_id.to_s.strip
-      @risk_assistant.messages.create!(
-        content:     "✅ Perfecto, #{RiskFieldSet.label_for(clean_id)} es &&#{value}&&.",
-        sender:      "assistant",
-        role:        "developer",
-        key:         clean_id,
-        item_label:  item_label,
-        value:       value,
-        field_asked: nil,
-        thread_id:   runner.thread_id
-      )
+    # 6.A) Guardar confirmaciones crudas con validación
+    if pairs.any?
+      pairs.each do |field_id, item_label, value|
+        clean_id = field_id.to_s.strip
+        field    = RiskFieldSet.by_id[clean_id.to_sym]
+        error    = RiskFieldSet.validate_answer(field, value)
+
+        if error.present?
+          @risk_assistant.messages.create!(
+            sender:      "assistant",
+            role:        "assistant",
+            content:     "⚠️ #{error} ⚠️",
+            field_asked: clean_id,
+            thread_id:   runner.thread_id
+          )
+          next
+        end
+
+        @risk_assistant.messages.create!(
+          content:     "✅ Perfecto, #{RiskFieldSet.label_for(clean_id)} es &&#{value}&&.",
+          sender:      "assistant",
+          role:        "developer",
+          key:         clean_id,
+          item_label:  item_label,
+          value:       value,
+          field_asked: nil,
+          thread_id:   runner.thread_id
+        )
+      end
     end
-  end
+  
 
     # 6.B) Guardar flags
     flags.each do |msg|
