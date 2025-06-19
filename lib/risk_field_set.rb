@@ -16,6 +16,7 @@ class RiskFieldSet
     :id, :label, :prompt, :type, :options, :example,
     :why, :context, :section, :validation, :assistant_instructions,
     :parent, :array_of_objects, :item_label_template,
+    :array_count_source_field_id, :row_index_path,
     keyword_init: true
   )
 
@@ -270,7 +271,9 @@ class RiskFieldSet
         parent:      parent,            # id del array padre
         array_of_objects: in_array,     # true si es columna de tabla
         assistant_instructions: node["assistant_instructions"],
-        item_label_template: node["item_label_template"]
+        item_label_template: node["item_label_template"],
+        array_count_source_field_id: node["array_count_source_field_id"],
+        row_index_path: node["row_index_path"]
       ).to_h
     end
 
