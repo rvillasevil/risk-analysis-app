@@ -126,14 +126,10 @@
       # Renderiza la misma vista show, con @report_markdown disponible
       render :report
     end
-  
-    def resume
-      @risk_assistant = current_user.risk_assistants.find(params[:id])
-      @messages = @risk_assistant.messages
-    end
 
     # GET /risk_assistants/:id/resume
     def resume
+      @risk_assistant = current_user.risk_assistants.find(params[:id])
       # Columnas del modelo Message
       @columns = Message.column_names
       # Solo los mensajes de este RiskAssistant
@@ -217,9 +213,9 @@
       thread_id = response.parse["id"]
       @risk_assistant.update!(thread_id: thread_id)
 
-      puts "🔍 Content: #{response["content"].inspect}"
+      Rails.logger.debug("🔍 Content: #{response["content"].inspect}")
 
-      print response
+      Rails.logger.debug(response)
     end
 
     def set_risk_assistant

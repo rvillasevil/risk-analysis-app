@@ -44,60 +44,62 @@
                               .order(:created_at) %>
                     <% grouped = {} %>
                     <% rows.each do |msg| %>
-                      <% parts = msg.key.split(".", 3) %>
+                      <% parts = msg.key.split(".") %>
                       <% idx  = parts[1] %>
-                      <% col  = parts[2] %>
-                      <% grouped[idx] ||= {} %>
-                      <% grouped[idx][col] = msg.value %>
+                      <% col  = parts[2..].join(".") %>
+                      <% grouped[idx] ||= { item_label: nil, values: {} } %>
+                      <% grouped[idx][:item_label] ||= msg.item_label %>
+                      <% grouped[idx][:values][col] = msg.value %>
                     <% end %>
 
-                    <table class="table table-sm table-bordered mt-2 mb-0">
-                      <thead class="table-light">
-                        <tr>
-                          <th>#</th>
+                      <table class="table table-sm table-bordered mt-2 mb-0">
+                        <thead class="table-light">
+                          <tr>
+                            <th>Item</th>
                           <% subfields.each do |sf| %>
                             <th><%= sf[:label] %></th>
                           <% end %>
                         </tr>
                       </thead>
                       <tbody>
-                        <% grouped.each_with_index do |(_idx, values), row_i| %>
+                        <% grouped.each do |idx, data| %>
                           <tr>
-                            <td><%= row_i + 1 %></td>
+                            <th scope="row"><%= data[:item_label] || idx.to_i + 1 %></th>
                             <% subfields.each do |sf| %>
                               <% col_id = sf[:id].split(".").last %>
-                              <% cell = values[col_id] %>
+                              <% cell = data[:values][col_id] %>
                               <% if sf[:type].to_s == "array_of_objects" %>
                                 <% nested_parent = sf[:id] %>
                                 <% nested_subfields = RiskFieldSet.flat_fields.select { |nsf| nsf[:parent] == nested_parent } %>
                                 <% nested_rows = @risk_assistant.messages
-                                                  .where("key LIKE ?", "#{nested_parent}.%")
+                                                  .where("key LIKE ?", "#{array_parent}.#{idx}.#{nested_parent}.%")
                                                   .order(:created_at) %>
                                 <% nested_grouped = {} %>
                                 <% nested_rows.each do |nmsg| %>
-                                  <% nparts = nmsg.key.split(".", 3) %>
-                                  <% nidx  = nparts[1] %>
-                                  <% ncol  = nparts[2] %>
-                                  <% nested_grouped[nidx] ||= {} %>
-                                  <% nested_grouped[nidx][ncol] = nmsg.value %>
+                                  <% nparts = nmsg.key.split(".") %>
+                                  <% nidx  = nparts[3] %>
+                                  <% ncol  = nparts[4..].join(".") %>
+                                  <% nested_grouped[nidx] ||= { item_label: nil, values: {} } %>
+                                  <% nested_grouped[nidx][:item_label] ||= nmsg.item_label %>
+                                  <% nested_grouped[nidx][:values][ncol] = nmsg.value %>
                                 <% end %>
 
                                 <table class="table table-sm table-bordered mb-0">
                                   <thead class="table-secondary">
                                     <tr>
-                                      <th>#</th>
+                                      <th>Item</th>
                                       <% nested_subfields.each do |nsf| %>
                                         <th><%= nsf[:label] %></th>
                                       <% end %>
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    <% nested_grouped.each_with_index do |(_nidx, nvalues), ni| %>
+                                    <% nested_grouped.each do |nidx, ndata| %>
                                       <tr>
-                                        <td><%= ni + 1 %></td>
+                                        <th scope="row"><%= ndata[:item_label] || nidx.to_i + 1 %></th>
                                         <% nested_subfields.each do |nsf| %>
                                           <% ncol_id = nsf[:id].split(".").last %>
-                                          <td><%= nvalues[ncol_id] %></td>
+                                          <td><%= ndata[:values][ncol_id] %></td>
                                         <% end %>
                                       </tr>
                                     <% end %>
