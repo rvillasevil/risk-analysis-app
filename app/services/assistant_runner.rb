@@ -135,44 +135,43 @@ class AssistantRunner
     # Encuentra el siguiente campo que NO tenga valor en BD
     # ------------------------------------------------------------
     def next_pending_field
-      # 1) Determinar si ya respondieron "constr_num_edificios"
-      count_msg = @risk_assistant.messages
-                    .where(key: "constr_num_edificios")
-                    .order(:created_at).last
-      if count_msg
-        total_buildings = count_msg.value.to_i
-        array_id = "constr_edificios_detalles_array"
+      answered = @risk_assistant.messages.where.not(key: nil).pluck(:key).to_set
+      root_fields = RiskFieldSet.flat_fields.select { |f| f[:parent].nil? }
 
-        # Inicializar estado para este array si no existe
-        @array_state ||= {}
-        @array_state[array_id] ||= { idx: 0, count: total_buildings }
-
-        state = @array_state[array_id]
-        # Si aún quedan edificios por procesar
-        if state[:idx] < state[:count]
-          # Obtener lista de subcampos hijos (sin índice) para este array
-          children = RiskFieldSet.children_of_array(array_id)
-          # Para cada subcampo, construimos clave completa
-          children.each do |child|
-            child_base = child[:id].split(".").last  # ej. "edif_nombre_uso"
-            full_key = "#{array_id}.#{state[:idx]}.#{child_base}"
-            # Si no existe mensaje con ese key, devolvemos este campo pendiente
-            return full_key.to_sym unless @risk_assistant.messages.exists?(key: full_key)
-          end
-
-          # Si llegamos acá, significa que ya respondimos todos los hijos
-          # del edificio actual, así que pasamos al siguiente
-          state[:idx] += 1
-          # Volvemos a invocar recursivamente para avanzar
-          return next_pending_field
+      root_fields.each do |field|
+        if field[:type] == :array_of_objects
+          pending = next_from_array(field[:id], [], answered)
+          return pending if pending
+        else
+          return field[:id].to_sym unless answered.include?(field[:id])
         end
       end
-
-      # 2) Si no hay array en proceso (o ya acabó), caemos al flujo normal:
-      done_keys = @risk_assistant.messages.where.not(key: nil).pluck(:key).map(&:to_sym)
-      all_ids   = RiskFieldSet.flat_fields.map { |f| f[:id].to_sym }
-      (all_ids - done_keys).first
+      nil
     end
+
+  def next_from_array(array_id, prefix_parts, answered)
+    info = RiskFieldSet.by_id[array_id.to_sym]
+    count_field = info[:array_count_source_field_id]
+    count_key = (prefix_parts + [count_field]).reject(&:blank?).join('.')
+    count_msg = @risk_assistant.messages.where(key: count_key).order(:created_at).last
+    return count_key.to_sym unless count_msg
+
+    count = count_msg.value.to_i
+    (0...count).each do |idx|
+      item_prefix = prefix_parts + [array_id, idx]
+      RiskFieldSet.children_of_array(array_id).each do |child|
+        if child[:type] == :array_of_objects
+          pending = next_from_array(child[:id], item_prefix, answered)
+          return pending if pending
+        else
+          suffix = child[:id].sub(/^#{Regexp.escape(array_id)}\./, '')
+          key = (item_prefix + [suffix]).join('.')
+          return key.to_sym unless answered.include?(key)
+        end
+      end
+    end
+    nil
+  end    
 
   # ------------------------------------------------------------
   # Lanza la run con instrucciones + la PREGUNTA exacta
@@ -202,14 +201,8 @@ class AssistantRunner
         field
       end
 
-    # Guardar SOLO la pregunta que ve el usuario:
-    @risk_assistant.messages.create!(
-      sender:      "assistant",
-      role:        "assistant",
-      content:     question,
-      field_asked: field.to_s,
-      thread_id:   thread_id
-    )          
+    # El asistente generará la pregunta exacta como parte de la respuesta,
+    # por lo que aquí no la publicamos para evitar duplicidades en el chat.         
 
     field_asked = field.to_s.strip
 

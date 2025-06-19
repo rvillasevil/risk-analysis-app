@@ -198,23 +198,16 @@ class MessagesController < ApplicationController
     end
 
     # 6.C) Publicar la nueva pregunta “limpia” para el cliente
-    lines = assistant_text.lines.map(&:strip)
-    clean_lines = lines.reject { |l| l.blank? || l.start_with?("✅", "⚠️") }
-    new_question_line = clean_lines.join("\n").strip
+
 
     answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
     next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
-    next_label      = next_field_hash && next_field_hash[:label]
 
-    display_text = new_question_line.present? ? new_question_line : assistant_text.strip
-
-    @risk_assistant.messages.create!(
-      sender:      "assistant",
-      role:        "assistant",
-      content:     display_text,
-      field_asked: next_label.to_s,
-      thread_id:   runner.thread_id
-    )
+    if next_field_hash
+      next_id    = next_field_hash[:id]
+      next_label = next_field_hash[:label]
+      display_text = RiskFieldSet.question_for(next_id)
+    end
 
     redirect_to @risk_assistant
 
