@@ -53,7 +53,7 @@ class DocumentFieldExtractor
     # 3) Llamar a OpenAI
     body = {
       model: OPENAI_MODEL,
-      temperature: 30,
+      temperature: 0.7,
       max_tokens: 512,
       messages: [
         { role: "user", content: prompt }

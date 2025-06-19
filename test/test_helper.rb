@@ -1,4 +1,6 @@
 ENV["RAILS_ENV"] ||= "test"
+ENV["OPENAI_API_KEY"] ||= "test"
+
 require_relative "../config/environment"
 require "rails/test_help"
 
@@ -10,4 +12,8 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+end
+
+class ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
 end

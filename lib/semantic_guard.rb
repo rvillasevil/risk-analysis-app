@@ -73,7 +73,7 @@ module SemanticGuard
 
     body = {
       model:       MODEL,
-      temperature: 100,
+      temperature: 0.3,
       max_tokens:  32,
       messages: [
         { role: "user", content: prompt }
