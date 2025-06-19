@@ -163,20 +163,22 @@ main.col-lg-8.col-md-7 {
 
 // 1) SIDEBAR ─────────────────────────────────────────────────────
 .sidebar-box {
-  position: sticky;
+  // Por defecto (móvil/tablet): NO sticky
+  position: static;
   width: auto;
-  top: calc(#{$header-h} + #{$sidebar-pad});
-  max-height: calc(100vh - $header-h - 2*$sidebar-pad);
-  overflow-y: hidden;             // si es muy largo scrollea internamente
-  overflow-x: hidden; 
+  top: auto;
+  max-height: none;
+  overflow-y: visible;
+  overflow-x: visible;
 }
 
-@media (min-width: 768px) {
-  .sidebar-box{
-    position: sticky;              /* se “pega” al viewport            */
-    top: calc(56px + 10rem);         /* 56 px ≈ navbar / botón + margen   */
-    max-height: calc(100vh - 56px - 2rem);
-    overflow-y: auto;               /* sólo el sidebar scrollea dentro  */
+@media (min-width: 992px) { // Bootstrap lg breakpoint
+  .sidebar-box {
+    position: sticky;              /* se “pega” al viewport solo en desktop */
+    top: calc(#{$header-h} + #{$sidebar-pad});
+    max-height: calc(100vh - #{$header-h} - 2 * #{$sidebar-pad});
+    overflow-y: auto;              /* sólo el sidebar scrollea dentro */
+    overflow-x: hidden;
   }
 }
 

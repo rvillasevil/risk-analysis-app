@@ -213,7 +213,13 @@ class AssistantRunner
 
     field_asked = field.to_s.strip
 
-    label    = RiskFieldSet.by_id[next_pending_field.to_sym][:label].to_s.strip
+    # Acceso seguro al label del siguiente campo pendiente
+    npf = next_pending_field
+    label = ""
+    if npf
+      byid = RiskFieldSet.by_id[npf.to_sym]
+      label = byid[:label].to_s.strip if byid
+    end
 
     extra = <<~SYS
       Lista interna de campos (no mostrar al usuario):
@@ -229,7 +235,7 @@ class AssistantRunner
         # 👉  Instrucciones específicas del campo que estás preguntando:
         #{instr.presence ? instr : "ninguna"}        
       4. Antes de validar un valor:
-        – Si el campo es *select*, comprueba que la respuesta esté en
+        – Si el campo es *select*, comprueba q<ue la respuesta esté en
           las opciones. Si no, muestra de nuevo la lista.
         – Aplica también las reglas de `context`, `validation`, etc.
       5. Tras ✅ confirmar, no hagas otra pregunta hasta que la app te
