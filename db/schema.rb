@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_05_29_172557) do
+ActiveRecord::Schema[7.0].define(version: 2025_06_19_134541) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -136,6 +136,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_29_172557) do
     t.string "thread_id"
     t.string "section"
     t.string "field_asked"
+    t.string "item_label"
     t.index ["risk_assistant_id"], name: "index_messages_on_risk_assistant_id"
   end
 

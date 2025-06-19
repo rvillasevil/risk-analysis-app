@@ -57,7 +57,7 @@ class MessagesController < ApplicationController
           @risk_assistant.messages.create!(
             content:     "✅ Perfecto, #{label} es &&#{valor}&&.",
             sender:      "assistant",
-            role:        "assistant",
+            role:        "developer",
             key:         campo_id,
             value:       valor,
             field_asked: label,
@@ -167,38 +167,31 @@ class MessagesController < ApplicationController
     assistant_text = runner.run_and_wait
 
     # 6) Procesar la respuesta del asistente (igual que antes)
-    pairs = assistant_text.scan(/##(.*?)##.*?&&\s*(.*?)\s*&&/m)
+    pairs = assistant_text.scan(/##(?<field_id>[^#()]+?)(?:\s*\((?<item_label>[^)]+)\))?##.*?&&\s*(?<value>.*?)\s*&&/m)    
     flags = assistant_text.scan(/⚠️\s*(.*?)\s*⚠️/m).flatten
 
     # 6.A) Guardar confirmaciones crudas
   if pairs.any?
-    pairs.each do |key_str, value|
-      # Guardamos la clave EXACTA con su índice:
+    pairs.each do |field_id, item_label, value|
+      clean_id = field_id.to_s.strip
       @risk_assistant.messages.create!(
-        content:     "✅ Perfecto, #{RiskFieldSet.label_for(key_str)} es &&#{value}&&.",
+        content:     "✅ Perfecto, #{RiskFieldSet.label_for(clean_id)} es &&#{value}&&.",
         sender:      "assistant",
-        role:        "assistant",
-        key:         key_str,
+        role:        "developer",
+        key:         clean_id,
+        item_label:  item_label,
         value:       value,
-        field_asked: nil,     # ya está contestado, next_pending_field generará lo siguiente
+        field_asked: nil,
         thread_id:   runner.thread_id
       )
     end
-  else
-    # Si no hay pares, es un mensaje genérico del asistente (p.ej. “Por favor, sube un doc…”)
-    @risk_assistant.messages.create!(
-      content:   assistant_text,
-      sender:    "assistant",
-      role:      "assistant",
-      thread_id: runner.thread_id
-    )
   end
 
     # 6.B) Guardar flags
     flags.each do |msg|
       @risk_assistant.messages.create!(
         sender:    "assistant",
-        role:      "assistant",
+        role:      "developer",
         content:   "⚠️ #{msg} ⚠️",
         thread_id: runner.thread_id
       )
@@ -206,9 +199,8 @@ class MessagesController < ApplicationController
 
     # 6.C) Publicar la nueva pregunta “limpia” para el cliente
     lines = assistant_text.lines.map(&:strip)
-    new_question_line = lines
-                        .reject { |l| l.blank? || l.start_with?("✅", "⚠️") }
-                        .find { |l| !l.blank? } || ""
+    clean_lines = lines.reject { |l| l.blank? || l.start_with?("✅", "⚠️") }
+    new_question_line = clean_lines.join("\n").strip
 
     answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
     next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
@@ -343,7 +335,7 @@ class MessagesController < ApplicationController
       }.to_json
     )
 
-    puts "🔍 Content: #{response["content"].inspect}"
+    Rails.logger.debug("🔍 Content: #{response["content"].inspect}")
     response.parse["choices"]&.first&.dig("message", "content")&.strip || "No se recibió una respuesta válida."
   end
 

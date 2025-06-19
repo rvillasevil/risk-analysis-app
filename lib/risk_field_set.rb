@@ -14,7 +14,8 @@ class RiskFieldSet
 
   Field = Struct.new(
     :id, :label, :prompt, :type, :options, :example,
-    :why, :context, :section, :validation, :assistant_instructions, :parent, :array_of_objects,
+    :why, :context, :section, :validation, :assistant_instructions,
+    :parent, :array_of_objects, :item_label_template,
     keyword_init: true
   )
 
@@ -49,35 +50,55 @@ class RiskFieldSet
 
     # Construye el prompt enriquecido, incluyendo siempre las opciones
     def question_for(id_sym)
-      id_str = id_sym.to_s
-      if id_str =~ /\A(?<array_id>[^.]+)\.(?<idx>\d+)\.(?<child_id>.+)\z/
-        array_id  = Regexp.last_match[:array_id]
-        idx       = Regexp.last_match[:idx].to_i
-        child_id  = Regexp.last_match[:child_id]
-        # Búsqueda del campo “array_id.child_id” en by_id
-        full_child_key = "#{array_id}.#{child_id}".to_sym
-        f = by_id[full_child_key] or return "¿?"
-        item_label = "Edificio #{idx + 1}"
-        parts = ["#{item_label}: #{f[:prompt].to_s.strip}"]
-        if f[:options]&.any?
-          parts << "Opciones disponibles: #{f[:options].join(', ')}."
+      id_str    = id_sym.to_s
+      segments  = id_str.split('.')
+      base_segs = []             # id sin índices numéricos
+      labels    = []             # etiquetas de cada índice detectado
+
+      i = 0
+      while i < segments.length
+        seg = segments[i]
+        nxt = segments[i + 1]
+
+        if nxt&.match?(/\A\d+\z/)
+          # id del array con índice
+          array_key = (base_segs + [seg]).join('.').to_sym
+          array_f   = by_id[array_key]
+          idx       = nxt.to_i
+
+          if array_f && array_f[:item_label_template]
+            tmpl = array_f[:item_label_template].dup
+            label = tmpl.gsub(/\{\{\s*index\s*\+\s*1\s*\}\}/, (idx + 1).to_s)
+          elsif array_f
+            label = "#{array_f[:label]} #{idx + 1}"
+          else
+            label = "Item #{idx + 1}"
+          end
+
+          labels << label
+          base_segs << seg
+          i += 2
+        else
+          base_segs << seg
+          i += 1
         end
-        parts << "Contexto: #{f[:context]}." if f[:context].present?
-        parts << "Ejemplo: #{f[:example]}."    if f[:example].present?
-        parts << "Importancia: #{f[:why]}."    if f[:why].present?
-        return parts.join(" ")
       end
 
-      # Caso “normal” (no pertenece a un array indexado)
-      f = by_id[id_sym.to_sym] or return "¿?"
-      parts = [f[:prompt].to_s.strip]
+      base_id = base_segs.join('.')
+      f = by_id[base_id.to_sym] or return "¿?"
+
+      prefix = labels.join(' · ')
+      question = f[:prompt].to_s.strip
+      question = "#{prefix}: #{question}" unless prefix.empty?
+
+      parts = [question]
       if f[:options]&.any?
         parts << "Opciones disponibles: #{f[:options].join(', ')}."
       end
       parts << "Contexto: #{f[:context]}." if f[:context].present?
       parts << "Ejemplo: #{f[:example]}."    if f[:example].present?
       parts << "Importancia: #{f[:why]}."    if f[:why].present?
-      parts.join(" ")
+      parts.join(' ')
     end
 
     # --------------------------------------------------------------------------
@@ -184,29 +205,34 @@ class RiskFieldSet
     #   • el propio campo-array  (p. ej. constr_edificios_detalles_array)
     #   • un campo por cada columna (p. ej. constr_edificios_detalles.edif_superficie)
     # ------------------------------------------------------------------
-    def walk_fields_rec(nodes, section, parent_array_id = nil)
+    def walk_fields_rec(nodes, section, parent_array_id = nil, id_prefix = nil)
       nodes.flat_map do |node|
+        full_id = [id_prefix, node["id"]].compact.join(".")
 
         case node["type"]
         when "subsection"
-          walk_fields_rec(node["fields"] || [], section, parent_array_id)
+          walk_fields_rec(node["fields"] || [], section, parent_array_id, id_prefix)
 
         when "array_of_objects"
           array_id   = node["id"]
-          array_field = json_to_field(node, section, parent: parent_array_id)
+          array_field = json_to_field(node, section,
+                                     id_override: full_id,
+                                     parent: parent_array_id)
 
-          # ► Procesar columnas (item_schema.fields)
-          cols = (node.dig("item_schema", "fields") || []).flat_map do |col|
-            json_to_field(col, section,
-                          id_override: "#{array_id}.#{col['id']}",
-                          parent:      array_id,
-                          in_array:    true)
-          end
+          cols = walk_fields_rec(
+                   node.dig("item_schema", "fields") || [],
+                   section,
+                   full_id,
+                   full_id
+                 )
 
           [array_field] + cols
 
         else
-          [json_to_field(node, section, parent: parent_array_id)]
+          [json_to_field(node, section,
+                         id_override: full_id,
+                         parent: parent_array_id,
+                         in_array: parent_array_id.present?)]
         end
       end
     end
@@ -243,7 +269,8 @@ class RiskFieldSet
         # ---- metadatos extra ----
         parent:      parent,            # id del array padre
         array_of_objects: in_array,     # true si es columna de tabla
-        assistant_instructions: node["assistant_instructions"]
+        assistant_instructions: node["assistant_instructions"],
+        item_label_template: node["item_label_template"]
       ).to_h
     end
 
