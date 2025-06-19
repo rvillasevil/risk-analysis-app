@@ -180,45 +180,6 @@
                             }
                         }
                     ]
-                },
-                {
-                    "id": "dgi_descripcion_edificaciones_instalaciones_subseccion",
-                    "title": "Descripción general de las edificaciones/instalaciones.",
-                    "type": "subsection",
-                    "assistant_instructions": "",
-                    "fields": [
-                        {
-                            "id": "dgi_desc_actividades_edificio_zonas",
-                            "label": "Descripción de actividades por edificio y/o zonas. (Esta descripción se detallará por cada edificio/zona en la sección de Construcción)",
-                            "type": "textarea",
-                            "assistant_instructions": "",
-                            "context": "Se solicitarán detalles específicos por edificio/zona más adelante.",
-                            "validation": {},
-                            "scoring": {
-                                "field_weight": 1
-                            }
-                        },
-                        {
-                            "id": "dgi_distancia_entre_edificaciones",
-                            "label": "Distancia entre edificaciones (m)",
-                            "type": "text",
-                            "assistant_instructions": "",
-                            "validation": {},
-                            "scoring": {
-                                "field_weight": 1
-                            }
-                        },
-                        {
-                            "id": "dgi_distancias_separacion_exterior",
-                            "label": "Distancias de separación entre edificaciones e instalaciones exteriores (m)",
-                            "type": "text",
-                            "assistant_instructions": "Distancias entre las edificaciones y las instalaciones más próximas.",
-                            "validation": {},
-                            "scoring": {
-                                "field_weight": 1
-                            }
-                        }
-                    ]
                 }
             ]
         },
