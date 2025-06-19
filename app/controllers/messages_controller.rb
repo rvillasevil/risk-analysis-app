@@ -102,7 +102,7 @@ class MessagesController < ApplicationController
 
       return redirect_to risk_assistant_path(@risk_assistant)      
     end
-=begin
+
     # 4) Solo llamar a SemanticGuard si NO hay archivo adjunto (o si el usuario escribió texto)
     unless params[:file].present?
 
@@ -143,11 +143,10 @@ class MessagesController < ApplicationController
             field_asked: last_q.field_asked,
             thread_id:   current_thread
           )
-          return redirect_to risk_assistant_path(@risk_assistant)
         end
       end
     end
-=end
+
     # 5) Si no hubo contradicción, seguimos con el flujo habitual:
 
     # 5.1) Preparamos el runner (crea thread si aún no existe)
@@ -165,6 +164,15 @@ class MessagesController < ApplicationController
 
     # 5.4) Ejecutar la run principal y esperamos su respuesta
     assistant_text = runner.run_and_wait
+
+     # Opcional: guardar la respuesta completa del asistente para auditoría
+    @risk_assistant.messages.create!(
+      sender:    "assistant",
+      role:      "developer",
+      content:   assistant_text,
+      thread_id: runner.thread_id
+    )
+
 
     # 6) Procesar la respuesta del asistente (igual que antes)
     pairs = assistant_text.scan(/##(?<field_id>[^#()]+?)(?:\s*\((?<item_label>[^)]+)\))?##.*?&&\s*(?<value>.*?)\s*&&/m)    
@@ -207,6 +215,13 @@ class MessagesController < ApplicationController
       next_id    = next_field_hash[:id]
       next_label = next_field_hash[:label]
       display_text = RiskFieldSet.question_for(next_id)
+      @risk_assistant.messages.create!(
+        sender:      "assistant",
+        role:        "assistant",
+        content:     display_text,
+        field_asked: next_id,
+        thread_id:   runner.thread_id
+      )      
     end
 
     redirect_to @risk_assistant
@@ -292,8 +307,6 @@ class MessagesController < ApplicationController
 
     previous_messages = collect_messages_for_context(@risk_assistant)
     prompt_messages = format_previous_messages(previous_messages)
-
-    print prompt_messages
 
     # Construir el context
     context = 
