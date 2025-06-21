@@ -33,7 +33,7 @@ module SemanticGuard
     # 1) Buscamos la última pregunta ABIERTA en este hilo
     last_q = risk_assistant.messages
                              .where(sender:    "assistant",
-                                    role:      "developer",
+                                    role:      "assistant",
                                     thread_id: thread_id)
                              .where.not(field_asked: nil)  # tiene asignado un field_asked
                              .where(key: nil)               # aún no confirmado

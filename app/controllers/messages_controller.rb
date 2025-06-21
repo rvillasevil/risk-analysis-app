@@ -198,17 +198,6 @@ class MessagesController < ApplicationController
           clean_id = expected if expected.gsub(/\.\d+/, '') == clean_id
         end
 
-      @risk_assistant.messages.create!(
-        content:     "✅ Perfecto, #{RiskFieldSet.label_for(clean_id)} es &&#{value}&&.",
-        sender:      "assistant",
-        role:        "developer",
-        key:         clean_id,
-        item_label:  item_label,
-        value:       value,
-        field_asked: nil,
-        thread_id:   runner.thread_id
-      )
-
         @risk_assistant.messages.create!(
           content:     "✅ Perfecto, #{RiskFieldSet.label_for(clean_id)} es &&#{value}&&.",
           sender:      "assistant",
@@ -264,7 +253,7 @@ class MessagesController < ApplicationController
   private
 
   def message_params
-    params.require(:message).permit(:content, :thread_id, :section, :section_asked)
+    params.require(:message).permit(:content, :thread_id, :section, :field_asked)
   end
 
   def set_risk_assistant

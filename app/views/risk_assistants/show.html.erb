@@ -3,11 +3,12 @@
 <%# -------------------------------------------------------------- %>
 <div class="container-xxl py-3">
   <!-- CABECERA + Botón hamburguesa -->
-  <div class="d-flex justify-content-between align-items-center mb-3" style="margin-bottom:0px !important;">
+  <div class="d-flex justify-content-between align-items-center mb-0">
     <button class="btn btn-outline-secondary d-md-none"
             data-bs-toggle="offcanvas"
             data-bs-target="#sidebarCanvas">
-      <i class="bi bi-list"><h1 class="h4 mb-0"><%= @risk_assistant.name %></h1></i>
+      <i class="bi bi-list"></i>
+      <h1 class="h4 mb-0"><%= @risk_assistant.name %></h1>
     </button>
   </div>
 
@@ -18,10 +19,9 @@
       <div class="d-none d-md-block">
         <div class="sidebar-box">
           <%#── Sección de “Archivos subidos” ──────────────────────────────────── %>
-          <h4 class="text-lg font-semibold mb-2">Archivos subidos</h6>
+          <h4 class="text-lg font-semibold mb-2">Archivos subidos</h4>
           <% if @risk_assistant.uploaded_files.attached? %>
             <div class="uploaded-files-section p-4 mb-6 border rounded bg-gray-50">
-              <h2 class="text-lg font-semibold mb-2">Archivos subidos</h2>
               <ul class="list-unstyled">
                 <% @risk_assistant.uploaded_files.each do |file| %>
                   <li class="mb-2">
@@ -37,7 +37,6 @@
             </div>
           <% else %>
             <div class="uploaded-files-section p-4 mb-6 border rounded bg-gray-50">
-              <h2 class="text-lg font-semibold mb-2">Archivos subidos</h2>
               <p class="text-muted">No hay archivos subidos.</p>
             </div>
           <% end %>
@@ -161,49 +160,3 @@
     });
   });
 </script>
-
-
-<!-- 
-      <%# -------- BOTONERA RÁPIDA DE SECCIONES ------------------ %>
-      <div class="row g-2 mb-3">
-        <% @sections.each_with_index do |sec,i| %>
-          <div class="col-6 col-sm-4 col-lg-3">
-            <button class="btn btn-outline-primary w-100"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#form<%= i %>">
-              <strong><%= i+1 %>.</strong>
-              <%= truncate(sec, length:22) %>
-            </button>
-          </div>
-        <% end %>
-      </div>
-
-      <%# -------- COLLAPSABLES DE FORMULARIOS ------------------- %>
-      <div id="formsGroup">
-        <% @sections.each_with_index do |sec,i| %>
-          <div class="collapse mb-3" id="form<%= i %>"
-               data-bs-parent="#formsGroup">
-            <div class="card p-3 shadow-sm">
-              <h5 class="mb-2"><%= i+1 %>. <%= sec %></h5>
-              <%= form_with url: risk_assistant_messages_path(@risk_assistant),
-                            method: :post, local: true,
-                            multipart: true do |f| %>
-                <%= f.hidden_field :section,
-                                   name:"message[section]",
-                                   value:sec.parameterize(separator:"_") %>
-
-                <div class="mb-2">
-                  <%= f.label :content, "Mensaje" %>
-                  <%= f.text_area :content,
-                                  name:"message[content]",
-                                  rows:3, required:true,
-                                  class:"form-control" %>
-                </div>
-                <%= file_field_tag :file, class:"form-control mb-2" %>
-                <%= f.submit "Enviar", class:"btn btn-pri" %>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-      </div>
--->
