@@ -13,7 +13,9 @@
 
       #Completados
       @completed = @risk_assistant.messages
-                                  .where(key: "")
+                                   .where.not(key: [nil, ""])
+                                   .where.not(value: [nil, ""])
+                                   .order(:created_at)
 
       # 👉 títulos de las secciones en el orden que quieras mostrar
       @sections = [
@@ -161,9 +163,11 @@
     # POST /risk_assistants/:id/create_message
     def create_message
       msg = @risk_assistant.messages.create(
-        role:  params[:role]  || 'user',
-        key:   params[:key],
-        value: params[:value]
+        sender:  params[:sender]  || 'user',
+        role:    params[:role]   || 'user',
+        key:     params[:key],
+        value:   params[:value],
+        content: params[:content] || params[:value]
       )
       if msg.persisted?
         redirect_to resume_risk_assistant_path(@risk_assistant), notice: "Mensaje ##{msg.id} añadido."
