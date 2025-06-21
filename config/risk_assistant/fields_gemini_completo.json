@@ -1,0 +1,4073 @@
+{
+    "form_title": "INFORME DE INSPECCIÓN DE RIESGOS",
+    "sections": [
+        {
+            "id": "informe_metadata",
+            "title": "INFORMACIÓN DEL INFORME",
+            "scoring": {
+                "section_weight": 1
+            },
+            "fields": [
+                {
+                    "id": "metadata_redactores_informe",
+                    "label": "Nombre y cargo de las personas que redactan el informe",
+                    "type": "select",
+                    "assistant_instructions": "Confirma que se incluye el puesto de trabajo",
+                    "example": "Roberto Villasevil",
+                    "why": "Debe figurar un responsable de esta toma de datos de cara a la aseguradora",
+                    "validation": {
+                        "required": true
+                    },
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                }
+            ]
+        },
+        {
+            "id": "descripcion_general_instalacion",
+            "title": "DESCRIPCIÓN GENERAL DE LA INSTALACIÓN",
+            "scoring": {
+                "section_weight": 5
+            },
+            "fields": [
+                {
+                    "id": "dgi_actividad_productos",
+                    "label": "Actividad / Tipos de productos",
+                    "type": "textarea",
+                    "assistant_instructions": "Se debe describir un sector de actividad y o los productos finales que hacen y ambos deben estar relacionados.",
+                    "validation": {
+                        "required": true
+                    },
+                    "scoring": {
+                        "field_weight": 2
+                    }
+                },
+                {
+                    "id": "dgi_tamano_empresa_trabajadores",
+                    "label": "Tamaño de la empresa / Nº trabajadores",
+                    "type": "text",
+                    "assistant_instructions": "Tamaño de la empresa debe corresponder al número de trabajadores o el volumen de facturación.",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "dgi_capacidad_produccion",
+                    "label": "Capacidad total de producción",
+                    "type": "text",
+                    "assistant_instructions": "Se debe indicar un número total anual de unidades, kg, toneladas, palets etc.",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "dgi_venta_nacional_internacional",
+                    "label": "Venta/Negocio nacional o internacional",
+                    "type": "select",
+                    "assistant_instructions": "Se refiere al tipo de clientes que tiene el usuario, que pueden ser nacionales o internacionales",
+                    "options": [
+                        {
+                            "label": "Nacional",
+                            "value": "nacional"
+                        },
+                        {
+                            "label": "Internacional",
+                            "value": "internacional"
+                        },
+                        {
+                            "label": "Ambos",
+                            "value": "ambos"
+                        }
+                    ],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "dgi_localizacion_subseccion",
+                    "title": "Localización / Exposición. Riesgos colindantes / Lay out",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "dgi_loc_situacion_coordenadas",
+                            "label": "Situación (Señas y coordenadas): C/ XXXXXX, Polig.XXXX (XXXX)",
+                            "type": "text",
+                            "assistant_instructions": "Dirección completa de la situación de la industria",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "dgi_loc_ubicacion_zona",
+                            "label": "Ubicación (Zona industrial, aislada, urbana, etc.)",
+                            "type": "text",
+                            "assistant_instructions": "Descripción de la zona donde se encuentra la industria, si está localizada en un polígono industrial, si dentro de ese polígono está aislado o tiene colindantes, si está situada en zona urbana como colindante a un pueblo o si está en una zona aislada sin actividades próximas en 100m alrededor.",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "dgi_loc_fotografias_aereas",
+                            "label": "Fotografías aéreas (Adjuntar archivo)",
+                            "type": "file",
+                            "assistant_instructions": "Adjuntar imágenes si se disponen de ellas",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "dgi_loc_planos_layout_exterior",
+                            "label": "Planos: Lay out exterior (edificaciones e instalaciones exteriores) (Adjuntar archivo)",
+                            "type": "file",
+                            "assistant_instructions": "Adjuntar planos si se disponen de ellas",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "dgi_loc_planos_layout_interior",
+                            "label": "Planos: Lay out interior (Equipos y líneas de producción/salas interiores) (Adjuntar archivo)",
+                            "type": "file",
+                            "assistant_instructions": "Adjuntar planos si se disponen de ellas",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "dgi_loc_colindantes_info",
+                            "label": "Colindantes (Terceros, exposición a ríos, mares, etc. / Distancia a ríos, mares, etc.)",
+                            "type": "textarea",
+                            "assistant_instructions": "Descripción ",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "dgi_loc_colindantes_actividad_riesgos_distancia",
+                            "label": "Actividad y riesgos de los colindates / Distancia a colindates (m)",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "dgi_loc_ubicacion_zona",
+                                    "operator": "different",
+                                    "value": "aislado o sin edificacione en 50m alrededor"
+                                }                                
+                            },
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "dgi_loc_aeropuertos_proximos",
+                            "label": "Aeropuertos próximos",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "construccion",
+            "title": "CONSTRUCCION",
+            "scoring": {
+                "section_weight": 5
+            },
+            "fields": [
+                {
+                    "id": "constr_tipo_establecimiento_industrial",
+                    "label": "Tipo de establecimientos industriales:",
+                    "type": "select",
+                    "assistant_instructions": "",
+                    "options": [
+                        {
+                            "label": "Parcialmente un edificio con otros establecimientos",
+                            "value": "parcial_ocupacion"
+                        },
+                        {
+                            "label": "Totalmente un edificio adosado o a <= 3m de terceros",
+                            "value": "total_adosado"
+                        },
+                        {
+                            "label": "Totalmente un edificio/varios a > 3m del más próximo",
+                            "value": "total_aislado"
+                        },
+                        {
+                            "label": "Espacio abierto totalmente cubierto, fachada sin cerramiento lateral",
+                            "value": "abierto_total_cubierto"
+                        },
+                        {
+                            "label": "Espacio abierto parcialmente cubierto (<=50%), fachada sin cerramiento lateral",
+                            "value": "abierto_parcial_cubierto"
+                        }
+                    ],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5
+                    }
+                },
+                {
+                    "id": "constr_distancia_libre_combustibles",
+                    "label": "Si es 'totalmente aislado', ¿dicha distancia está libre de mercancías combustibles o elementos que propaguen incendio?",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {
+                        "visible_if": {
+                            "field_id": "constr_tipo_establecimiento_industrial",
+                            "operator": "equals",
+                            "value": "total_aislado"
+                        }
+                    },
+                    "scoring": {
+                        "field_weight": 1,
+                        "option_scores": {
+                            "true": 5,
+                            "false": 0
+                        }
+                    }
+                },
+                {
+                    "id": "constr_superficie_total_parcela",
+                    "label": "Superficie Total Parcela (m²)",
+                    "type": "number",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 0.5
+                    }
+                },
+                {
+                    "id": "constr_superficie_total_construida",
+                    "label": "Superficie Total Construida (m²)",
+                    "type": "number",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 0.5
+                    }
+                },
+                {
+                    "id": "constr_necesidad_norma_sismo",
+                    "label": "Necesidad de cumplimiento Norma Sismo-resistente",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1,
+                        "option_scores": {
+                            "true": 2,
+                            "false": 5
+                        }
+                    }
+                },
+                {
+                    "id": "constr_cumple_norma_sismo",
+                    "label": "En caso de ser necesario, ¿cumple la Norma Sismo-resistente?",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {
+                        "visible_if": {
+                            "field_id": "constr_necesidad_norma_sismo",
+                            "operator": "is_true"
+                        }
+                    },
+                    "scoring": {
+                        "field_weight": 2,
+                        "option_scores": {
+                            "true": 10,
+                            "false": 0
+                        }
+                    }
+                },
+                {
+                    "id": "constr_num_edificios",
+                    "label": "Nº Edificios principales a detallar",
+                    "type": "number",
+                    "assistant_instructions": "",
+                    "defaultValue": 0,
+                    "validation": {
+                        "min": 0
+                    },
+                    "scoring": {
+                        "field_weight": 0.5
+                    }
+                },
+                {
+                    "id": "constr_edificios_detalles_array",
+                    "label": "Detalles por Edificio",
+                    "type": "array_of_objects",
+                    "assistant_instructions": "",
+                    "row_index_path": true,
+                    "array_count_source_field_id": "constr_num_edificios",
+                    "item_label_template": "Edificio {{index + 1}}",
+                    "assistant_instructions":
+                        "Cuando confirmes una celda usa exactamente:\n ✅ Perfecto, el campo ##{{field_id}} ({{item_label}})## es &&<valor>&&.",
+                    "validation": {
+                        "visible_if": {
+                            "field_id": "constr_num_edificios",
+                            "operator": "greater_than",
+                            "value": 0
+                        }
+                    },
+                    "item_schema": {
+                        "id": "constr_edificio_detalle_item",
+                        "fields": [
+                            {
+                                "id": "edif_nombre_uso",
+                                "label": "Nombre/ID del Edificio y Uso Principal (ej: Edificio 1 - Producción)",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {
+                                    "required": true
+                                },
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "edif_descripcion_actividades",
+                                "label": "Descripción de actividades en este edificio/zona",
+                                "type": "textarea",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "edif_propiedad_alquilado",
+                                "label": "Edificación en Propiedad/Alquilado",
+                                "type": "select",
+                                "assistant_instructions": "",
+                                "options": [
+                                    {
+                                        "label": "Propiedad",
+                                        "value": "propiedad"
+                                    },
+                                    {
+                                        "label": "Alquilado",
+                                        "value": "alquilado"
+                                    }
+                                ],
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "edif_ano_construccion",
+                                "label": "Año de construcción",
+                                "type": "number",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "edif_num_plantas",
+                                "label": "Nº de plantas",
+                                "type": "number",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "edif_altura",
+                                "label": "Altura del edificio (m)",
+                                "type": "number",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "edif_mat_constructivos_cub",
+                                "label": "Materiales constructivos de cubierta",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "edif_mat_constructivos_cerra",
+                                "label": "Materiales constructivos de las fachadas exteriores",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "edif_mat_constructivos_tabiq",
+                                "label": "Materiales constructivos de tabiquerías interiores",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "edif_mat_constructivos_estructura",
+                                "label": "Materiales constructivos de la estructura, pilares y vigas/cerchas",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "edif_num_sectores_incendio",
+                                "label": "Nº Sectores de incendio interior en este edificio",
+                                "type": "number",
+                                "assistant_instructions": "",
+                                "defaultValue": 0,
+                                "validation": {
+                                    "min": 0
+                                },
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "edif_sectores_incendio_array",
+                                "label": "Detalles por Sector de Incendio (dentro de este Edificio)",
+                                "type": "array_of_objects",
+                                "assistant_instructions": "",
+                                "row_index_path": true,
+                                "array_count_source_field_id": "edif_num_sectores_incendio",
+                                "item_label_template": "Sector {{index + 1}}",
+                                "assistant_instructions":
+                                    "Cuando confirmes una celda usa exactamente:\n ✅ Perfecto, el campo ##{{field_id}} ({{item_label}})## es &&<valor>&&.",
+                                "validation": {
+                                    "visible_if": {
+                                        "field_id": "edif_num_sectores_incendio",
+                                        "operator": "greater_than",
+                                        "value": 0
+                                    }
+                                },
+                                "item_schema": {
+                                    "id": "edif_sector_incendio_item",
+                                    "fields": [
+                                        {
+                                            "id": "sector_nombre_areas",
+                                            "label": "Nombre/ID del Sector y Áreas",
+                                            "type": "text",
+                                            "assistant_instructions": "",
+                                            "validation": {
+                                                "required": true
+                                            },
+                                            "scoring": {
+                                                "field_weight": 0.5
+                                            }
+                                        },
+                                        {
+                                            "id": "sector_superficie",
+                                            "label": "Superficie del sector (m²)",
+                                            "type": "number",
+                                            "assistant_instructions": "",
+                                            "validation": {},
+                                            "scoring": {
+                                                "field_weight": 0.5
+                                            }
+                                        },
+                                        {
+                                            "id": "sector_cubierta_material",
+                                            "label": "Cubierta: Tipo de material y % o m² (Panel simple metálico, Sándwich PUR, Sándwich PIR FM, etc.)",
+                                            "type": "textarea",
+                                            "assistant_instructions": "",
+                                            "tooltip": "Materiales no combustibles: Ladrillo, bloques hormigón, chapa metálica simple, lana roca, fibra vidrio. Ligeramente combustibles: PIR (FM). Combustibles: PIR (No FM), PUR, EPS, Madera.",
+                                            "validation": {},
+                                            "scoring": {
+                                                "field_weight": 1.5
+                                            }
+                                        },
+                                        {
+                                            "id": "sector_cerramiento_material",
+                                            "label": "Cerramiento: Tipo de material y % o m²",
+                                            "type": "textarea",
+                                            "assistant_instructions": "",
+                                            "validation": {},
+                                            "scoring": {
+                                                "field_weight": 1.5
+                                            }
+                                        },
+                                        {
+                                            "id": "sector_particiones_interiores_material",
+                                            "label": "Particiones interiores: Tipo de material y % o m² (o N/A)",
+                                            "type": "textarea",
+                                            "assistant_instructions": "",
+                                            "validation": {},
+                                            "scoring": {
+                                                "field_weight": 1
+                                            }
+                                        },
+                                        {
+                                            "id": "sector_estructura_material",
+                                            "label": "Estructura: Tipo de material (Metálica, hormigón, madera, etc.)",
+                                            "type": "text",
+                                            "assistant_instructions": "",
+                                            "tooltip": "No combustible: Metálica, hormigón, metálica protegida. Ligeramente combustible: No combustibles recubiertas de material combustible. Combustible: Madera.",
+                                            "validation": {},
+                                            "scoring": {
+                                                "field_weight": 1.5
+                                            }
+                                        },
+                                        {
+                                            "id": "sector_resistencia_fuego",
+                                            "label": "Resistencia al fuego (paredes, puertas, huecos, paso de instalaciones). Paredes por encima de cubierta. Medios comunicación vertical.",
+                                            "type": "textarea",
+                                            "assistant_instructions": "",
+                                            "validation": {},
+                                            "scoring": {
+                                                "field_weight": 1.5
+                                            }
+                                        },
+                                        {
+                                            "id": "sector_fotos_generales",
+                                            "label": "Fotos generales de la construcción del sector (Adjuntar archivos)",
+                                            "type": "file_multiple",
+                                            "assistant_instructions": "",
+                                            "validation": {},
+                                            "scoring": {
+                                                "field_weight": 0.5
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "constr_plano_ubicacion_edificios_sectores_combustibles",
+                    "label": "Facilitar plano de ubicación de edificaciones, sectores y construcciones combustibles (Adjuntar archivo).",
+                    "type": "file",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "constr_distancias_seguridad_entre_edificios_sectores_exteriores",
+                    "label": "Distancias de seguridad entre edificios y libre de almacenamientos / Sectores exteriores",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "constr_camaras_frigorificas_subseccion",
+                    "title": "Cámaras frigoríficas",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "constr_num_camaras_frigorificas",
+                            "label": "Nº Cámaras frigoríficas a detallar",
+                            "type": "number",
+                            "assistant_instructions": "",
+                            "assistant_instructions": "Recoge únicamente un número, si se indica por ejemplo ninguna, el value es 0",
+                            "defaultValue": 0,
+                            "validation": {
+                                "min": 0
+                            },
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "constr_camaras_frigorificas_array",
+                            "label": "Detalles por Cámara Frigorífica",
+                            "type": "array_of_objects",
+                            "assistant_instructions": "",
+                            "row_index_path": true,
+                            "array_count_source_field_id": "constr_num_camaras_frigorificas",
+                            "item_label_template": "Cámara Frigorífica {{index + 1}}",
+                            "assistant_instructions":
+                                "Cuando confirmes una celda usa exactamente:\n ✅ Perfecto, el campo ##{{field_id}} ({{item_label}})## es &&<valor>&&.",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "constr_num_camaras_frigorificas",
+                                    "operator": "greater_than",
+                                    "value": 0
+                                }
+                            },
+                            "item_schema": {
+                                "id": "constr_camara_frigorifica_item",
+                                "fields": [
+                                    {
+                                        "id": "camara_superficie",
+                                        "label": "Superficie (m²)",
+                                        "type": "number",
+                                        "assistant_instructions": "",
+                                        "validation": {},
+                                        "scoring": {
+                                            "field_weight": 0.5
+                                        }
+                                    },
+                                    {
+                                        "id": "camara_tipo_aislamiento_panel",
+                                        "label": "Tipo de aislamiento del panel (Lana roca, PIR FM, PIR No FM, PUR, EPS, etc.)",
+                                        "type": "text",
+                                        "assistant_instructions": "",
+                                        "validation": {},
+                                        "scoring": {
+                                            "field_weight": 1.5
+                                        }
+                                    },
+                                    {
+                                        "id": "camara_sector_incendio_ubicacion",
+                                        "label": "Sector de Incendio donde se ubica",
+                                        "type": "text",
+                                        "assistant_instructions": "",
+                                        "validation": {},
+                                        "scoring": {
+                                            "field_weight": 0.5
+                                        }
+                                    },
+                                    {
+                                        "id": "camara_colindantes",
+                                        "label": "Colindantes a la cámara",
+                                        "type": "text",
+                                        "assistant_instructions": "",
+                                        "validation": {},
+                                        "scoring": {
+                                            "field_weight": 0.5
+                                        }
+                                    },
+                                    {
+                                        "id": "camara_fotos_exterior_interior",
+                                        "label": "Fotos del exterior e interior de la cámara (Adjuntar archivos)",
+                                        "type": "file_multiple",
+                                        "assistant_instructions": "",
+                                        "validation": {},
+                                        "scoring": {
+                                            "field_weight": 0.5
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "id": "constr_camaras_frigorificas_plano_ubicacion",
+                            "label": "Facilitar plano de ubicación de las cámaras frigoríficas (Adjuntar archivo).",
+                            "type": "file",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "constr_num_camaras_frigorificas",
+                                    "operator": "greater_than",
+                                    "value": 0
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "actividad_operacional",
+            "title": "ACTIVIDAD OPERACIONAL",
+            "scoring": {
+                "section_weight": 3
+            },
+            "fields": [
+                {
+                    "id": "ao_organigrama_general",
+                    "label": "Organigrama general (Adjuntar archivo si es necesario)",
+                    "type": "file",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "ao_num_trabajadores_total",
+                    "label": "Nº total de trabajadores (si es diferente al ya indicado)",
+                    "type": "number",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 0.5
+                    }
+                },
+                {
+                    "id": "ao_turnos_trabajo",
+                    "label": "Turnos de trabajo (ej: 3 turnos de 8h, L-V)",
+                    "type": "text",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 0.5
+                    }
+                },
+                {
+                    "id": "ao_horarios_trabajo",
+                    "label": "Horarios de trabajo",
+                    "type": "text",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 0.5
+                    }
+                },
+                {
+                    "id": "ao_cambios_ultimos_anos",
+                    "label": "Cambios en los últimos años (inversiones, tipo, nuevos proyectos que pueden afectar el riesgo)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "tooltip": "Incluir inversiones realizadas, tipo, o nuevos proyectos que puedan mejorar/incrementar el riesgo.",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5
+                    }
+                },
+                {
+                    "id": "ao_nuevos_proyectos",
+                    "label": "Nuevos proyectos",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5
+                    }
+                }
+            ]
+        },
+        {
+            "id": "proceso_productivo",
+            "title": "DESCRIPCIÓN DEL PROCESO PRODUCTIVO",
+            "scoring": {
+                "section_weight": 5
+            },
+            "fields": [
+                {
+                    "id": "pp_tipo_actividad",
+                    "label": "Tipo de actividad",
+                    "type": "text",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "pp_diagrama_proceso",
+                    "label": "Diagrama del proceso (Adjuntar archivo)",
+                    "type": "file",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5
+                    }
+                },
+                {
+                    "id": "pp_descripcion_general_proceso",
+                    "label": "Descripción general del proceso / Fases principales / Aportes de calor / Presiones de trabajo / Manejo de productos peligrosos (inflamables/explosivos, etc.)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 2
+                    }
+                },
+                {
+                    "id": "pp_materias_primas_intermedias_finales",
+                    "label": "Materias primas y productos intermedios / productos finales (Listado general)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "pp_productos_auxiliares_proceso",
+                    "label": "Productos auxiliares de proceso",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "pp_producto_terceros",
+                    "label": "Tipo de producto de terceros si lo hubiese",
+                    "type": "text",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 0.5
+                    }
+                },
+                {
+                    "id": "pp_num_lineas_equipos_principales",
+                    "label": "Número de Líneas/Equipos principales del proceso a detallar",
+                    "type": "number",
+                    "assistant_instructions": "",
+                    "defaultValue": 0,
+                    "validation": {
+                        "min": 0
+                    },
+                    "scoring": {
+                        "field_weight": 0.5
+                    }
+                },
+                {
+                    "id": "pp_lineas_equipos_principales_array",
+                    "label": "Líneas/Equipo principal del proceso, describe el numero de líneas de proceso significativas presentes en la planta y el nombre de cada línea",
+                    "type": "array_of_objects",
+                    "assistant_instructions": "",
+                    "row_index_path": true,
+                    "array_count_source_field_id": "pp_num_lineas_equipos_principales",
+                    "item_label_template": "Equipo/Línea Principal {{index + 1}}",
+                    "assistant_instructions":
+                        "Cuando confirmes una celda usa exactamente:\n ✅ Perfecto, el campo ##{{field_id}} ({{item_label}})## es &&<valor>&&.",
+                    "validation": {
+                        "visible_if": {
+                            "field_id": "pp_num_lineas_equipos_principales",
+                            "operator": "greater_than",
+                            "value": 0
+                        }
+                    },
+                    "item_schema": {
+                        "id": "pp_equipo_principal_item",
+                        "fields": [
+                            {
+                                "id": "equipo_nombre",
+                                "label": "Nombre del Equipo/Línea",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {
+                                    "required": true
+                                },
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "equipo_fabricante",
+                                "label": "Fabricante",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "equipo_ano_fabricacion",
+                                "label": "Año Fabricación",
+                                "type": "number",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "equipo_capacidad_nominal",
+                                "label": "Capacidad Producción Nominal unitaria",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "equipo_factor_utilizacion",
+                                "label": "Factor de utilización (%)",
+                                "type": "number",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "equipo_valor_reposicion",
+                                "label": "Valor (€)",
+                                "type": "number",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "pp_control_seguridad_proceso",
+                    "label": "Control/seguridad de proceso",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5
+                    }
+                }
+            ]
+        },
+        {
+            "id": "almacenamiento",
+            "title": "ALMACENAMIENTO",
+            "scoring": {
+                "section_weight": 5
+            },
+            "fields": [
+                {
+                    "id": "alm_productos_granel",
+                    "label": "¿Existen productos a granel?",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 0.5,
+                        "option_scores": {
+                            "true": 3,
+                            "false": 5
+                        }
+                    }
+                },
+                {
+                    "id": "alm_productos_peligrosos_inflamables_ex",
+                    "label": "¿Existen productos PELIGROSOS/inflamables/EX?",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1,
+                        "option_scores": {
+                            "true": 1,
+                            "false": 5
+                        }
+                    }
+                },
+                {
+                    "id": "alm_productos_aerosoles",
+                    "label": "¿Existen productos aerosoles?",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 0.5,
+                        "option_scores": {
+                            "true": 1,
+                            "false": 5
+                        }
+                    }
+                },
+                {
+                    "id": "alm_materia_prima_array",
+                    "label": "Almacenamiento de MATERIA PRIMA",
+                    "type": "array_of_objects",
+                    "assistant_instructions": "",
+                    "row_index_path": true,
+                    "allow_add_remove_rows": true,
+                    "item_label_template": "Materia Prima {{index + 1}}",
+                    "assistant_instructions":
+                        "Cuando confirmes una celda usa exactamente:\n ✅ Perfecto, el campo ##{{field_id}} ({{item_label}})## es &&<valor>&&.",
+                    "item_schema": {
+                        "id": "alm_materia_prima_item",
+                        "fields": [
+                            {
+                                "id": "mp_tipo_producto",
+                                "label": "Tipo/Producto",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {
+                                    "required": true
+                                },
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "mp_riesgo",
+                                "label": "Riesgo (Incendios, Explosión, etc.)",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "mp_tipo_almacenamiento",
+                                "label": "Tipo de almacenamiento (Palets madera/plástico, estantería altura, silos, suelo, etc.)",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "mp_embalaje",
+                                "label": "Embalaje (Cajas cartón, retráctil, sacos, etc.)",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "mp_cantidad",
+                                "label": "Cantidad (kg, unidades, m³, etc.)",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "mp_ubicacion",
+                                "label": "Ubicación (Área compartimentada, no sectorizada, junto a producción, exterior, nave separada, etc.)",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "mp_proteccion",
+                                "label": "Protección (Rociadores, agua pulverizada, venteo, extintores, monitores, etc.)",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1.5
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "alm_mp_plano_fotos",
+                    "label": "Facilitar plano con ubicación de almacenes de MP. Adjuntar fotos. (Adjuntar archivos)",
+                    "type": "file_multiple",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "alm_producto_intermedio_array",
+                    "label": "Almacenamiento de PRODUCTO INTERMEDIO",
+                    "type": "array_of_objects",
+                    "assistant_instructions": "",
+                    "row_index_path": true,
+                    "allow_add_remove_rows": true,
+                    "item_label_template": "Producto Intermedio {{index + 1}}",
+                    "assistant_instructions":
+                        "Cuando confirmes una celda usa exactamente:\n ✅ Perfecto, el campo ##{{field_id}} ({{item_label}})## es &&<valor>&&.",
+                    "item_schema": {
+                        "id": "alm_producto_intermedio_item",
+                        "fields": [
+                            {
+                                "id": "pi_tipo_producto",
+                                "label": "Tipo/Producto",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {
+                                    "required": true
+                                },
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "pi_riesgo",
+                                "label": "Riesgo",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "pi_tipo_almacenamiento",
+                                "label": "Tipo de almacenamiento",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "pi_embalaje",
+                                "label": "Embalaje",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "pi_cantidad",
+                                "label": "Cantidad",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "pi_ubicacion",
+                                "label": "Ubicación",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "pi_proteccion",
+                                "label": "Protección",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1.5
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "alm_pi_plano_fotos",
+                    "label": "Facilitar plano con ubicación de almacenes de PI. Adjuntar fotos. (Adjuntar archivos)",
+                    "type": "file_multiple",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "alm_producto_final_array",
+                    "label": "Almacenamiento de PRODUCTO FINAL",
+                    "type": "array_of_objects",
+                    "assistant_instructions": "",
+                    "row_index_path": true,
+                    "allow_add_remove_rows": true,
+                    "item_label_template": "Producto Final {{index + 1}}",
+                    "assistant_instructions":
+                        "Cuando confirmes una celda usa exactamente:\n ✅ Perfecto, el campo ##{{field_id}} ({{item_label}})## es &&<valor>&&.",
+                    "item_schema": {
+                        "id": "alm_producto_final_item",
+                        "fields": [
+                            {
+                                "id": "pt_tipo_producto",
+                                "label": "Tipo/Producto",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {
+                                    "required": true
+                                },
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "pt_riesgo",
+                                "label": "Riesgo",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "pt_tipo_almacenamiento",
+                                "label": "Tipo de almacenamiento",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "pt_embalaje",
+                                "label": "Embalaje",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "pt_cantidad",
+                                "label": "Cantidad",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "pt_ubicacion",
+                                "label": "Ubicación",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "pt_proteccion",
+                                "label": "Protección",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1.5
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "alm_pt_plano_fotos",
+                    "label": "Facilitar plano con ubicación de almacenes de PT. Adjuntar fotos. (Adjuntar archivos)",
+                    "type": "file_multiple",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "alm_producto_auxiliar_array",
+                    "label": "Almacenamiento de PRODUCTO AUXILIAR",
+                    "type": "array_of_objects",
+                    "assistant_instructions": "",
+                    "row_index_path": true,
+                    "allow_add_remove_rows": true,
+                    "item_label_template": "Producto Auxiliar {{index + 1}}",
+                    "assistant_instructions":
+                        "Cuando confirmes una celda usa exactamente:\n ✅ Perfecto, el campo ##{{field_id}} ({{item_label}})## es &&<valor>&&.",
+                    "item_schema": {
+                        "id": "alm_producto_auxiliar_item",
+                        "fields": [
+                            {
+                                "id": "pa_tipo_producto",
+                                "label": "Tipo/Producto",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {
+                                    "required": true
+                                },
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "pa_riesgo",
+                                "label": "Riesgo",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "pa_tipo_almacenamiento",
+                                "label": "Tipo de almacenamiento",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "pa_embalaje",
+                                "label": "Embalaje",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "pa_cantidad",
+                                "label": "Cantidad",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "pa_ubicacion",
+                                "label": "Ubicación",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "pa_proteccion",
+                                "label": "Protección",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1.5
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "alm_pa_plano_fotos",
+                    "label": "Facilitar plano con ubicación de almacenes de PA. Adjuntar fotos. (Adjuntar archivos)",
+                    "type": "file_multiple",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "alm_checklist_evaluacion_x",
+                    "label": "Check-list de evaluación “X”: con columna de comentarios (Detallar)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "tooltip": "Este campo es para un checklist específico. Si no aplica, indicar N/A. Si aplica, detallar los puntos del checklist y sus comentarios.",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "alm_almacenamiento_camaras_frigorificas_array",
+                    "label": "Almacenamiento en Cámaras Frigoríficas (si aplica, referenciar a cámaras ya definidas o detallar nuevas)",
+                    "type": "array_of_objects",
+                    "assistant_instructions": "",
+                    "row_index_path": true,
+                    "allow_add_remove_rows": true,
+                    "item_label_template": "Producto en Cámara Frigorífica {{index + 1}}",
+                    "assistant_instructions":
+                        "Cuando confirmes una celda usa exactamente:\n ✅ Perfecto, el campo ##{{field_id}} ({{item_label}})## es &&<valor>&&.",
+                    "validation": {
+                        "visible_if": {
+                            "field_id": "constr_num_camaras_frigorificas",
+                            "operator": "greater_than",
+                            "value": 0
+                        }
+                    },
+                    "item_schema": {
+                        "id": "alm_camara_frigorifica_producto_item",
+                        "fields": [
+                            {
+                                "id": "alm_camara_id_ref",
+                                "label": "Nº/ID Cámara frigorífica (referencia a 'constr_camaras_frigorificas_array')",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "alm_camara_tipo_producto_almacenado",
+                                "label": "Tipo de producto almacenado (ej: Leche líquida, Aditivos)",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "alm_camara_tipo_almacenamiento",
+                                "label": "Tipo almacenamiento en cámara (ej: botellas de plástico, sacos)",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "alm_camara_embalaje",
+                                "label": "Embalaje",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "alm_camara_cantidad",
+                                "label": "Cantidad",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "alm_camara_ubicacion_detalle",
+                                "label": "Ubicación (si se requiere mayor detalle)",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "alm_camara_proteccion_especifica",
+                                "label": "Protección específica para este almacenamiento",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "id": "instalaciones_servicio",
+            "title": "INSTALACIONES DE SERVICIO",
+            "scoring": {
+                "section_weight": 5
+            },
+            "fields": [
+                {
+                    "id": "is_acuerdo_norma",
+                    "label": "Instalaciones de acuerdo a norma (Industrial/seguridadindustrial/instalacionesindustriales/Paginas/index.aspx)",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1,
+                        "option_scores": {
+                            "true": 5,
+                            "false": 0
+                        }
+                    }
+                },
+                {
+                    "id": "is_instalacion_electrica_subseccion",
+                    "title": "Instalación eléctrica",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "is_elec_descripcion_general",
+                            "label": "Descripción general (subestaciones, salas eléctricas, PAT, pararrayos, grupos electrógenos). Compartimentación, ubicación, reactiva.",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "is_elec_backup_redundancias",
+                            "label": "Back-up y redundancias. Definir criticidad de equipos (Paralización del 25, 50, 75, 100%).",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "is_elec_num_lineas_acometida",
+                            "label": "Nº de líneas de acometida eléctrica (ej: Dos líneas eléctricas a 60kV)",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "is_elec_potencia_instalada",
+                            "label": "Potencia instalada",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "is_elec_potencia_consumida",
+                            "label": "Potencia consumida",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "is_elec_num_subestaciones_principales",
+                            "label": "Nº Subestaciones principales",
+                            "type": "number",
+                            "assistant_instructions": "",
+                            "defaultValue": 0,
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "is_elec_subestaciones_principales_array",
+                            "label": "Detalles Subestación Principal",
+                            "type": "array_of_objects",
+                            "assistant_instructions": "",
+                            "row_index_path": true,
+                            "array_count_source_field_id": "is_elec_num_subestaciones_principales",
+                            "item_label_template": "Subestación Principal {{index + 1}}",
+                            "assistant_instructions":
+                                "Cuando confirmes una celda usa exactamente:\n ✅ Perfecto, el campo ##{{field_id}} ({{item_label}})## es &&<valor>&&.",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "is_elec_num_subestaciones_principales",
+                                    "operator": "greater_than",
+                                    "value": 0
+                                }
+                            },
+                            "item_schema": {
+                                "id": "is_elec_subestacion_principal_item",
+                                "fields": [
+                                    {
+                                        "id": "subest_princ_ubicacion",
+                                        "label": "Ubicación (ej: Area exterior, zona norte, separada)",
+                                        "type": "text",
+                                        "assistant_instructions": "",
+                                        "validation": {},
+                                        "scoring": {
+                                            "field_weight": 0.5
+                                        }
+                                    },
+                                    {
+                                        "id": "subest_princ_relacion_transformacion",
+                                        "label": "Relación transformación (ej: 60kV/6kV)",
+                                        "type": "text",
+                                        "assistant_instructions": "",
+                                        "validation": {},
+                                        "scoring": {
+                                            "field_weight": 0.5
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "id": "is_elec_num_subestaciones_secundarias",
+                            "label": "Nº Subestaciones secundarias",
+                            "type": "number",
+                            "assistant_instructions": "",
+                            "defaultValue": 0,
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "is_elec_subestaciones_secundarias_array",
+                            "label": "Detalles Subestación Secundaria",
+                            "type": "array_of_objects",
+                            "assistant_instructions": "",
+                            "row_index_path": true,
+                            "array_count_source_field_id": "is_elec_num_subestaciones_secundarias",
+                            "item_label_template": "Subestación Secundaria {{index + 1}}",
+                            "assistant_instructions":
+                                "Cuando confirmes una celda usa exactamente:\n ✅ Perfecto, el campo ##{{field_id}} ({{item_label}})## es &&<valor>&&.",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "is_elec_num_subestaciones_secundarias",
+                                    "operator": "greater_than",
+                                    "value": 0
+                                }
+                            },
+                            "item_schema": {
+                                "id": "is_elec_subestacion_secundaria_item",
+                                "fields": [
+                                    {
+                                        "id": "subest_sec_ubicacion",
+                                        "label": "Ubicación (ej: sala sectorizada, junto a producción)",
+                                        "type": "text",
+                                        "assistant_instructions": "",
+                                        "validation": {},
+                                        "scoring": {
+                                            "field_weight": 0.5
+                                        }
+                                    },
+                                    {
+                                        "id": "subest_sec_relacion_transformacion",
+                                        "label": "Relación transformación (ej: 6kV/400V)",
+                                        "type": "text",
+                                        "assistant_instructions": "",
+                                        "validation": {},
+                                        "scoring": {
+                                            "field_weight": 0.5
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "id": "is_elec_num_transformadores",
+                            "label": "Nº total de Transformadores a detallar",
+                            "type": "number",
+                            "assistant_instructions": "",
+                            "defaultValue": 0,
+                            "assistant_instructions": "Captura únicamente un número.",
+                            "validation": {
+                                "min": 0
+                            },
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "is_elec_transformadores_array",
+                            "label": "Detalles por Transformador",
+                            "type": "array_of_objects",
+                            "assistant_instructions": "",
+                            "row_index_path": true,
+                            "array_count_source_field_id": "is_elec_num_transformadores",
+                            "item_label_template": "Transformador {{index + 1}}",
+                            "assistant_instructions":
+                                "Cuando confirmes una celda usa exactamente:\n ✅ Perfecto, el campo ##{{field_id}} ({{item_label}})## es &&<valor>&&.",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "is_elec_num_transformadores",
+                                    "operator": "greater_than",
+                                    "value": 0
+                                }
+                            },
+                            "item_schema": {
+                                "id": "is_elec_transformador_item",
+                                "fields": [
+                                    {
+                                        "id": "transf_caracteristicas",
+                                        "label": "Características técnicas (Potencia MVA/kVA, Relación kV/kV, Refrigeración, Aceite L, Seco)",
+                                        "type": "textarea",
+                                        "assistant_instructions": "",
+                                        "validation": {},
+                                        "scoring": {
+                                            "field_weight": 1
+                                        }
+                                    },
+                                    {
+                                        "id": "transf_fabricante",
+                                        "label": "Fabricante",
+                                        "type": "text",
+                                        "assistant_instructions": "",
+                                        "validation": {},
+                                        "scoring": {
+                                            "field_weight": 0.5
+                                        }
+                                    },
+                                    {
+                                        "id": "transf_ano_fabricacion",
+                                        "label": "Año Fabricación",
+                                        "type": "number",
+                                        "assistant_instructions": "",
+                                        "validation": {},
+                                        "scoring": {
+                                            "field_weight": 0.5
+                                        }
+                                    },
+                                    {
+                                        "id": "transf_ubicacion",
+                                        "label": "Ubicación (Subestación principal/secundaria, sala sectorizada, almacén repuestos)",
+                                        "type": "text",
+                                        "assistant_instructions": "",
+                                        "validation": {},
+                                        "scoring": {
+                                            "field_weight": 1
+                                        }
+                                    },
+                                    {
+                                        "id": "transf_proteccion",
+                                        "label": "Protección (Diluvio, Detección de incendios, Ninguna)",
+                                        "type": "text",
+                                        "assistant_instructions": "",
+                                        "validation": {},
+                                        "scoring": {
+                                            "field_weight": 1.5
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "is_generacion_electrica",
+                    "label": "Instalaciones de generación eléctrica (Ciclos combinados, Motores, Paneles fotovoltaicos, Aerogeneradores, etc.)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "is_bateria_litio_almacenamiento",
+                    "label": "Batería de litio para almacenamiento de energía eléctrica",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "is_aparatos_presion",
+                    "label": "Aparatos a presión (descripción, número, ubicación, protecciones)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "is_sistema_calentamiento_proceso",
+                    "label": "Sistema de calentamiento de proceso (tipo, combustible, capacidad, ubicación, protecciones)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "is_redes_gas_erm",
+                    "label": "Redes de gas / Estación de regulación y medición (ERM)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "is_caldera_agua_vapor",
+                    "label": "Caldera generadora de agua caliente y/o vapor (tipo, combustible, capacidad, ubicación, protecciones)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "is_compresores_aire",
+                    "label": "Compresores de aire (tipo, capacidad, ubicación, protecciones)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "is_sistema_refrigeracion",
+                    "label": "Sistema de refrigeración (tipo de refrigerante, capacidad, ubicación, protecciones)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "is_sistemas_transporte_subseccion",
+                    "title": "Sistemas de transporte",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "is_transp_gruas",
+                            "label": "Grúas (tipo, capacidad, mantenimiento)",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "is_transp_carretillas_carga_baterias",
+                            "label": "Carretillas y áreas de carga y tipos de baterías (plomo-ácido, litio; sala de carga ventilada, protegida)",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "is_transp_camiones_surtidores",
+                            "label": "Camiones y surtidores de combustible (internos)",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "is_otras_instalaciones_servicio",
+                    "label": "Otras instalaciones de servicio relevantes",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "is_riesgos_instalaciones_servicio_analisis_especializado",
+                    "label": "Riesgos de instalaciones de servicios (¿Lo analizará el ingeniero especializado?)",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 0.5,
+                        "option_scores": {
+                            "true": 3,
+                            "false": 0
+                        }
+                    }
+                },
+                {
+                    "id": "is_instaladores_cualificados_certificadas",
+                    "label": "Instalaciones realizadas por instaladores cualificados e instalaciones certificadas",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1,
+                        "option_scores": {
+                            "true": 5,
+                            "false": 0
+                        }
+                    }
+                },
+                {
+                    "id": "is_cambios_extensiones_cualificados",
+                    "label": "Cambios, extensiones y/o ampliaciones realizadas por instaladores cualificados",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1,
+                        "option_scores": {
+                            "true": 5,
+                            "false": 0
+                        }
+                    }
+                },
+                {
+                    "id": "is_manipulacion_personal_propio_formado",
+                    "label": "Manipulación de instalaciones por personal propio ¿Formado?",
+                    "type": "select",
+                    "assistant_instructions": "",
+                    "options": [
+                        {
+                            "label": "Sí, formado",
+                            "value": "si_formado"
+                        },
+                        {
+                            "label": "Sí, no formado",
+                            "value": "si_no_formado"
+                        },
+                        {
+                            "label": "No, personal externo",
+                            "value": "no_externo"
+                        }
+                    ],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1,
+                        "option_scores": {
+                            "si_formado": 5,
+                            "no_externo": 4,
+                            "si_no_formado": 0
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "id": "gestion_seguridad_emergencia",
+            "title": "GESTION DE LA SEGURIDAD / PROCEDIMIENTOS DE SEGURIDAD (PREVENCIÓN) /PLANES DE EMERGENCIA",
+            "scoring": {
+                "section_weight": 5
+            },
+            "fields": [
+                {
+                    "id": "gs_organizacion_dpto_seguridad",
+                    "label": "A nivel organizativo, dependencia del departamento de seguridad",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "gs_cumplimiento_lprl_rsp",
+                    "label": "Cumplimiento Reg. disposiciones mínimas de seguridad y salud en los lugares de trabajo (Ley de Prevención de Riesgos Laborales (LPRL) y del Reglamento de los Servicios de Prevención (RSP))",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5,
+                        "option_scores": {
+                            "true": 5,
+                            "false": 0
+                        }
+                    }
+                },
+                {
+                    "id": "gs_num_personas_dpto_seguridad",
+                    "label": "Nº personas del departamento de seguridad",
+                    "type": "number",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "gs_formacion_dpto_seguridad",
+                    "label": "Formación de las personas del departamento de seguridad",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "gs_empresa_externa_prevencion",
+                    "label": "Empresa externa de servicio de prevención",
+                    "type": "text",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 0.5
+                    }
+                },
+                {
+                    "id": "gs_metodologia_analisis_riesgos",
+                    "label": "Metodología de análisis y evaluación de riesgos de proceso y de la instalación (Hazop, SIL, etc.)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5
+                    }
+                },
+                {
+                    "id": "gs_gestion_seguridad_proceso",
+                    "label": "Gestión de seguridad en el proceso (gestión de cambios, gestión de by-passes)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5
+                    }
+                },
+                {
+                    "id": "gs_procedimientos_seguridad_implementacion",
+                    "label": "Procedimientos/implementación de procedimientos de seguridad (permisos de trabajos en caliente, prohibición de fumar, orden y limpieza, etc.)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 2
+                    }
+                },
+                {
+                    "id": "gs_formacion_operarios_seguridad",
+                    "label": "Formación de operarios a nivel de puesto de trabajo y seguridad en la planta.",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5
+                    }
+                },
+                {
+                    "id": "gs_programa_formacion_trabajo",
+                    "label": "Programa de formación de puesto de trabajo/Inducción/Refresco.",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "gs_estudio_incidentes_accidentes",
+                    "label": "Estudio de incidentes y accidentes / Estudios causa-raiz / Lecciones aprendidas",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5
+                    }
+                },
+                {
+                    "id": "gs_kpis_seguridad",
+                    "label": "KPI‘s de seguridad",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "gs_plan_autoproteccion_subseccion",
+                    "title": "Plan de autoprotección",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "gs_planauto_elaborado_por",
+                            "label": "Elaborado interna o externamente",
+                            "type": "select",
+                            "assistant_instructions": "",
+                            "options": [
+                                {
+                                    "label": "Internamente",
+                                    "value": "interna"
+                                },
+                                {
+                                    "label": "Externamente",
+                                    "value": "externa"
+                                }
+                            ],
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "gs_planauto_personal_intervencion",
+                            "label": "Nº personas de primera y segunda intervención (por turno, según día semana, etc.)",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "gs_planauto_formacion_personal",
+                            "label": "Formación del personal de intervención",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "gs_afectado_seveso3",
+                    "label": "Actividad afectada por SEVESO III (Si / No)",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1,
+                        "option_scores": {
+                            "true": 1,
+                            "false": 5
+                        }
+                    }
+                },
+                {
+                    "id": "gs_plan_emergencia_interior_exterior",
+                    "label": "Plan de emergencia interior / Exterior (si aplica SEVESO)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {
+                        "visible_if": {
+                            "field_id": "gs_afectado_seveso3",
+                            "operator": "is_true"
+                        }
+                    },
+                    "scoring": {
+                        "field_weight": 1.5
+                    }
+                },
+                {
+                    "id": "gs_simulacros_periodicos",
+                    "label": "Simulacros periódicos (frecuencia, alcance)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5
+                    }
+                },
+                {
+                    "id": "gs_bomberos_propios_subseccion",
+                    "title": "Bomberos profesionales propios",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "gs_bombprop_existen",
+                            "label": "¿Existen bomberos profesionales propios?",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5,
+                                "option_scores": {
+                                    "true": 5,
+                                    "false": 0
+                                }
+                            }
+                        },
+                        {
+                            "id": "gs_bombprop_numero",
+                            "label": "Nº de bomberos",
+                            "type": "number",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "gs_bombprop_existen",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "gs_bombprop_equipos",
+                            "label": "Equipos para primera y segunda intervención",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "gs_bombprop_existen",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "gs_bombprop_camiones",
+                            "label": "Camiones de bomberos",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "gs_bombprop_existen",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "gs_bomberos_publicos_subseccion",
+                    "title": "Bomberos profesionales públicos",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "gs_bombpub_distancia",
+                            "label": "Distancia (km)",
+                            "type": "number",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "gs_bombpub_tiempo_intervencion",
+                            "label": "Tiempo de intervención (minutos)",
+                            "type": "number",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "gs_bombpub_visita_planta",
+                            "label": "¿Han visitado la planta?",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5,
+                                "option_scores": {
+                                    "true": 5,
+                                    "false": 2
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "medios_proteccion_incendios",
+            "title": "MEDIOS DE PROTECCIÓN CONTRA INCENDIOS",
+            "scoring": {
+                "section_weight": 5
+            },
+            "fields": [
+                {
+                    "id": "mpci_reglamentacion_considerada",
+                    "label": "Reglamentación de PCI considerada (RCPIEI Año XXX, NFPA, FM, otros)",
+                    "type": "text",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "mpci_medios_manuales_subseccion",
+                    "title": "Medios manuales de extinción contra incendios",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "mpci_man_extintores_descripcion",
+                            "label": "Extintores: Tipo, agente extintor, número, ubicación y sin obstaculizar",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "mpci_man_bies_descripcion",
+                            "label": "Bocas de incendio equipadas (BIEs): Tipo, número, presión estática en BIE más alejada, ubicación, sin obstaculizar",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "mpci_man_hidrantes_descripcion",
+                            "label": "Hidrantes: Públicos y/o propios (interior parcela). Tipo, número, ubicación, sin obstaculizar",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "mpci_man_otros_medios",
+                            "label": "Otros medios manuales (columnas secas, lanzas, monitores, etc.) (Describir)",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "mpci_deteccion_alarma_subseccion",
+                    "title": "Sistemas de detección y alarma",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "mpci_det_sistema_deteccion_existe",
+                            "label": "Sistemas de detección de incendios (Si/NO)",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1,
+                                "option_scores": {
+                                    "true": 5,
+                                    "false": 0
+                                }
+                            }
+                        },
+                        {
+                            "id": "mpci_det_tipo_sistemas",
+                            "label": "Tipo de sistemas de detección (humos, llama, video-detección, etc.) / Áreas protegidas",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "mpci_det_sistema_deteccion_existe",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "mpci_det_reglamento_diseno",
+                            "label": "Reglamento considerado para diseño de sistemas de detección",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "mpci_det_sistema_deteccion_existe",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "mpci_det_transmision_alarmas",
+                            "label": "Transmisión de alarmas de incendio a zona permanentemente ocupada 24h o CRA 24h.",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "mpci_det_sistema_deteccion_existe",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1.5,
+                                "option_scores": {
+                                    "true": 5,
+                                    "false": 1
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "mpci_medios_automaticos_subseccion",
+                    "title": "Medios automáticos de extinción de incendios",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "mpci_auto_tipo_instalaciones",
+                            "label": "Tipo de instalaciones de extinción de incendios / Áreas protegidas (ej: rociadores, agua pulverizada, CO2, espuma)",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 2
+                            }
+                        },
+                        {
+                            "id": "mpci_auto_diseno_adecuado",
+                            "label": "Diseño de los medios automáticos de extinción de incendios. ¿Diseño adecuado?",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5,
+                                "option_scores": {
+                                    "true": 5,
+                                    "false": 0
+                                }
+                            }
+                        },
+                        {
+                            "id": "mpci_auto_inspeccion_mantenimiento_estado",
+                            "label": "Inspección y mantenimiento. ¿Estado y mantenimiento adecuado?",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5,
+                                "option_scores": {
+                                    "true": 5,
+                                    "false": 0
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "mpci_abastecimiento_agua_subseccion",
+                    "title": "Sistema de abastecimiento de agua de PCI",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "mpci_agua_fuente_alimentacion",
+                            "label": "Fuente de alimentación (ej: red pública, depósito propio, mixto)",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "mpci_agua_redes_suministro",
+                            "label": "Redes de suministro de agua (Externo e interno) (Diámetros, redes en anillo o no, material, etc.)",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "mpci_agua_equipos_bombeo",
+                            "label": "Equipos de bombeo (exclusivos para incendio o no, nº bombas, tipo bombas -principal, reserva, jockey-, motorización -eléctrica, diésel-)",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "mpci_agua_inspeccion_mantenimiento_pruebas",
+                            "label": "Inspección y mantenimiento. Estado y mantenimiento adecuado. Pruebas de bombas (periodicidad, resultados).",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "mpci_inspeccion_mantenimiento_general_medios_extincion",
+                    "label": "Inspección y mantenimiento general de los medios de extinción.",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "mpci_cumplimiento_reglamentacion_pci",
+                    "label": "Cumplimiento reglamentación de instalaciones de PCI (Año XXX) u otros reglamentos (NFPA,…)",
+                    "type": "text",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                }
+            ]
+        },
+        {
+            "id": "seguridad_fisica_vigilancia",
+            "title": "SEGURIDAD FÍSICA/VIGILANCIA",
+            "scoring": {
+                "section_weight": 3.5
+            },
+            "fields": [
+                {
+                    "id": "sfv_proteccion_fisica_parcela",
+                    "label": "Protección física de la parcela (vallados/muros perimetrales/Rejas, bolardos anti impacto, etc.)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5
+                    }
+                },
+                {
+                    "id": "sfv_num_accesos_parcela",
+                    "label": "Nº de accesos a la parcela",
+                    "type": "number",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 0.5
+                    }
+                },
+                {
+                    "id": "sfv_control_accesos_parcela",
+                    "label": "Control de accesos a la parcela (tipo de control)",
+                    "type": "text",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "sfv_iluminacion_interior_exterior_parcela",
+                    "label": "Iluminación interior de la parcela y alrededor de los edificios",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1,
+                        "option_scores": {
+                            "true": 5,
+                            "false": 1
+                        }
+                    }
+                },
+                {
+                    "id": "sfv_medidas_fisicas_intrusion_edificios",
+                    "label": "Medidas físicas adecuadas frente a intrusión en los edificios (puertas seguridad, cerraduras, rejas ventanas, vidrio seguridad, etc.)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5
+                    }
+                },
+                {
+                    "id": "sfv_control_acceso_edificios",
+                    "label": "Control de acceso a los edificios (tipo de control)",
+                    "type": "text",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "sfv_sistemas_deteccion_intrusion",
+                    "label": "Sistemas de detección de intrusión (perimetral, periférica, volumétrica)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5
+                    }
+                },
+                {
+                    "id": "sfv_transmision_alarmas_intrusion",
+                    "label": "Transmisión de alarmas de intrusión a zona ocupada 24h o CRA 24h.",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5,
+                        "option_scores": {
+                            "true": 5,
+                            "false": 1
+                        }
+                    }
+                },
+                {
+                    "id": "sfv_otros_sistemas_proteccion",
+                    "label": "Otros sistema de protección (C.C.T.V., cajas fuertes, etc.)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "sfv_vigilancia_subseccion",
+                    "title": "Vigilancia",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "sfv_vig_empresa_propia_externa",
+                            "label": "Empresa de vigilancia (propia/externa)",
+                            "type": "select",
+                            "assistant_instructions": "",
+                            "options": [
+                                {
+                                    "label": "Propia",
+                                    "value": "propia"
+                                },
+                                {
+                                    "label": "Externa",
+                                    "value": "externa"
+                                },
+                                {
+                                    "label": "No aplica",
+                                    "value": "na"
+                                }
+                            ],
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "sfv_vig_num_vigilantes_turno",
+                            "label": "Nº de vigilantes por turno",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "sfv_vig_empresa_propia_externa",
+                                    "operator": "not_equals",
+                                    "value": "na"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "sfv_vig_control_accesos_rondas",
+                            "label": "Control de accesos, rondas (exterior parcela, interior edificaciones)",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "sfv_vig_empresa_propia_externa",
+                                    "operator": "not_equals",
+                                    "value": "na"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "sfv_vig_autorizados_armas",
+                            "label": "Autorizados a llevar pistolas",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "sfv_vig_empresa_propia_externa",
+                                    "operator": "not_equals",
+                                    "value": "na"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 0.5,
+                                "option_scores": {
+                                    "true": 3,
+                                    "false": 1
+                                }
+                            }
+                        },
+                        {
+                            "id": "sfv_vig_actuacion_emergencias",
+                            "label": "Actuación en emergencias",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "sfv_vig_empresa_propia_externa",
+                                    "operator": "not_equals",
+                                    "value": "na"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "mantenimiento",
+            "title": "MANTENIMIENTO",
+            "scoring": {
+                "section_weight": 4.5
+            },
+            "fields": [
+                {
+                    "id": "mnt_gestion_mantenimiento_organizacion",
+                    "label": "Gestión de mantenimiento. Dependencia del departamento de mantenimiento a nivel organizativo, de la planta.",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "mnt_programa_mantenimiento_maquinaria_proceso",
+                    "label": "Programa de mantenimiento de maquinaria de proceso",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5,
+                        "option_scores": {
+                            "true": 5,
+                            "false": 0
+                        }
+                    }
+                },
+                {
+                    "id": "mnt_programa_mantenimiento_instalaciones_servicio",
+                    "label": "Programa de mantenimiento de instalaciones de servicio",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5,
+                        "option_scores": {
+                            "true": 5,
+                            "false": 0
+                        }
+                    }
+                },
+                {
+                    "id": "mnt_tecnicos_mantenimiento_propio_subseccion",
+                    "title": "Técnicos de mantenimiento propio",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "mnt_propio_existen",
+                            "label": "¿Existen técnicos de mantenimiento propio?",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "mnt_propio_numero",
+                            "label": "Número de técnicos de mantenimiento",
+                            "type": "number",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "mnt_propio_existen",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "mnt_propio_formacion_experiencia",
+                            "label": "Formación y experiencia de técnicos",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "mnt_propio_existen",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "mnt_mantenimiento_externo_subseccion",
+                    "title": "Mantenimiento externo de maquinaria e instalaciones",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "mnt_externo_existe",
+                            "label": "¿Se realiza mantenimiento externo?",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "mnt_externo_tecnicos",
+                            "label": "Técnicos de mantenimiento externo (empresas)",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "mnt_externo_existe",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "mnt_externo_empresas_prestigio",
+                            "label": "Empresas de mantenimiento de reconocido prestigio técnico",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "mnt_externo_existe",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1,
+                                "option_scores": {
+                                    "true": 5,
+                                    "false": 1
+                                }
+                            }
+                        },
+                        {
+                            "id": "mnt_externo_formacion_experiencia",
+                            "label": "Formación y experiencia de técnicos de mantenimiento externo",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "mnt_externo_existe",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "mnt_herramienta_gmao",
+                    "label": "Herramienta de gestión de mantenimiento GMAO. Ordenes de trabajo.",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5,
+                        "option_scores": {
+                            "true": 5,
+                            "false": 1
+                        }
+                    }
+                },
+                {
+                    "id": "mnt_formacion_personal_mantenimiento",
+                    "label": "Formación del personal de mantenimiento (general)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "mnt_experiencia_personal_mantenimiento",
+                    "label": "Experiencia del personal de mantenimiento (general)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "mnt_tipo_mantenimiento_tecnicas_subseccion",
+                    "title": "Tipo de mantenimiento / Técnicas de mantenimiento e inspecciones",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "mnt_tipo_preventivo_predictivo_correctivo",
+                            "label": "Tipo de mantenimiento (preventivo, predictivo y correctivo)",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "mnt_preventivo_fabricante_experiencia",
+                            "label": "Mantenimiento preventivo según fabricante y/o experiencia del mantenedor",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1,
+                                "option_scores": {
+                                    "true": 5,
+                                    "false": 1
+                                }
+                            }
+                        },
+                        {
+                            "id": "mnt_monitorizacion_variables_maquinas",
+                            "label": "Monitorización de variables de maquinas (vibraciones, termografía, etc.)",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5,
+                                "option_scores": {
+                                    "true": 5,
+                                    "false": 1
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "mnt_inspecciones_periodicas_maquinaria_instalaciones",
+                    "label": "Inspecciones y mantenimiento periódico de maquinaria e instalaciones, por personal especializado (propio/terceros). ¿Se realizan?",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5,
+                        "option_scores": {
+                            "true": 5,
+                            "false": 0
+                        }
+                    }
+                },
+                {
+                    "id": "mnt_empresas_inspecciones_periodicas",
+                    "label": "Empresas encargadas de la inspecciones periódicas de maquinaria e instalaciones (si aplica)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {
+                        "visible_if": {
+                            "field_id": "mnt_inspecciones_periodicas_maquinaria_instalaciones",
+                            "operator": "is_true"
+                        }
+                    },
+                    "scoring": {
+                        "field_weight": 0.5
+                    }
+                },
+                {
+                    "id": "mnt_parada_anual_mantenimiento",
+                    "label": "Parada anual de mantenimiento",
+                    "type": "boolean",
+                    "assistant_instructions": "",
+                    "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1,
+                        "option_scores": {
+                            "true": 5,
+                            "false": 2
+                        }
+                    }
+                },
+                {
+                    "id": "mnt_estado_conservacion_instalaciones",
+                    "label": "Estado de conservación de las instalaciones (general)",
+                    "type": "select",
+                    "assistant_instructions": "",
+                    "options": [
+                        {
+                            "label": "Bueno",
+                            "value": "bueno"
+                        },
+                        {
+                            "label": "Regular",
+                            "value": "regular"
+                        },
+                        {
+                            "label": "Malo",
+                            "value": "malo"
+                        }
+                    ],
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 2,
+                        "option_scores": {
+                            "bueno": 10,
+                            "regular": 5,
+                            "malo": 0
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "id": "perdida_beneficio",
+            "title": "PÉRDIDA DE BENEFICIO",
+            "scoring": {
+                "section_weight": 4.5
+            },
+            "fields": [
+                {
+                    "id": "pb_materia_prima_subseccion",
+                    "title": "Materia prima",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "pb_mp_proveedores",
+                            "label": "Proveedores MP (principales)",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "pb_mp_stock_planta_almacen",
+                            "label": "Stock MP (toneladas/días, semanas, meses) en planta/Almacén (Fijo más flotante)",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "pb_mp_num_proveedores",
+                            "label": "Nº Proveedores total",
+                            "type": "number",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "pb_mp_exigencia_stock_proveedores",
+                            "label": "Se exige mantener a los proveedores unos stocks determinados",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5,
+                                "option_scores": {
+                                    "true": 3,
+                                    "false": 1
+                                }
+                            }
+                        },
+                        {
+                            "id": "pb_mp_origen_proveedores",
+                            "label": "Origen de los proveedores (nacional/internacional, distancia)",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "pb_mp_porcentaje_mayor_proveedor",
+                            "label": "% de MP suministrada por el mayor proveedor",
+                            "type": "number",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "pb_mp_transporte",
+                            "label": "Transporte MP (tipo, criticidad)",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "pb_mp_suministro_alternativo",
+                            "label": "Posibilidad de suministro de MP de otros proveedores, y % de suministro sobre el total",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "pb_mp_extracoste_produccion_terceros_plantas",
+                            "label": "Extra-coste de producción por terceros o plantas (si MP falla)",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "pb_producto_semielaborado_subseccion",
+                    "title": "Producto semi elaborado",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "pb_pse_stock_planta_almacen",
+                            "label": "Stock Producto Semielaborado (toneladas/días, semanas, meses) en planta/Almacén (Fijo más flotante)",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "pb_pse_suministro_alternativo",
+                            "label": "Posibilidad de suministro de Producto Semielaborado de otras plantas del grupo y/o proveedores externos.",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "pb_pse_extracoste_suministro_alternativo",
+                            "label": "Extra-coste en el caso de proveedores externos y/o del grupo.",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "pb_producto_terminado_clientes_subseccion",
+                    "title": "Producto terminado (PT). Clientes.",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "pb_pt_stock_planta",
+                            "label": "Stock PT (toneladas/días, semanas, meses) en planta",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "pb_pt_num_clientes",
+                            "label": "Nº Clientes total",
+                            "type": "number",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "pb_pt_exigencia_stock_cliente",
+                            "label": "Se exige por parte del cliente mantener unos stocks determinados en planta (Si/No).",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "pb_pt_exigencia_stock_cliente_cantidades",
+                            "label": "Cantidades (toneladas/días, semanas, meses) exigidas por cliente",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "pb_pt_exigencia_stock_cliente",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "pb_pt_sectores_venta",
+                            "label": "Sectores de venta",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "pb_pt_porcentaje_venta_sector",
+                            "label": "% de venta según sector",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "pb_pt_porcentaje_mayor_cliente",
+                            "label": "% de PT vendido al mayor cliente",
+                            "type": "number",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "pb_pt_transporte",
+                            "label": "Transporte PT (tipo, criticidad)",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "pb_pt_suministro_alternativo_grupo_terceros",
+                            "label": "Posibilidad de suministro de PT de otras plantas del grupo o de terceros, y % de suministro sobre el total necesario",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "pb_pt_extracoste_produccion_alternativa",
+                            "label": "Extra-coste de producción por otras plantas del grupo o por terceros",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "pb_flexibilidad_redundancia_procesos_instalaciones_subseccion",
+                    "title": "Flexibilidad y redundancia de los procesos productivos e instalaciones auxiliares.",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "pb_flex_tiempos_reemplazo_instalaciones_criticas",
+                            "label": "Tiempos de reemplazo de instalaciones críticas",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "pb_flex_tipo_proceso_lineal_diversificado",
+                            "label": "Tipo de Proceso (lineal o diversificado)",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "pb_flex_lineas_unicas_duplicadas",
+                            "label": "Líneas únicas de producción o duplicidad de líneas de producción",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "pb_flex_cuellos_botella_proceso",
+                            "label": "Cuellos de botella en líneas o maquinaria de proceso",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "pb_flex_maquinaria_nacional_internacional",
+                            "label": "Maquinaria Nacional/Internacional (disponibilidad repuestos, servicio técnico)",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "pb_produccion_facturacion_por_linea_equipo_array",
+                    "label": "% de producción y % de facturación que pasa por cada línea de proceso o equipo principal:",
+                    "type": "array_of_objects",
+                    "assistant_instructions": "",
+                    "row_index_path": true,
+                    "allow_add_remove_rows": true,
+                    "item_label_template": "Línea/Equipo {{index+1}}",
+                    "item_schema": {
+                        "id": "pb_prod_fact_linea_item",
+                        "fields": [
+                            {
+                                "id": "linea_nombre",
+                                "label": "Línea de producción / maquinaria",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {
+                                    "required": true
+                                },
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "linea_porc_produccion_total",
+                                "label": "% Producción Total que pasa por la línea/maquinaria",
+                                "type": "number",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "linea_porc_facturacion_total",
+                                "label": "% Facturación total que pasa por la línea/maquinaria",
+                                "type": "number",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "pb_tiempo_reposicion_equipos_principales_array",
+                    "label": "Tiempo reposición equipos principales y cuello de botella hasta la vuelta a normalidad",
+                    "type": "array_of_objects",
+                    "assistant_instructions": "",
+                    "row_index_path": true,
+                    "allow_add_remove_rows": true,
+                    "item_label_template": "Equipo Principal {{index+1}}",
+                    "item_schema": {
+                        "id": "pb_t_rep_equip_princ_item",
+                        "fields": [
+                            {
+                                "id": "equip_princ_nombre",
+                                "label": "Línea de producción/Maquinaria",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {
+                                    "required": true
+                                },
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "equip_princ_tiempo_reposicion",
+                                "label": "Tiempo de reposición (semanas/meses)",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "equip_princ_tiempo_montaje",
+                                "label": "Tiempo de montaje (semanas/meses)",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "equip_princ_coste_reemplazo",
+                                "label": "Coste de reemplazo (€)",
+                                "type": "number",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "pb_produccion_facturacion_por_instalacion_servicio_array",
+                    "label": "% de producción y % de facturación que pasa por cada instalación de servicio principal:",
+                    "type": "array_of_objects",
+                    "assistant_instructions": "",
+                    "row_index_path": true,
+                    "allow_add_remove_rows": true,
+                    "item_label_template": "Instalación Servicio {{index+1}}",
+                    "item_schema": {
+                        "id": "pb_prod_fact_is_item",
+                        "fields": [
+                            {
+                                "id": "is_nombre",
+                                "label": "Instalaciones de servicio (Transformadores, Calderas, etc.)",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {
+                                    "required": true
+                                },
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "is_porc_produccion_total",
+                                "label": "% Producción Total que depende de la instalación",
+                                "type": "number",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "is_porc_facturacion_total",
+                                "label": "% Facturación total que depende de la instalación",
+                                "type": "number",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "pb_tiempo_reposicion_instalaciones_servicio_array",
+                    "label": "Tiempo reposición instalaciones de servicios/auxiliares principales y cuello de botella hasta la vuelta a normalidad",
+                    "type": "array_of_objects",
+                    "assistant_instructions": "",
+                    "row_index_path": true,
+                    "allow_add_remove_rows": true,
+                    "item_label_template": "Instalación Servicio Principal {{index+1}}",
+                    "item_schema": {
+                        "id": "pb_t_rep_is_princ_item",
+                        "fields": [
+                            {
+                                "id": "is_princ_nombre",
+                                "label": "Instalación de servicio/auxiliar",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {
+                                    "required": true
+                                },
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "is_princ_tiempo_reposicion",
+                                "label": "Tiempo de reposición (semanas/meses)",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 1
+                                }
+                            },
+                            {
+                                "id": "is_princ_tiempo_montaje",
+                                "label": "Tiempo de montaje (semanas/meses)",
+                                "type": "text",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            },
+                            {
+                                "id": "is_princ_coste_reemplazo",
+                                "label": "Coste de reemplazo (€)",
+                                "type": "number",
+                                "assistant_instructions": "",
+                                "validation": {},
+                                "scoring": {
+                                    "field_weight": 0.5
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "pb_equipos_informaticos_backup_proteccion",
+                    "label": "Equipos informáticos (backup, protecciones, etc.)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "pb_produccion_interdependencia_plantas_grupo_subseccion",
+                    "title": "Producción /Interdependencia entre plantas del grupo",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "pb_interdep_turnos_trabajo",
+                            "label": "Turnos de trabajo (si no se ha detallado antes o es específico para PB)",
+                            "type": "text",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "pb_interdep_estabilidad_ventas_produccion",
+                            "label": "Estabilidad anual de ventas: ¿Producción regular o estacionaria?",
+                            "type": "select",
+                            "assistant_instructions": "",
+                            "options": [
+                                {
+                                    "label": "Regular",
+                                    "value": "regular"
+                                },
+                                {
+                                    "label": "Estacionaria",
+                                    "value": "estacionaria"
+                                }
+                            ],
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "pb_interdep_prod_estacionaria_meses_mayor_prod",
+                            "label": "En caso de producción estacionaria: Meses de mayor producción y % total producción/facturación",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "pb_interdep_estabilidad_ventas_produccion",
+                                    "operator": "equals",
+                                    "value": "estacionaria"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "pb_interdep_prod_estacionaria_meses_menor_prod",
+                            "label": "En caso de producción estacionaria: Meses de menor producción y % total producción/facturación",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "pb_interdep_estabilidad_ventas_produccion",
+                                    "operator": "equals",
+                                    "value": "estacionaria"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "pb_interdep_produccion_bajo_pedido",
+                            "label": "Producción bajo pedido (Si/No)",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "pb_interdep_porc_produccion_bajo_pedido",
+                            "label": "Porcentaje de producción bajo pedido",
+                            "type": "number",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "pb_interdep_produccion_bajo_pedido",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "pb_interdep_num_plantas_grupo",
+                            "label": "Número de plantas del grupo: ¿Una o Varias?",
+                            "type": "select",
+                            "assistant_instructions": "",
+                            "options": [
+                                {
+                                    "label": "Una",
+                                    "value": "una"
+                                },
+                                {
+                                    "label": "Varias",
+                                    "value": "varias"
+                                }
+                            ],
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "pb_interdep_descripcion_plantas_grupo",
+                            "label": "Si son varias, describir brevemente",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "pb_interdep_num_plantas_grupo",
+                                    "operator": "equals",
+                                    "value": "varias"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 0.5
+                            }
+                        },
+                        {
+                            "id": "pb_interdep_entre_planta_actual_resto",
+                            "label": "Interdependencia entre la planta actual y el resto de las plantas del grupo (Si/No). Describir.",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "pb_interdep_num_plantas_grupo",
+                                    "operator": "equals",
+                                    "value": "varias"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "pb_interdep_diagrama_interdependencia",
+                            "label": "Diagrama de interdependencia entre centros de fabricación del grupo (Adjuntar si existe)",
+                            "type": "file",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "pb_interdep_num_plantas_grupo",
+                                    "operator": "equals",
+                                    "value": "varias"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "pb_interdep_paralizacion_otras_plantas_por_esta",
+                            "label": "En caso de siniestro en esta planta, ¿los otros centros sufrirían paralización total o parcial? % de paralización para el resto.",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "pb_interdep_num_plantas_grupo",
+                                    "operator": "equals",
+                                    "value": "varias"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "pb_interdep_produccion_alternativa_grupo_terceros",
+                            "label": "Posibilidad de producción alternativa en plantas del grupo o de terceros. Extracoste.",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "pb_plan_continuidad_negocio_subseccion",
+                    "title": "Plan de continuidad de negocio",
+                    "type": "subsection",
+                    "assistant_instructions": "",
+                    "fields": [
+                        {
+                            "id": "pb_pcn_elaborado_implantado",
+                            "label": "Plan de continuidad de negocio elaborado e implantado",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {},
+                            "scoring": {
+                                "field_weight": 2,
+                                "option_scores": {
+                                    "true": 10,
+                                    "false": 0
+                                }
+                            }
+                        },
+                        {
+                            "id": "pb_pcn_sgcn_definicion",
+                            "label": "Sistema de Gestión continuidad de negocio (SGCN) (definición del alcance, política, roles, etc.)",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "pb_pcn_elaborado_implantado",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "pb_pcn_operacion_gcn",
+                            "label": "Continuidad de negocio · Operación (GCN) (Business Impact Analysis, estrategias, estructuras de respuesta, etc.)",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "pb_pcn_elaborado_implantado",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1.5
+                            }
+                        },
+                        {
+                            "id": "pb_pcn_analisis_impacto_perdida",
+                            "label": "Existe un análisis de impacto de pérdida de negocio (suministradores, clientes, productos principales, etc.)",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "pb_pcn_elaborado_implantado",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1.5,
+                                "option_scores": {
+                                    "true": 5,
+                                    "false": 0
+                                }
+                            }
+                        },
+                        {
+                            "id": "pb_pcn_productos_principales_facturacion_impacto",
+                            "label": "Productos principales relacionados con la facturación y áreas geográficas. Impacto financiero, escenarios críticos, etc.",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "pb_pcn_analisis_impacto_perdida",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "pb_pcn_estrategia_minimizacion_perdidas",
+                            "label": "Estrategia de minimización de pérdidas",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "pb_pcn_elaborado_implantado",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "pb_pcn_plan_contingencia_continuidad",
+                            "label": "Plan de contingencia/Plan de Continuidad de Negocio (detalles)",
+                            "type": "textarea",
+                            "assistant_instructions": "",
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "pb_pcn_elaborado_implantado",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1
+                            }
+                        },
+                        {
+                            "id": "pb_pcn_implementacion_adecuada",
+                            "label": "Implementación adecuada del plan",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "pb_pcn_elaborado_implantado",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1,
+                                "option_scores": {
+                                    "true": 5,
+                                    "false": 0
+                                }
+                            }
+                        },
+                        {
+                            "id": "pb_pcn_revision_periodica_plan",
+                            "label": "Revisión periódica del plan de contingencia",
+                            "type": "boolean",
+                            "assistant_instructions": "",
+                            "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                            "validation": {
+                                "visible_if": {
+                                    "field_id": "pb_pcn_elaborado_implantado",
+                                    "operator": "is_true"
+                                }
+                            },
+                            "scoring": {
+                                "field_weight": 1,
+                                "option_scores": {
+                                    "true": 5,
+                                    "false": 0
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "sostenibilidad_esg",
+            "title": "SOSTENIBILIDAD / ESG",
+            "scoring": {
+                "section_weight": 2.5
+            },
+            "fields": [
+                {
+                    "id": "esg_politicas_practicas",
+                    "label": "Políticas y prácticas de Sostenibilidad / ESG implementadas (medioambientales, sociales, gobernanza)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "esg_certificaciones",
+                    "label": "Certificaciones ESG (ISO 14001, EMAS, etc.)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                },
+                {
+                    "id": "esg_riesgos_oportunidades",
+                    "label": "Principales riesgos y oportunidades ESG identificados para el negocio",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5
+                    }
+                }
+            ]
+        },
+        {
+            "id": "escenarios_perdidas_riesgos",
+            "title": "ESCENARIOS DE PERDIDAS/RIESGOS (DAÑOS MATERIALES, AVERIA MAQUINARIA, PB)",
+            "scoring": {
+                "section_weight": 3
+            },
+            "fields": [
+                {
+                    "id": "epr_descripcion_escenarios",
+                    "label": "Descripción de los principales escenarios de pérdidas identificados (incendio, explosión, inundación, avería maquinaria crítica, fallo proveedor clave, ciberataque, etc.)",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 2
+                    }
+                },
+                {
+                    "id": "epr_estimacion_pml_eml",
+                    "label": "Estimación de PML (Probable Maximum Loss) y EML (Estimated Maximum Loss) para los escenarios principales",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1.5
+                    }
+                }
+            ]
+        },
+        {
+            "id": "otros",
+            "title": "OTROS",
+            "scoring": {
+                "section_weight": 1
+            },
+            "fields": [
+                {
+                    "id": "otros_comentarios_adicionales",
+                    "label": "Comentarios adicionales o aspectos no cubiertos anteriormente que sean relevantes para la inspección de riesgos.",
+                    "type": "textarea",
+                    "assistant_instructions": "",
+                    "validation": {},
+                    "scoring": {
+                        "field_weight": 1
+                    }
+                }
+            ]
+        }
+    ]
+}
