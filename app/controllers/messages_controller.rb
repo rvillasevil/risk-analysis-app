@@ -192,19 +192,22 @@ class MessagesController < ApplicationController
     if pairs.any?
       pairs.each do |field_id, item_label, value|
         clean_id = field_id.to_s.strip
-        field    = RiskFieldSet.by_id[clean_id.to_sym]
-        error    = RiskFieldSet.validate_answer(field, value)
-
-        if error.present?
-          @risk_assistant.messages.create!(
-            sender:      "assistant",
-            role:        "assistant",
-            content:     "⚠️ #{error} ⚠️",
-            field_asked: clean_id,
-            thread_id:   runner.thread_id
-          )
-          next
+        
+        if last_q && clean_id !~ /\.\d+\./
+          expected = last_q.field_asked.to_s
+          clean_id = expected if expected.gsub(/\.\d+/, '') == clean_id
         end
+
+      @risk_assistant.messages.create!(
+        content:     "✅ Perfecto, #{RiskFieldSet.label_for(clean_id)} es &&#{value}&&.",
+        sender:      "assistant",
+        role:        "developer",
+        key:         clean_id,
+        item_label:  item_label,
+        value:       value,
+        field_asked: nil,
+        thread_id:   runner.thread_id
+      )
 
         @risk_assistant.messages.create!(
           content:     "✅ Perfecto, #{RiskFieldSet.label_for(clean_id)} es &&#{value}&&.",
