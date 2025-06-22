@@ -2,33 +2,36 @@
 <%#           _sidebar partial                                    %>
 <%# -------------------------------------------------------------- %>
 <%#  (Guárdalo como app/views/risk_assistants/_sidebar.html.erb)  %>
-<div>
-  <h5 class="sidebar-header mb-3">Progreso general</h5>
-
-  <div class="progress mb-4" style="height:20px;">
-    <div class="progress-bar bg-success"
-         style="width:<%= overall_pct %>%;">
-      <%= overall_pct %>% completado
-    </div>
+<div class="card shadow-sm mb-4">
+  <div class="card-header">
+    <h6 class="mb-0">Progreso general</h6>
   </div>
 
-  <h6 class="sidebar-header">Por secciones</h6>
-  <% progress_by_section.each_value do |info| %>
-    <p class="mb-1 small"><%= info[:title] %> (<%= info[:done] %>/<%= info[:total] %>)</p>
-    <div class="progress mb-3" style="height:12px;">
-      <div class="progress-bar"
-           style="width:<%= info[:pct] %>%;">
+  <div class="card-body">
+    <div class="progress mb-3" style="height: 1rem;">
+      <div class="progress-bar bg-success" style="width:<%= overall_pct %>%;">
+        <%= overall_pct %>% completado
       </div>
     </div>
-  <% end %>
+    <% progress_by_section.each_value do |info| %>
+      <p class="mb-1 small"><%= info[:title] %> (<%= info[:done] %>/<%= info[:total] %>)</p>
+      <div class="progress mb-3" style="height: 0.5rem;">
+        <div class="progress-bar bg-primary" style="width:<%= info[:pct] %>%;"></div>
+      </div>
+    <% end %>
+  </div>
+</div>
 
-  <hr>
-  <h6 class="sidebar-header">Últimos valores</h6>
-  <ul class="list-unstyled small">
+<div class="card shadow-sm">
+  <div class="card-header">
+    <h6 class="mb-0">Últimos valores</h6>
+  </div>
+  <ul class="list-group list-group-flush small">
     <% risk_assistant.messages.order(created_at: :desc).limit(50).each do |m| %>
       <% next unless m.key.present? %>
-      <li class="mb-1">
-        <strong><%= m.key %></strong>: <%= m.value %>
+      <li class="list-group-item d-flex justify-content-between">
+        <span class="fw-semibold"><%= m.key %></span>
+        <span class="text-muted"><%= m.value %></span>
       </li>
     <% end %>
   </ul>

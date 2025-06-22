@@ -78,7 +78,7 @@
       <h1 class="h1 mb-0"><%= @risk_assistant.name %></h1>
       <div class="chat-history">
         <%# Mensajes en orden ascendente pero invertidos vía flex-column-reverse %>
-        <% @risk_assistant.messages.where.not(role: 'assistant').order(created_at: :asc).each do |m| %>
+        <% @risk_assistant.messages.where.not(role: 'developer').order(created_at: :asc).each do |m| %>
           <% row_cls = m.sender == 'user' ? 'user' : 'assistant' %>
           <div class="message-row <%= row_cls %>">
             <div class="message-box <%= row_cls %>">
@@ -160,3 +160,4 @@
     });
   });
 </script>
+

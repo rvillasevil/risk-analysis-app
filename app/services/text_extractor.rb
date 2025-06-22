@@ -18,7 +18,7 @@ class TextExtractor
     if file.content_type == 'application/pdf'
       extract_pdf_text(raw_bytes)
     else
-      raw_bytes.force_encoding('UTF-8')
+      raw_bytes.force_encoding('UTF-8').scrub
     end
   rescue => e
     Rails.logger.error "TextExtractor error: #{e.message}"

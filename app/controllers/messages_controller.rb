@@ -31,8 +31,10 @@ class MessagesController < ApplicationController
     # 3) Si el usuario sube un archivo, extraer el texto y buscar campos automáticamente
     if params[:file].present?
       # A partir de aquí, el fichero queda disponible localmente para descargarlo.
-      # Luego extraer texto, subir a OpenAI, etc. (tal como ya tenías).
-      extracted_text = TextExtractor.call(params[:file])      
+      # Luego extraer texto, subir a OpenA<I, etc. (tal como ya tenías).
+      extracted_text = TextExtractor.call(params[:file])
+      params[:file].rewind
+      @risk_assistant.uploaded_files.attach(params[:file])    
 
       # 3.2) Guardamos en histórico (opcional) un mensaje tipo “system” con el texto crudo
       unless extracted_text.blank?

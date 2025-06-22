@@ -10,6 +10,8 @@ class DocumentFieldExtractor
     "Content-Type"  => "application/json"
   }.freeze
 
+   MAX_TOKENS = ENV.fetch('DOCUMENT_FIELD_EXTRACTOR_MAX_TOKENS', 2000).to_i
+
   # Dado un texto extraído de uno o varios ficheros, devuelve un hash { campo_id => valor } 
   # para todos los campos del JSON que aparezcan en dicho texto.
   def self.call(extracted_text)
@@ -46,15 +48,14 @@ class DocumentFieldExtractor
       ##nombre_empresa## &&ACME S.A.&&  
       ##direccion## &&Calle Falsa 123&&
 
-      => Ahora hazlo sobre el texto real:
-      #{extracted_text}
+      => Ahora analiza el texto proporcionado.
     PROMPT
 
     # 3) Llamar a OpenAI
     body = {
       model: OPENAI_MODEL,
       temperature: 0.7,
-      max_tokens: 512,
+      max_tokens: MAX_TOKENS,
       messages: [
         { role: "user", content: prompt }
       ]
@@ -63,6 +64,7 @@ class DocumentFieldExtractor
     response = HTTP
                  .headers(OPENAI_HEADERS)
                  .post(OPENAI_URL, json: body)
+    Rails.logger.debug "[DocumentFieldExtractor] ← Response body: #{response.body.to_s.truncate(500)}"
     content = response.parse.dig("choices", 0, "message", "content") || ""
     raw = content.to_s.strip
 

@@ -36,6 +36,127 @@
                   <% when "number" %>
                     <%= number_with_delimiter(value.to_f, delimiter: ".") %>
 
+                  <% when "boolean_group" %>
+                    <% values = value.is_a?(Array) ? value : value.to_s.split(/\s*,\s*/) %>
+                    <% values.each do |val| %>
+                      <span class="badge bg-success me-1">✓ <%= val %></span>
+                  <% end %>
+
+
+                  <% when "object" %>
+                    <% obj_parent = f[:id] %>
+                    <% obj_fields = RiskFieldSet.flat_fields.select { |sf| sf[:parent] == obj_parent } %>
+                    <table class="table table-sm table-borderless mb-0">
+                      <tbody>
+                        <% obj_fields.each do |sf| %>
+                          <% sub_key   = sf[:id].to_s %>
+                          <% sub_value = @risk_assistant.messages.where(key: sub_key).order(:created_at).pluck(:value).first %>
+                          <% next if sub_value.blank? && sf[:type].to_s != "array_of_objects" %>
+                          <tr>
+                            <th class="w-50 align-middle"><%= sf[:label] %></th>
+                            <td>
+                              <% case sf[:type].to_s %>
+                              <% when "boolean" %>
+                                <% if %w[true Sí sí SÍ].include?(sub_value) %>
+                                  <span class="badge bg-success">Sí</span>
+                                <% else %>
+                                  <span class="badge bg-danger">No</span>
+                                <% end %>
+
+                              <% when "select" %>
+                                <span class="badge bg-info text-dark"><%= sub_value %></span>
+
+                              <% when "number" %>
+                                <%= number_with_delimiter(sub_value.to_f, delimiter: ".") %>
+
+                              <% when "array_of_objects" %>
+                                <% array_parent = sf[:id] %>
+                                <% subfields = RiskFieldSet.flat_fields.select { |ss| ss[:parent] == array_parent } %>
+                                <% rows = @risk_assistant.messages
+                                              .where("key LIKE ?", "#{array_parent}.%")
+                                              .order(:created_at) %>
+                                <% grouped = {} %>
+                                <% rows.each do |msg| %>
+                                  <% parts = msg.key.split(".") %>
+                                  <% idx  = parts[1] %>
+                                  <% col  = parts[2..].join(".") %>
+                                  <% grouped[idx] ||= { item_label: nil, values: {} } %>
+                                  <% grouped[idx][:item_label] ||= msg.item_label %>
+                                  <% grouped[idx][:values][col] = msg.value %>
+                                <% end %>
+
+                                <table class="table table-sm table-bordered mt-2 mb-0">
+                                  <thead class="table-light">
+                                    <tr>
+                                      <th>Item</th>
+                                      <% subfields.each do |ssf| %>
+                                        <th><%= ssf[:label] %></th>
+                                      <% end %>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <% grouped.each do |idx, data| %>
+                                      <tr>
+                                        <th scope="row"><%= data[:item_label] || idx.to_i + 1 %></th>
+                                        <% subfields.each do |ssf| %>
+                                          <% col_id = ssf[:id].split(".").last %>
+                                          <% cell = data[:values][col_id] %>
+                                          <% if ssf[:type].to_s == "array_of_objects" %>
+                                            <% nested_parent = ssf[:id] %>
+                                            <% nested_subfields = RiskFieldSet.flat_fields.select { |nsf| nsf[:parent] == nested_parent } %>
+                                            <% nested_rows = @risk_assistant.messages
+                                                              .where("key LIKE ?", "#{array_parent}.#{idx}.#{nested_parent}.%")
+                                                              .order(:created_at) %>
+                                            <% nested_grouped = {} %>
+                                            <% nested_rows.each do |nmsg| %>
+                                              <% nparts = nmsg.key.split(".") %>
+                                              <% nidx  = nparts[3] %>
+                                              <% ncol  = nparts[4..].join(".") %>
+                                              <% nested_grouped[nidx] ||= { item_label: nil, values: {} } %>
+                                              <% nested_grouped[nidx][:item_label] ||= nmsg.item_label %>
+                                              <% nested_grouped[nidx][:values][ncol] = nmsg.value %>
+                                            <% end %>
+
+                                            <table class="table table-sm table-bordered mb-0">
+                                              <thead class="table-secondary">
+                                                <tr>
+                                                  <th>Item</th>
+                                                  <% nested_subfields.each do |nsf| %>
+                                                    <th><%= nsf[:label] %></th>
+                                                  <% end %>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <% nested_grouped.each do |nidx, ndata| %>
+                                                  <tr>
+                                                    <th scope="row"><%= ndata[:item_label] || nidx.to_i + 1 %></th>
+                                                    <% nested_subfields.each do |nsf| %>
+                                                      <% ncol_id = nsf[:id].split(".").last %>
+                                                      <td><%= ndata[:values][ncol_id] %></td>
+                                                    <% end %>
+                                                  </tr>
+                                                <% end %>
+                                              </tbody>
+                                            </table>
+                                          <% else %>
+                                            <%= simple_format(cell.to_s) %>
+                                          <% end %>
+                                        <% end %>
+                                      </tr>
+                                    <% end %>
+                                  </tbody>
+                                </table>
+
+                              <% else %>
+                                <%= simple_format(sub_value.to_s) %>
+                              <% end %>
+                            </td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+
+
                   <% when "array_of_objects" %>
                     <% array_parent = f[:id] %>
                     <% subfields = RiskFieldSet.flat_fields.select { |sf| sf[:parent] == array_parent } %>
