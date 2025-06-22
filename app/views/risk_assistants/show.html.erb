@@ -77,7 +77,7 @@
     <main class="col-lg-8 col-md-7 d-flex flex-column chat-page">
       <h1 class="h1 mb-0"><%= @risk_assistant.name %></h1>
         <% display_msgs = @risk_assistant.messages
-                             .where.not(role: 'developer')
+                             .where.not(role: 'assistant')
                              .order(created_at: :asc) %>
         <div class="chat-history">
           <% if display_msgs.empty? %>
@@ -124,7 +124,7 @@
             <%#— Campo de subida de archivo oculto —%>
             <%= file_field_tag :file,
                                id: 'fileUpload',
-                               accept: '.pdf,.doc,.docx,.txt',
+                               accept: 'image/*,.pdf,.doc,.docx,.txt',
                                class: 'd-none' %>
 
             <%#— Botón para disparar el selector de archivos —%>

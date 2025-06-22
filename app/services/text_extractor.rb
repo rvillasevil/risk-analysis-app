@@ -15,11 +15,19 @@ class TextExtractor
     return "" if raw_bytes.blank?
 
     # 2) Si es PDF, extraer con PDF::Reader; en caso contrario, asumimos texto plano.
-    if file.content_type == 'application/pdf'
-      extract_pdf_text(raw_bytes)
-    else
-      raw_bytes.force_encoding('UTF-8').scrub
-    end
+    text =
+      if file.content_type == 'application/pdf'
+        # 2) Procesar según tipo MIME
+        if file.content_type&.start_with?('image/')
+          ''
+        elsif file.content_type == 'application/pdf'
+        extract_pdf_text(raw_bytes)
+      else
+        raw_bytes.force_encoding('UTF-8').scrub
+      end
+
+    text.delete!("\u0000")
+    text
   rescue => e
     Rails.logger.error "TextExtractor error: #{e.message}"
     ""
