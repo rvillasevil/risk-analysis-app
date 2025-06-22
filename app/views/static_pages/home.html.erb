@@ -1,25 +1,20 @@
   <style>
+    /* Animations & brand accents */
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .feature-icon { font-size: 3rem; color: #0d6efd; }
-    .testimonial {
-      background: #fff;
-      padding: 2rem;
-      border-radius: .5rem;
-      box-shadow: 0 .25rem .5rem rgba(0,0,0,0.1);
-    }
-    .cta-banner {
-      background: linear-gradient(90deg, #6610f2, #0d6efd);
-      color: #fff;
-      padding: 3rem 1rem;
-      animation: pulseBg 5s infinite;
+      to   { opacity: 1; transform: translateY(0); }
     }
     @keyframes pulseBg {
       0%,100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
+      50%     { background-position: 100% 50%; }
     }
+
+    .feature-icon    { font-size: 3rem; color: #0d6efd; }
+    .plan-card       { transition: transform .3s ease-in-out, box-shadow .3s; }
+    .plan-card:hover { transform: translateY(-6px); box-shadow: 0 .75rem 1.5rem rgba(0,0,0,.1); }
+    .ribbon-early    { position: absolute; top: -10px; right: -10px; background:#dc3545; color:#fff; padding: .25rem .5rem; font-size:.8rem; font-weight:600; border-radius:.25rem; }
+    .testimonial     { background:#fff; padding:2rem; border-radius:.5rem; box-shadow:0 .25rem .5rem rgba(0,0,0,.1); }
+    .cta-banner      { background: linear-gradient(90deg,#6610f2,#0d6efd); color:#fff; padding:4rem 1rem; animation:pulseBg 8s infinite; }
   </style>
     
   <div class="container-fluid pt-5">
@@ -49,55 +44,146 @@
     <div class="row justify-content-center">
       <div class="lc-block text-center col-md-8">
         <div editable="rich">
-          <h1 class="display-2 fw-bold">Riesgos claros. Decisiones rápidas.</h1>
+          <h1 class="display-3 fw-bold mb-3" style="animation:fadeInUp .8s ease-out;">Riesgos claros. <span class="text-primary">Decisiones ágiles</span> para brokers.</h1>
         </div>
       </div>
     </div>
     <div class="row justify-content-center">
       <div class="lc-block text-center col-xxl-6 col-md-8">
         <div editable="rich">
-          <p class="lead mb-4">Transforma la captura de riesgos industriales con IA conversacional y análisis experto integrado.</p>
+          <p class="lead mb-4">Conversación inteligente, análisis de documentos. Una experiencia ágil y agradable para tus clientes, con insights de riesgo listos para actuar.</p>
+
           <a href="<%= new_user_registration_path %>" class="btn btn-danger btn-lg me-3">Solicitar Demo</a>
           <a href="<%= risk_assistants_path %>" class="btn btn-outline-primary btn-lg me-3">Ver Demo</a>
           <a href="<%= policy_analyses_path %>" class="btn btn-primary btn-lg">Comparativa de pólizas</a>       
         </div>
+        <small class="d-block mt-3 text-muted">Oferta Early‑Adopter: 20 % descuento hasta el 30 de septiembre de 2025</small>
       </div><!-- /lc-block -->
     </div>
   </div>
  
  
-    
-
-  <!-- Características destacadas -->
+<!-- ================= FEATURES ================= -->
   <section class="py-5">
     <div class="container">
       <div class="row text-center g-4">
-        <div class="col-md-4">
+        <div class="col-md-3">
           <div class="p-4">
-            <div class="feature-icon mb-3"><i class="bi bi-journal-text"></i></div>
+            <div class="feature-icon mb-3"><i class="bi bi-chat-dots"></i></div>
             <h5>Captura Conversacional</h5>
-            <p>Diálogos inteligentes que guían al usuario y aseguran datos completos y conformes.</p>
+            <p>Interroga al cliente con IA, sin formularios interminables.</p>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <div class="p-4">
-            <div class="feature-icon mb-3"><i class="bi bi-gear-fill"></i></div>
-            <h5>Ingeniería Asistida</h5>
-            <p>Módulo HAZOP, ATEX y NFPA integrado, con horas virtuales de expertos en cada análisis.</p>
+            <div class="feature-icon mb-3"><i class="bi bi-cloud-arrow-up"></i></div>
+            <h5>Carga & Análisis de Docs</h5>
+            <p>Extrae datos clave de planes de autoprotección, informes PCI y más.</p>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <div class="p-4">
-            <div class="feature-icon mb-3"><i class="bi bi-file-earmark-bar-graph-fill"></i></div>
-            <h5>Informes Instantáneos</h5>
-            <p>Reportes listos para underwriting y reaseguro, exportables en PDF y Excel.</p>
+            <div class="feature-icon mb-3"><i class="bi bi-bar-chart-line"></i></div>
+            <h5>Comparativa de Pólizas</h5>
+            <p>Benchmark automático de coberturas y límites entre aseguradoras.</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="p-4">
+            <div class="feature-icon mb-3"><i class="bi bi-robot"></i></div>
+            <h5>API & Integraciones</h5>
+            <p>Conecta tu ERP o CRM y automatiza la emisión.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Testimonios -->
+<!-- ================= HOW IT WORKS ================= -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-5">Cómo funciona</h2>
+      <div class="row g-4 text-center">
+        <div class="col-md-4">
+          <div class="p-4 h-100">
+            <div class="feature-icon mb-3"><i class="bi bi-clipboard-data"></i></div>
+            <h6>1. Chatea o sube archivos</h6>
+            <p>El cliente conversa con el bot o carga documentos técnicos.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-4 h-100">
+            <div class="feature-icon mb-3"><i class="bi bi-cpu"></i></div>
+            <h6>2. IA procesa y normaliza</h6>
+            <p>Detectamos valores de riesgo, sus coberturas y brechas.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-4 h-100">
+            <div class="feature-icon mb-3"><i class="bi bi-file-earmark-richtext"></i></div>
+            <h6>3. Informe listo al instante</h6>
+            <p>Descarga PDF, Excel o envíalo a tu aseguradora preferida.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- ================= PRICING ================= -->
+  <section id="pricing" class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-5">Planes y precios</h2>
+      <div class="row justify-content-center g-4">
+        <!-- Starter -->
+        <div class="col-md-4 position-relative">
+          <div class="plan-card border rounded-4 h-100 p-4 text-center">
+            <h5 class="mb-3">Starter</h5>
+            <h2 class="fw-bold">99€<small class="fs-6 fw-normal text-muted">/mes</small></h2>
+            <ul class="list-unstyled mt-3 mb-4 text-start">
+              <li><i class="bi bi-check2 text-success me-1"></i>Hasta 5 cuentas de cliente</li>
+              <li><i class="bi bi-check2 text-success me-1"></i>20 documentos/mes</li>
+              <li><i class="bi bi-check2 text-success me-1"></i>Chatbot IA básico</li>
+              <li><i class="bi bi-check2 text-success me-1"></i>Soporte email</li>
+            </ul>
+            <a href="<%= new_user_registration_path %>?plan=starter" class="btn btn-outline-primary w-100">Comenzar</a>
+          </div>
+        </div>
+        <!-- Professional -->
+        <div class="col-md-4 position-relative">
+          <span class="ribbon-early">-20 %</span>
+          <div class="plan-card border border-primary rounded-4 h-100 p-4 text-center bg-white">
+            <h5 class="mb-3 text-primary">Professional</h5>
+            <h2 class="fw-bold">249€<small class="fs-6 fw-normal text-muted">/mes</small></h2>
+            <ul class="list-unstyled mt-3 mb-4 text-start">
+              <li><i class="bi bi-check2 text-success me-1"></i>Cuentas ilimitadas</li>
+              <li><i class="bi bi-check2 text-success me-1"></i>100 documentos/mes</li>
+              <li><i class="bi bi-check2 text-success me-1"></i>Comparativa de pólizas avanzada</li>
+              <li><i class="bi bi-check2 text-success me-1"></i>Migración PDF gratuita</li>
+              <li><i class="bi bi-check2 text-success me-1"></i>Soporte prioritario</li>
+            </ul>
+            <a href="<%= new_user_registration_path %>?plan=pro" class="btn btn-primary w-100">Elegir Professional</a>
+            <small class="d-block mt-2 text-muted">Precio Early‑Adopter hasta 30 sep 2025</small>
+          </div>
+        </div>
+        <!-- Enterprise -->
+        <div class="col-md-4 position-relative">
+          <div class="plan-card border rounded-4 h-100 p-4 text-center">
+            <h5 class="mb-3">Enterprise</h5>
+            <h2 class="fw-bold">A medida</h2>
+            <ul class="list-unstyled mt-3 mb-4 text-start">
+              <li><i class="bi bi-check2 text-success me-1"></i>Documentos ilimitados</li>
+              <li><i class="bi bi-check2 text-success me-1"></i>Acceso API completo</li>
+              <li><i class="bi bi-check2 text-success me-1"></i>Consultoría de integración</li>
+              <li><i class="bi bi-check2 text-success me-1"></i>SLA 99,9 % y gestor dedicado</li>
+            </ul>
+            <a href="/contact?type=enterprise" class="btn btn-outline-primary w-100">Solicitar propuesta</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- ================= TESTIMONIALS ================= -->
   <section class="py-5 bg-light">
     <div class="container">
       <h2 class="text-center mb-5">Lo que dicen nuestros clientes</h2>
@@ -105,47 +191,42 @@
         <div class="carousel-inner">
           <div class="carousel-item active">
             <div class="testimonial mx-auto" style="max-width:600px;">
-              <p class="mb-3">“Gracias a InsurAI, hemos reducido un 60% el tiempo de elaboración de informes y mejorado la fiabilidad de nuestros datos.”</p>
-              <h6 class="mb-0">Juan Pérez</h6>
+              <p class="mb-3">“Hemos reducido un 60 % el tiempo de informes y aumentado la fiabilidad de los datos.”</p>
+              <h6 class="mb-0">Juan Pérez</h6>
               <small>Director de Riesgos, SegurosPlus</small>
             </div>
           </div>
           <div class="carousel-item">
             <div class="testimonial mx-auto" style="max-width:600px;">
-              <p class="mb-3">“La integración de ingeniería virtual nos ha permitido detectar y mitigar riesgos antes de la inspección física.”</p>
-              <h6 class="mb-0">María Gómez</h6>
+              <p class="mb-3">“La ingeniería virtual nos permite detectar riesgos antes de la inspección física.”</p>
+              <h6 class="mb-0">María Gómez</h6>
               <small>Broker líder, RiskMasters</small>
             </div>
           </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon"></span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon"></span>
-        </button>
+        <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+        <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
       </div>
     </div>
   </section>
 
-  <!-- Banner CTA -->
+<!-- ================= CTA BANNER ================= -->
   <section class="cta-banner text-center">
     <div class="container">
-      <h2 class="display-5 mb-3">Listo para acelerar tus procesos?</h2>
-      <p class="mb-4">Reduce tiempos, minimiza errores y maximiza márgenes con InsurAI.</p>
-      <a href="<%= new_user_registration_path %>" class="btn btn-light btn-lg">Comienza Ahora</a>
+      <h2 class="display-5 mb-3">¿Listo para modernizar tu correduría?</h2>
+      <p class="mb-4">Empieza hoy mismo y descubre por qué los mejores brokers confían en DataRisk.</p>
+      <a href="<%= new_user_registration_path %>" class="btn btn-light btn-lg">Activar prueba gratuita</a>
     </div>
   </section>
 
-  <!-- Footer -->
+<!-- ================= FOOTER ================= -->
   <footer class="bg-dark text-white text-center py-4">
     <div class="container">
-      <p class="mb-2">© <%= Time.now.year %> InsurAI | Todos los derechos reservados</p>
+      <p class="mb-2">© <%= Time.now.year %> DataRisk | Todos los derechos reservados</p>
       <a href="/privacy" class="text-white me-3">Política de Privacidad</a>
       <a href="/terms" class="text-white">Términos de Uso</a>
     </div>
   </footer>
 
-  <!-- Bootstrap 5 JS & Icons -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

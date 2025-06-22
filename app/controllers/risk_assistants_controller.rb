@@ -17,13 +17,11 @@
                                    .where.not(value: [nil, ""])
                                    .order(:created_at)
 
-      # 👉 títulos de las secciones en el orden que quieras mostrar
-      @sections = [
-        'Datos identificativos', 'Situación',         'Construcción',
-        'Sectorización',         'Actividad',         'Servicios Auxiliares',
-        'Mantenimiento',         'Medios Activos',    'Medios Humanos',
-        'Pérdida de beneficios', 'CATNAT',            'Reportaje fotográfico'
-      ]
+      # Catálogo de secciones definido en config/risk_assistant/*
+      catalogue = RiskFieldSet.all
+
+      # Títulos de las secciones en el orden configurado
+      @sections = catalogue.map { |_id, sec| sec[:title] }
 
       # ------------------------------------------------------------
       # 1. Mensajes con clave (key) y valor (value) no vacíos
@@ -70,7 +68,7 @@
       # --------------------------
       # 2) progreso por sección
       # --------------------------
-      @progress_by_section = RiskFieldSet.all.each_with_object({}) do |(sec_key, sec_cfg), h|
+      @progress_by_section = catalogue.each_with_object({}) do |(sec_key, sec_cfg), h|
         total = sec_cfg[:fields].size
         done  = sec_cfg[:fields].count { |f| filled_ids.include?(f[:id].to_sym) }
         pct   = total.zero? ? 0 : ((done * 100.0) / total).round

@@ -74,6 +74,7 @@ class AssistantRunner
     instr    = field[:assistant_instructions].to_s.strip
 
     # guarda la PREGUNTA para que el guardia pueda validarla
+=begin
     risk_assistant.messages.create!(
       sender:      "assistant",
       role:        "assistant",
@@ -82,7 +83,7 @@ class AssistantRunner
       content:     question,
       thread_id:   thread_id
     )
-
+=end
     extra = +""
     extra << "### Instrucciones de campo:\n#{instr}\n\n" if instr.present?
     extra << "### Pregunta EXACTA:\n#{question}\n\n"
@@ -151,7 +152,11 @@ class AssistantRunner
 
   def next_from_array(array_id, prefix_parts, answered)
     info = RiskFieldSet.by_id[array_id.to_sym]
+      return nil unless info
+
     count_field = info[:array_count_source_field_id]
+      return nil unless count_field
+
     count_key = (prefix_parts + [count_field]).reject(&:blank?).join('.')
     count_msg = @risk_assistant.messages.where(key: count_key).order(:created_at).last
     return count_key.to_sym unless count_msg
@@ -183,24 +188,15 @@ class AssistantRunner
     question = RiskFieldSet.question_for(field)   # ← YA incluye opciones
 
     # ↓ Recupera las instrucciones privadas que el JSON trae para ese campo
-    instr = RiskFieldSet.by_id[
-              # Si field incluye índice, quitamos “.0.edif_nombre_uso” para buscar las instrucciones
-              field.to_s.include?(".") ?
-                field.to_s.sub(/\.\d+\.(.+)$/, '.\1').to_sym :
-                field 
-          ][:assistant_instructions].to_s.strip
 
     # 3) Recuperamos las instrucciones privadas para este campo (sin índice si lo hubiera)
     #    Ej.: si field == :"constr_edificios_detalles_array.0.edif_nombre_uso",
     #    queremos buscar en JSON por :"constr_edificios_detalles_array.edif_nombre_uso"
-    base_key =
-      if field.to_s.include?(".")
-        # quitamos el “.0.” o “.1.” dejando “array_id.child_id”
-        field.to_s.sub(/\.\d+\.(.+)$/, '.\1').to_sym
-      else
-        field
-      end
-
+    base_key = field.to_s.include?(".") ?
+                 field.to_s.sub(/\.\d+\.(.+)$/, '.\1').to_sym :
+                 field.to_sym
+    info  = RiskFieldSet.by_id[base_key]
+    instr = info ? info[:assistant_instructions].to_s.strip : ""
     # El asistente generará la pregunta exacta como parte de la respuesta,
     # por lo que aquí no la publicamos para evitar duplicidades en el chat.         
 
