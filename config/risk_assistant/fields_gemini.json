@@ -11,6 +11,7 @@
                 {
                     "id": "metadata_redactores_informe",
                     "label": "Nombre y cargo de las personas que redactan el informe",
+                    "context": "Describe el campo «Nombre y cargo de las personas que redactan el informe». Referencias NFPA y RSCIEI aplicables.",
                     "type": "select",
                     "example": "Roberto Villasevil",
                     "why": "Debe figurar un responsable de esta toma de datos de cara a la aseguradora",
@@ -49,6 +50,8 @@
                 {
                     "id": "dgi_actividad_productos_empresa",
                     "label": "Actividad, Tipos de productos, Tamaño de la empresa y Nº trabajadores",
+                    "context": "Describe el campo «Actividad, Tipos de productos, Tamaño de la empresa y Nº trabajadores». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Actividad, Tipos de productos, Tamaño de la empresa y Nº trabajadores» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Describa la actividad principal, los tipos de productos, el tamaño general de la empresa y el número de trabajadores.",
                     "validation": {
@@ -61,6 +64,8 @@
                 {
                     "id": "dgi_situacion_riesgo_capacidad_produccion",
                     "label": "Situación del riesgo y Capacidad total de producción",
+                    "context": "Describe el campo «Situación del riesgo y Capacidad total de producción». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Situación del riesgo y Capacidad total de producción» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Describa la situación del riesgo y la capacidad total de producción de la instalación.",
                     "validation": {},
@@ -71,10 +76,14 @@
                 {
                     "id": "dgi_venta_nacional_internacional",
                     "label": "Venta/Negocio nacional o internacional",
+                    "context": "Describe el campo «Venta/Negocio nacional o internacional». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Venta/Negocio nacional o internacional» y sea coherente.",
                     "type": "select",
                     "options": [
                         {
                             "label": "Nacional",
+                    "context": "Describe el campo «Nacional». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Nacional» y sea coherente.",
                             "value": "nacional"
                         },
                         {
@@ -99,6 +108,8 @@
                         {
                             "id": "dgi_loc_ubicacion_detalles",
                             "label": "Detalles de Ubicación (Dirección, Coordenadas, Tipo de Zona, Aeropuertos Próximos)",
+                            "context": "Describe el campo «Detalles de Ubicación (Dirección, Coordenadas, Tipo de Zona, Aeropuertos Próximos)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Detalles de Ubicación (Dirección, Coordenadas, Tipo de Zona, Aeropuertos Próximos)» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Incluir señas, coordenadas (C/ XXXXXX, Polig.XXXX (XXXX)), tipo de ubicación (industrial, aislada, urbana, etc.) y aeropuertos próximos.",
                             "validation": {},
@@ -109,6 +120,8 @@
                         {
                             "id": "dgi_loc_planos_fotografias",
                             "label": "Planos y Fotografías Aéreas (Adjuntar archivos)",
+                            "context": "Describe el campo «Planos y Fotografías Aéreas (Adjuntar archivos)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Planos y Fotografías Aéreas (Adjuntar archivos)» y sea coherente.",
                             "type": "file_multiple",
                             "tooltip": "Adjuntar fotografías aéreas, lay out exterior (edificaciones e instalaciones exteriores) y lay out interior (equipos y líneas de producción/salas interiores).",
                             "validation": {},
@@ -119,6 +132,8 @@
                         {
                             "id": "dgi_loc_colindantes_detalles_riesgos",
                             "label": "Información de Colindantes (Terceros, exposición, actividad, riesgos, distancia)",
+                            "context": "Describe el campo «Información de Colindantes (Terceros, exposición, actividad, riesgos, distancia)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Información de Colindantes (Terceros, exposición, actividad, riesgos, distancia)» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Detallar colindantes (terceros, exposición a ríos, mares, etc.), distancia a estos, su actividad y riesgos asociados.",
                             "validation": {},
@@ -136,6 +151,7 @@
                         {
                             "id": "dgi_desc_actividades_edificio_zonas",
                             "label": "Descripción de actividades por edificio y/o zonas",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Descripción de actividades por edificio y/o zonas» y sea coherente.",
                             "type": "textarea",
                             "context": "Se solicitarán detalles específicos por edificio/zona más adelante.",
                             "validation": {},
@@ -146,6 +162,8 @@
                         {
                             "id": "dgi_congestion_distancias_edificaciones",
                             "label": "Congestión y Distancias entre Edificaciones/Instalaciones",
+                            "context": "Describe el campo «Congestión y Distancias entre Edificaciones/Instalaciones». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Congestión y Distancias entre Edificaciones/Instalaciones» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Detallar la congestión de edificios, instalaciones y almacenamientos (exterior e interior) y las distancias entre edificaciones e instalaciones exteriores (m).",
                             "validation": {},
@@ -167,6 +185,7 @@
                 {
                     "id": "constr_establecimiento_industrial_detalles",
                     "label": "Tipo de establecimiento industrial y detalles relacionados",
+                    "context": "Describe el campo «Tipo de establecimiento industrial y detalles relacionados». Referencias NFPA y RSCIEI aplicables.",
                     "type": "textarea",
                     "tooltip": "Seleccione el tipo de establecimiento y, si es 'totalmente aislado', indique si la distancia está libre de mercancías combustibles. Tipos: Parcialmente un edificio con otros, Totalmente un edificio adosado o a <= 3m de terceros, Totalmente un edificio/varios a > 3m del más próximo, Espacio abierto totalmente cubierto sin cerramiento lateral, Espacio abierto parcialmente cubierto (<=50%) sin cerramiento lateral.",
                     "assistant_instructions": "Primero indique el tipo de establecimiento. Si es 'totalmente aislado', añada si la distancia está libre de mercancías combustibles (Sí/No). Ejemplo: 'Totalmente un edificio/varios a > 3m del más próximo. Distancia libre de combustibles: Sí.'",
@@ -178,6 +197,7 @@
                 {
                     "id": "constr_superficies_normativa_sismo",
                     "label": "Superficies (Parcela, Construida) y Normativa Sismorresistente",
+                    "context": "Describe el campo «Superficies (Parcela, Construida) y Normativa Sismorresistente». Referencias NFPA y RSCIEI aplicables.",
                     "type": "textarea",
                     "tooltip": "Indicar Superficie Total Parcela (m²), Superficie Total Construida (m²), si hay necesidad de cumplimiento Norma Sismo-resistente (Sí/No) y si cumple dicha norma en caso de ser necesario (Sí/No).",
                     "assistant_instructions": "Formato: Parcela: [valor] m², Construida: [valor] m². Necesidad Norma Sismo: [Sí/No]. Cumple Norma Sismo: [Sí/No/N/A].",
@@ -189,6 +209,8 @@
                 {
                     "id": "constr_num_edificios",
                     "label": "Nº Edificios principales a detallar",
+                    "context": "Describe el campo «Nº Edificios principales a detallar». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Nº Edificios principales a detallar» y sea coherente.",
                     "type": "number",
                     "defaultValue": 0,
                     "validation": {
@@ -201,6 +223,7 @@
                 {
                     "id": "constr_edificios_detalles_array",
                     "label": "Detalles constructivos por Edificio, número de edificios",
+                    "context": "Describe el campo «Detalles constructivos por Edificio, número de edificios». Referencias NFPA y RSCIEI aplicables.",
                     "type": "array_of_objects",
                     "row_index_path": true,
                     "array_count_source_field_id": "constr_num_edificios",
@@ -219,6 +242,8 @@
                             {
                                 "id": "edif_identificacion_uso_propiedad",
                                 "label": "Nombre/ID, Uso Principal y Propiedad/Alquilado",
+                                "context": "Describe el campo «Nombre/ID, Uso Principal y Propiedad/Alquilado». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Nombre/ID, Uso Principal y Propiedad/Alquilado» y sea coherente.",
                                 "type": "textarea",
                                 "tooltip": "Ej: Edificio 1 - Producción. Propiedad.",
                                 "validation": {
@@ -231,6 +256,8 @@
                             {
                                 "id": "edif_descripcion_actividades",
                                 "label": "Descripción de actividades en este edificio/zona",
+                                "context": "Describe el campo «Descripción de actividades en este edificio/zona». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Descripción de actividades en este edificio/zona» y sea coherente.",
                                 "type": "textarea",
                                 "validation": {},
                                 "scoring": {
@@ -240,6 +267,8 @@
                             {
                                 "id": "edif_caracteristicas_constructivas",
                                 "label": "Características (Año constr., Nº plantas, Altura) y Materiales (Cubierta, Fachadas, Tabiquerías, Estructura)",
+                                "context": "Describe el campo «Características (Año constr., Nº plantas, Altura) y Materiales (Cubierta, Fachadas, Tabiquerías, Estructura)». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Características (Año constr., Nº plantas, Altura) y Materiales (Cubierta, Fachadas, Tabiquerías, Estructura)» y sea coherente.",
                                 "type": "textarea",
                                 "tooltip": "Año de construcción, Nº de plantas, Altura (m). Detallar materiales constructivos de cubierta, fachadas exteriores, tabiquerías interiores, y estructura (pilares y vigas/cerchas).",
                                 "validation": {},
@@ -250,6 +279,8 @@
                             {
                                 "id": "edif_num_sectores_incendio",
                                 "label": "Nº Sectores de incendio interior en este edificio",
+                                "context": "Describe el campo «Nº Sectores de incendio interior en este edificio». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Nº Sectores de incendio interior en este edificio» y sea coherente.",
                                 "type": "number",
                                 "defaultValue": 0,
                                 "validation": {
@@ -262,6 +293,7 @@
                             {
                                 "id": "edif_sectores_incendio_array",
                                 "label": "Detalles por Sector de Incendio (dentro de este Edificio)",
+                                "context": "Describe el campo «Detalles por Sector de Incendio (dentro de este Edificio)». Referencias NFPA y RSCIEI aplicables.",
                                 "type": "array_of_objects",
                                 "row_index_path": true,
                                 "array_count_source_field_id": "edif_num_sectores_incendio",
@@ -280,6 +312,8 @@
                                         {
                                             "id": "sector_identificacion_superficie",
                                             "label": "Nombre/ID del Sector, Áreas y Superficie (m²)",
+                                            "context": "Describe el campo «Nombre/ID del Sector, Áreas y Superficie (m²)». Referencias NFPA y RSCIEI aplicables.",
+                                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Nombre/ID del Sector, Áreas y Superficie (m²)» y sea coherente.",
                                             "type": "textarea",
                                             "tooltip": "Ej: Sector A - Almacén. Superficie: 500 m².",
                                             "validation": {
@@ -292,6 +326,8 @@
                                         {
                                             "id": "sector_materiales_constructivos",
                                             "label": "Materiales (Cubierta, Cerramiento, Particiones Interiores, Estructura)",
+                                            "context": "Describe el campo «Materiales (Cubierta, Cerramiento, Particiones Interiores, Estructura)». Referencias NFPA y RSCIEI aplicables.",
+                                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Materiales (Cubierta, Cerramiento, Particiones Interiores, Estructura)» y sea coherente.",
                                             "type": "textarea",
                                             "tooltip": "Cubierta: Tipo y % o m² (Panel simple metálico, Sándwich PUR, etc.). Cerramiento: Tipo y % o m². Particiones interiores: Tipo y % o m² (o N/A). Estructura: Tipo (Metálica, hormigón, etc.).",
                                             "validation": {},
@@ -302,6 +338,8 @@
                                         {
                                             "id": "sector_resistencia_fuego",
                                             "label": "Resistencia al fuego (paredes, puertas, huecos, paso de instalaciones). Paredes por encima de cubierta. Medios comunicación vertical.",
+                                            "context": "Describe el campo «Resistencia al fuego (paredes, puertas, huecos, paso de instalaciones). Paredes por encima de cubierta. Medios comunicación vertical.». Referencias NFPA y RSCIEI aplicables.",
+                                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Resistencia al fuego (paredes, puertas, huecos, paso de instalaciones). Paredes por encima de cubierta. Medios comunicación vertical.» y sea coherente.",
                                             "type": "textarea",
                                             "validation": {},
                                             "scoring": {
@@ -311,6 +349,8 @@
                                         {
                                             "id": "sector_fotos_generales",
                                             "label": "Fotos generales de la construcción del sector (Adjuntar archivos)",
+                                            "context": "Describe el campo «Fotos generales de la construcción del sector (Adjuntar archivos)». Referencias NFPA y RSCIEI aplicables.",
+                                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Fotos generales de la construcción del sector (Adjuntar archivos)» y sea coherente.",
                                             "type": "file_multiple",
                                             "validation": {},
                                             "scoring": {
@@ -326,6 +366,8 @@
                 {
                     "id": "constr_plano_ubicacion_distancias_seguridad",
                     "label": "Plano ubicación (edificios, sectores, construcciones combustibles) y Distancias de seguridad",
+                    "context": "Describe el campo «Plano ubicación (edificios, sectores, construcciones combustibles) y Distancias de seguridad». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Plano ubicación (edificios, sectores, construcciones combustibles) y Distancias de seguridad» y sea coherente.",
                     "type": "textarea_file_combination",
                     "file_label": "Adjuntar plano de ubicación",
                     "textarea_label": "Describir distancias de seguridad entre edificios y libre de almacenamientos / Sectores exteriores",
@@ -342,6 +384,7 @@
                         {
                             "id": "constr_num_camaras_frigorificas",
                             "label": "Nº Cámaras frigoríficas a detallar",
+                            "context": "Describe el campo «Nº Cámaras frigoríficas a detallar». Referencias NFPA y RSCIEI aplicables.",
                             "type": "number",
                             "assistant_instructions": "Recoge únicamente un número, si se indica por ejemplo ninguna, el value es 0",
                             "defaultValue": 0,
@@ -355,6 +398,7 @@
                         {
                             "id": "constr_camaras_frigorificas_array",
                             "label": "Detalles por Cámara Frigorífica",
+                            "context": "Describe el campo «Detalles por Cámara Frigorífica». Referencias NFPA y RSCIEI aplicables.",
                             "type": "array_of_objects",
                             "row_index_path": true,
                             "array_count_source_field_id": "constr_num_camaras_frigorificas",
@@ -373,6 +417,8 @@
                                     {
                                         "id": "camara_detalles_constructivos",
                                         "label": "Detalles (Superficie m², Tipo aislamiento panel, Ubicación en sector incendio, Colindantes)",
+                                        "context": "Describe el campo «Detalles (Superficie m², Tipo aislamiento panel, Ubicación en sector incendio, Colindantes)». Referencias NFPA y RSCIEI aplicables.",
+                                        "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Detalles (Superficie m², Tipo aislamiento panel, Ubicación en sector incendio, Colindantes)» y sea coherente.",
                                         "type": "textarea",
                                         "tooltip": "Indicar superficie, tipo de aislamiento del panel (Lana roca, PIR FM, etc.), sector de incendio donde se ubica, y colindantes a la cámara.",
                                         "validation": {},
@@ -383,6 +429,8 @@
                                     {
                                         "id": "camara_fotos_exterior_interior",
                                         "label": "Fotos del exterior e interior de la cámara (Adjuntar archivos)",
+                                        "context": "Describe el campo «Fotos del exterior e interior de la cámara (Adjuntar archivos)». Referencias NFPA y RSCIEI aplicables.",
+                                        "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Fotos del exterior e interior de la cámara (Adjuntar archivos)» y sea coherente.",
                                         "type": "file_multiple",
                                         "validation": {},
                                         "scoring": {
@@ -395,6 +443,8 @@
                         {
                             "id": "constr_camaras_frigorificas_plano_ubicacion",
                             "label": "Facilitar plano de ubicación de las cámaras frigoríficas (Adjuntar archivo).",
+                            "context": "Describe el campo «Facilitar plano de ubicación de las cámaras frigoríficas (Adjuntar archivo).». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Facilitar plano de ubicación de las cámaras frigoríficas (Adjuntar archivo).» y sea coherente.",
                             "type": "file",
                             "validation": {
                                 "visible_if": {
@@ -421,6 +471,8 @@
                 {
                     "id": "ao_organigrama_general",
                     "label": "Organigrama general (Adjuntar archivo si es necesario)",
+                    "context": "Describe el campo «Organigrama general (Adjuntar archivo si es necesario)». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Organigrama general (Adjuntar archivo si es necesario)» y sea coherente.",
                     "type": "file",
                     "validation": {},
                     "scoring": {
@@ -430,6 +482,8 @@
                 {
                     "id": "ao_trabajadores_turnos_horarios",
                     "label": "Nº total trabajadores, Turnos y Horarios de trabajo",
+                    "context": "Describe el campo «Nº total trabajadores, Turnos y Horarios de trabajo». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Nº total trabajadores, Turnos y Horarios de trabajo» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Indicar el nº total de trabajadores (si es diferente al ya indicado), los turnos de trabajo (ej: 3 turnos de 8h, L-V) y los horarios.",
                     "validation": {},
@@ -440,6 +494,8 @@
                 {
                     "id": "ao_cambios_proyectos_recientes",
                     "label": "Cambios en los últimos años y Nuevos proyectos",
+                    "context": "Describe el campo «Cambios en los últimos años y Nuevos proyectos». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Cambios en los últimos años y Nuevos proyectos» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Incluir inversiones realizadas, tipo, o nuevos proyectos que puedan mejorar/incrementar el riesgo. Detallar también nuevos proyectos en curso o planificados.",
                     "validation": {},
@@ -459,6 +515,8 @@
                 {
                     "id": "pp_tipo_actividad_diagrama",
                     "label": "Tipo de actividad y Diagrama del proceso",
+                    "context": "Describe el campo «Tipo de actividad y Diagrama del proceso». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Tipo de actividad y Diagrama del proceso» y sea coherente.",
                     "type": "textarea_file_combination",
                     "file_label": "Adjuntar diagrama del proceso",
                     "textarea_label": "Describir el tipo de actividad.",
@@ -470,6 +528,8 @@
                 {
                     "id": "pp_descripcion_general_proceso",
                     "label": "Descripción general del proceso / Fases principales / Aportes de calor / Presiones de trabajo / Manejo de productos peligrosos (inflamables/explosivos, etc.)",
+                    "context": "Describe el campo «Descripción general del proceso / Fases principales / Aportes de calor / Presiones de trabajo / Manejo de productos peligrosos (inflamables/explosivos, etc.)». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Descripción general del proceso / Fases principales / Aportes de calor / Presiones de trabajo / Manejo de productos peligrosos (inflamables/explosivos, etc.)» y sea coherente.",
                     "type": "textarea",
                     "validation": {},
                     "scoring": {
@@ -479,6 +539,8 @@
                 {
                     "id": "pp_materiales_proceso_producto_terceros",
                     "label": "Materiales (MP, intermedios, finales, auxiliares) y Producto de terceros",
+                    "context": "Describe el campo «Materiales (MP, intermedios, finales, auxiliares) y Producto de terceros». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Materiales (MP, intermedios, finales, auxiliares) y Producto de terceros» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Listado general de materias primas, productos intermedios, productos finales y productos auxiliares de proceso. Indicar también tipo de producto de terceros si lo hubiese.",
                     "validation": {},
@@ -489,6 +551,8 @@
                 {
                     "id": "pp_num_lineas_equipos_principales",
                     "label": "Número de Líneas/Equipos principales del proceso a detallar",
+                    "context": "Describe el campo «Número de Líneas/Equipos principales del proceso a detallar». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Número de Líneas/Equipos principales del proceso a detallar» y sea coherente.",
                     "type": "number",
                     "defaultValue": 0,
                     "validation": {
@@ -501,6 +565,7 @@
                 {
                     "id": "pp_lineas_equipos_principales_array",
                     "label": "Líneas/Equipo principal del proceso",
+                    "context": "Describe el campo «Líneas/Equipo principal del proceso». Referencias NFPA y RSCIEI aplicables.",
                     "type": "array_of_objects",
                     "row_index_path": true,
                     "array_count_source_field_id": "pp_num_lineas_equipos_principales",
@@ -519,6 +584,8 @@
                             {
                                 "id": "equipo_nombre",
                                 "label": "Nombre del Equipo/Línea",
+                                "context": "Describe el campo «Nombre del Equipo/Línea». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Nombre del Equipo/Línea» y sea coherente.",
                                 "type": "text",
                                 "validation": {
                                     "required": true
@@ -530,6 +597,8 @@
                             {
                                 "id": "equipo_detalles_tecnicos_valor",
                                 "label": "Detalles (Fabricante, Año Fab., Capacidad Nominal, Factor Utilización %, Valor €)",
+                                "context": "Describe el campo «Detalles (Fabricante, Año Fab., Capacidad Nominal, Factor Utilización %, Valor €)». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Detalles (Fabricante, Año Fab., Capacidad Nominal, Factor Utilización %, Valor €)» y sea coherente.",
                                 "type": "textarea",
                                 "tooltip": "Indicar fabricante, año de fabricación, capacidad de producción nominal unitaria, factor de utilización (%), y valor de reposición (€).",
                                 "validation": {},
@@ -543,6 +612,8 @@
                 {
                     "id": "pp_control_seguridad_proceso",
                     "label": "Control/seguridad de proceso",
+                    "context": "Describe el campo «Control/seguridad de proceso». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Control/seguridad de proceso» y sea coherente.",
                     "type": "textarea",
                     "validation": {},
                     "scoring": {
@@ -561,6 +632,8 @@
                 {
                     "id": "alm_tipos_productos_existentes",
                     "label": "Existencia de tipos de productos específicos",
+                    "context": "Describe el campo «Existencia de tipos de productos específicos». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Existencia de tipos de productos específicos» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Indicar Sí/No para: productos a granel, productos PELIGROSOS/inflamables/EX, productos aerosoles. Ej: Granel: Sí, Peligrosos: No, Aerosoles: Sí.",
                     "validation": {},
@@ -571,6 +644,8 @@
                 {
                     "id": "alm_materia_prima_array",
                     "label": "Almacenamiento de MATERIA PRIMA",
+                    "context": "Describe el campo «Almacenamiento de MATERIA PRIMA». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Almacenamiento de MATERIA PRIMA» y sea coherente.",
                     "type": "array_of_objects",
                     "row_index_path": true,
                     "allow_add_remove_rows": true,
@@ -581,6 +656,8 @@
                             {
                                 "id": "mp_producto_riesgo",
                                 "label": "Tipo/Producto y Riesgo",
+                                "context": "Describe el campo «Tipo/Producto y Riesgo». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Tipo/Producto y Riesgo» y sea coherente.",
                                 "type": "textarea",
                                 "tooltip": "Indicar el tipo/producto y su riesgo asociado (Incendios, Explosión, etc.).",
                                 "validation": { "required": true },
@@ -589,6 +666,8 @@
                             {
                                 "id": "mp_almacenamiento_detalles",
                                 "label": "Detalles de Almacenamiento (Tipo, Embalaje, Cantidad, Ubicación)",
+                                "context": "Describe el campo «Detalles de Almacenamiento (Tipo, Embalaje, Cantidad, Ubicación)». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Detalles de Almacenamiento (Tipo, Embalaje, Cantidad, Ubicación)» y sea coherente.",
                                 "type": "textarea",
                                 "tooltip": "Tipo de almacenamiento (Palets madera/plástico, estantería altura, silos, suelo, etc.), Embalaje (Cajas cartón, retráctil, sacos, etc.), Cantidad (kg, unidades, m³, etc.), Ubicación (Área compartimentada, no sectorizada, etc.).",
                                 "scoring": { "field_weight": 3 }
@@ -596,6 +675,8 @@
                             {
                                 "id": "mp_proteccion",
                                 "label": "Protección",
+                                "context": "Describe el campo «Protección». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Protección» y sea coherente.",
                                 "type": "text",
                                 "tooltip": "Rociadores, agua pulverizada, venteo, extintores, monitores, etc.",
                                 "scoring": { "field_weight": 1.5 }
@@ -606,6 +687,8 @@
                 {
                     "id": "alm_mp_plano_fotos",
                     "label": "Facilitar plano con ubicación de almacenes de MP. Adjuntar fotos. (Adjuntar archivos)",
+                    "context": "Describe el campo «Facilitar plano con ubicación de almacenes de MP. Adjuntar fotos. (Adjuntar archivos)». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Facilitar plano con ubicación de almacenes de MP. Adjuntar fotos. (Adjuntar archivos)» y sea coherente.",
                     "type": "file_multiple",
                     "validation": {},
                     "scoring": {
@@ -615,6 +698,8 @@
                 {
                     "id": "alm_producto_intermedio_array",
                     "label": "Almacenamiento de PRODUCTO INTERMEDIO",
+                    "context": "Describe el campo «Almacenamiento de PRODUCTO INTERMEDIO». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Almacenamiento de PRODUCTO INTERMEDIO» y sea coherente.",
                     "type": "array_of_objects",
                     "row_index_path": true,
                     "allow_add_remove_rows": true,
@@ -625,6 +710,8 @@
                             {
                                 "id": "pi_producto_riesgo",
                                 "label": "Tipo/Producto y Riesgo",
+                                "context": "Describe el campo «Tipo/Producto y Riesgo». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Tipo/Producto y Riesgo» y sea coherente.",
                                 "type": "textarea",
                                 "validation": { "required": true },
                                 "scoring": { "field_weight": 1.5 }
@@ -632,12 +719,16 @@
                             {
                                 "id": "pi_almacenamiento_detalles",
                                 "label": "Detalles de Almacenamiento (Tipo, Embalaje, Cantidad, Ubicación)",
+                                "context": "Describe el campo «Detalles de Almacenamiento (Tipo, Embalaje, Cantidad, Ubicación)». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Detalles de Almacenamiento (Tipo, Embalaje, Cantidad, Ubicación)» y sea coherente.",
                                 "type": "textarea",
                                 "scoring": { "field_weight": 3 }
                             },
                             {
                                 "id": "pi_proteccion",
                                 "label": "Protección",
+                                "context": "Describe el campo «Protección». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Protección» y sea coherente.",
                                 "type": "text",
                                 "scoring": { "field_weight": 1.5 }
                             }
@@ -647,6 +738,8 @@
                 {
                     "id": "alm_pi_plano_fotos",
                     "label": "Facilitar plano con ubicación de almacenes de PI. Adjuntar fotos. (Adjuntar archivos)",
+                    "context": "Describe el campo «Facilitar plano con ubicación de almacenes de PI. Adjuntar fotos. (Adjuntar archivos)». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Facilitar plano con ubicación de almacenes de PI. Adjuntar fotos. (Adjuntar archivos)» y sea coherente.",
                     "type": "file_multiple",
                     "validation": {},
                     "scoring": {
@@ -656,6 +749,8 @@
                 {
                     "id": "alm_producto_final_array",
                     "label": "Almacenamiento de PRODUCTO FINAL",
+                    "context": "Describe el campo «Almacenamiento de PRODUCTO FINAL». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Almacenamiento de PRODUCTO FINAL» y sea coherente.",
                     "type": "array_of_objects",
                     "row_index_path": true,
                     "allow_add_remove_rows": true,
@@ -666,6 +761,8 @@
                             {
                                 "id": "pt_producto_riesgo",
                                 "label": "Tipo/Producto y Riesgo",
+                                "context": "Describe el campo «Tipo/Producto y Riesgo». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Tipo/Producto y Riesgo» y sea coherente.",
                                 "type": "textarea",
                                 "validation": { "required": true },
                                 "scoring": { "field_weight": 1.5 }
@@ -673,12 +770,16 @@
                             {
                                 "id": "pt_almacenamiento_detalles",
                                 "label": "Detalles de Almacenamiento (Tipo, Embalaje, Cantidad, Ubicación)",
+                                "context": "Describe el campo «Detalles de Almacenamiento (Tipo, Embalaje, Cantidad, Ubicación)». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Detalles de Almacenamiento (Tipo, Embalaje, Cantidad, Ubicación)» y sea coherente.",
                                 "type": "textarea",
                                 "scoring": { "field_weight": 3 }
                             },
                             {
                                 "id": "pt_proteccion",
                                 "label": "Protección",
+                                "context": "Describe el campo «Protección». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Protección» y sea coherente.",
                                 "type": "text",
                                 "scoring": { "field_weight": 1.5 }
                             }
@@ -688,6 +789,8 @@
                 {
                     "id": "alm_pt_plano_fotos",
                     "label": "Facilitar plano con ubicación de almacenes de PT. Adjuntar fotos. (Adjuntar archivos)",
+                    "context": "Describe el campo «Facilitar plano con ubicación de almacenes de PT. Adjuntar fotos. (Adjuntar archivos)». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Facilitar plano con ubicación de almacenes de PT. Adjuntar fotos. (Adjuntar archivos)» y sea coherente.",
                     "type": "file_multiple",
                     "validation": {},
                     "scoring": {
@@ -697,6 +800,8 @@
                 {
                     "id": "alm_producto_auxiliar_array",
                     "label": "Almacenamiento de PRODUCTO AUXILIAR",
+                    "context": "Describe el campo «Almacenamiento de PRODUCTO AUXILIAR». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Almacenamiento de PRODUCTO AUXILIAR» y sea coherente.",
                     "type": "array_of_objects",
                     "row_index_path": true,
                     "allow_add_remove_rows": true,
@@ -707,6 +812,8 @@
                             {
                                 "id": "pa_producto_riesgo",
                                 "label": "Tipo/Producto y Riesgo",
+                                "context": "Describe el campo «Tipo/Producto y Riesgo». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Tipo/Producto y Riesgo» y sea coherente.",
                                 "type": "textarea",
                                 "validation": { "required": true },
                                 "scoring": { "field_weight": 1.5 }
@@ -714,12 +821,16 @@
                             {
                                 "id": "pa_almacenamiento_detalles",
                                 "label": "Detalles de Almacenamiento (Tipo, Embalaje, Cantidad, Ubicación)",
+                                "context": "Describe el campo «Detalles de Almacenamiento (Tipo, Embalaje, Cantidad, Ubicación)». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Detalles de Almacenamiento (Tipo, Embalaje, Cantidad, Ubicación)» y sea coherente.",
                                 "type": "textarea",
                                 "scoring": { "field_weight": 3 }
                             },
                             {
                                 "id": "pa_proteccion",
                                 "label": "Protección",
+                                "context": "Describe el campo «Protección». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Protección» y sea coherente.",
                                 "type": "text",
                                 "scoring": { "field_weight": 1.5 }
                             }
@@ -729,6 +840,8 @@
                 {
                     "id": "alm_pa_plano_fotos",
                     "label": "Facilitar plano con ubicación de almacenes de PA. Adjuntar fotos. (Adjuntar archivos)",
+                    "context": "Describe el campo «Facilitar plano con ubicación de almacenes de PA. Adjuntar fotos. (Adjuntar archivos)». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Facilitar plano con ubicación de almacenes de PA. Adjuntar fotos. (Adjuntar archivos)» y sea coherente.",
                     "type": "file_multiple",
                     "validation": {},
                     "scoring": {
@@ -738,6 +851,8 @@
                 {
                     "id": "alm_checklist_evaluacion_x",
                     "label": "Check-list de evaluación “X”: con columna de comentarios (Detallar)",
+                    "context": "Describe el campo «Check-list de evaluación “X”: con columna de comentarios (Detallar)». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Check-list de evaluación “X”: con columna de comentarios (Detallar)» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Este campo es para un checklist específico. Si no aplica, indicar N/A. Si aplica, detallar los puntos del checklist y sus comentarios.",
                     "validation": {},
@@ -748,6 +863,8 @@
                 {
                     "id": "alm_almacenamiento_camaras_frigorificas_array",
                     "label": "Almacenamiento en Cámaras Frigoríficas (si aplica, referenciar a cámaras ya definidas o detallar nuevas)",
+                    "context": "Describe el campo «Almacenamiento en Cámaras Frigoríficas (si aplica, referenciar a cámaras ya definidas o detallar nuevas)». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Almacenamiento en Cámaras Frigoríficas (si aplica, referenciar a cámaras ya definidas o detallar nuevas)» y sea coherente.",
                     "type": "array_of_objects",
                     "row_index_path": true,
                     "allow_add_remove_rows": true,
@@ -765,6 +882,8 @@
                             {
                                 "id": "alm_camara_ref_producto",
                                 "label": "Nº/ID Cámara (referencia) y Tipo de producto almacenado",
+                                "context": "Describe el campo «Nº/ID Cámara (referencia) y Tipo de producto almacenado». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Nº/ID Cámara (referencia) y Tipo de producto almacenado» y sea coherente.",
                                 "type": "textarea",
                                 "tooltip": "Referenciar a 'constr_camaras_frigorificas_array'. Ej: Leche líquida, Aditivos.",
                                 "scoring": { "field_weight": 1.5 }
@@ -772,6 +891,8 @@
                             {
                                 "id": "alm_camara_almacenamiento_detalles",
                                 "label": "Detalles de Almacenamiento en Cámara (Tipo, Embalaje, Cantidad, Ubicación detallada)",
+                                "context": "Describe el campo «Detalles de Almacenamiento en Cámara (Tipo, Embalaje, Cantidad, Ubicación detallada)». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Detalles de Almacenamiento en Cámara (Tipo, Embalaje, Cantidad, Ubicación detallada)» y sea coherente.",
                                 "type": "textarea",
                                 "tooltip": "Tipo almacenamiento (ej: botellas de plástico, sacos), embalaje, cantidad, y ubicación si se requiere mayor detalle.",
                                 "scoring": { "field_weight": 2 }
@@ -779,6 +900,8 @@
                             {
                                 "id": "alm_camara_proteccion_especifica",
                                 "label": "Protección específica para este almacenamiento",
+                                "context": "Describe el campo «Protección específica para este almacenamiento». Referencias NFPA y RSCIEI aplicables.",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Protección específica para este almacenamiento» y sea coherente.",
                                 "type": "text",
                                 "scoring": { "field_weight": 1 }
                             }
@@ -797,8 +920,12 @@
                 {
                     "id": "is_acuerdo_norma",
                     "label": "Instalaciones de acuerdo a norma (Industrial/seguridadindustrial/instalacionesindustriales/Paginas/index.aspx)",
+                    "context": "Describe el campo «Instalaciones de acuerdo a norma (Industrial/seguridadindustrial/instalacionesindustriales/Paginas/index.aspx)». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Instalaciones de acuerdo a norma (Industrial/seguridadindustrial/instalacionesindustriales/Paginas/index.aspx)» y sea coherente.",
                     "type": "boolean",
                     "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "context": "Describe el campo «Sí","value":"true"},{"label":"No","value":"false». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Sí","value":"true"},{"label":"No","value":"false» y sea coherente.",
                     "validation": {},
                     "scoring": {
                         "field_weight": 1,
@@ -813,6 +940,8 @@
                         {
                             "id": "is_elec_descripcion_backup_potencia",
                             "label": "Descripción general, Backup/Redundancias, Líneas acometida y Potencias",
+                            "context": "Describe el campo «Descripción general, Backup/Redundancias, Líneas acometida y Potencias». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Descripción general, Backup/Redundancias, Líneas acometida y Potencias» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Descripción general (subestaciones, salas eléctricas, PAT, pararrayos, grupos electrógenos), compartimentación, ubicación, reactiva. Back-up y redundancias (definir criticidad equipos 25-100%). Nº de líneas de acometida (ej: Dos líneas eléctricas a 60kV). Potencia instalada y consumida.",
                             "validation": {},
@@ -821,6 +950,8 @@
                         {
                             "id": "is_elec_num_subestaciones_principales",
                             "label": "Nº Subestaciones principales",
+                            "context": "Describe el campo «Nº Subestaciones principales». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Nº Subestaciones principales» y sea coherente.",
                             "type": "number",
                             "defaultValue": 0,
                             "validation": {},
@@ -829,6 +960,8 @@
                         {
                             "id": "is_elec_subestaciones_principales_array",
                             "label": "Detalles Subestación Principal",
+                            "context": "Describe el campo «Detalles Subestación Principal». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Detalles Subestación Principal» y sea coherente.",
                             "type": "array_of_objects",
                             "row_index_path": true,
                             "array_count_source_field_id": "is_elec_num_subestaciones_principales",
@@ -839,6 +972,8 @@
                                     {
                                         "id": "subest_princ_ubicacion_transformacion",
                                         "label": "Ubicación y Relación transformación",
+                                        "context": "Describe el campo «Ubicación y Relación transformación». Referencias NFPA y RSCIEI aplicables.",
+                                        "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Ubicación y Relación transformación» y sea coherente.",
                                         "type": "textarea",
                                         "tooltip": "Ubicación (ej: Area exterior, zona norte, separada). Relación transformación (ej: 60kV/6kV).",
                                         "scoring": { "field_weight": 1 }
@@ -849,6 +984,8 @@
                         {
                             "id": "is_elec_num_subestaciones_secundarias",
                             "label": "Nº Subestaciones secundarias",
+                            "context": "Describe el campo «Nº Subestaciones secundarias». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Nº Subestaciones secundarias» y sea coherente.",
                             "type": "number",
                             "defaultValue": 0,
                             "validation": {},
@@ -857,6 +994,8 @@
                         {
                             "id": "is_elec_subestaciones_secundarias_array",
                             "label": "Detalles Subestación Secundaria",
+                            "context": "Describe el campo «Detalles Subestación Secundaria». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Detalles Subestación Secundaria» y sea coherente.",
                             "type": "array_of_objects",
                             "row_index_path": true,
                             "array_count_source_field_id": "is_elec_num_subestaciones_secundarias",
@@ -867,6 +1006,8 @@
                                     {
                                         "id": "subest_sec_ubicacion_transformacion",
                                         "label": "Ubicación y Relación transformación",
+                                        "context": "Describe el campo «Ubicación y Relación transformación». Referencias NFPA y RSCIEI aplicables.",
+                                        "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Ubicación y Relación transformación» y sea coherente.",
                                         "type": "textarea",
                                         "tooltip": "Ubicación (ej: sala sectorizada, junto a producción). Relación transformación (ej: 6kV/400V).",
                                         "scoring": { "field_weight": 1 }
@@ -877,6 +1018,8 @@
                         {
                             "id": "is_elec_num_transformadores",
                             "label": "Nº total de Transformadores a detallar",
+                            "context": "Describe el campo «Nº total de Transformadores a detallar». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Nº total de Transformadores a detallar» y sea coherente.",
                             "type": "number",
                             "defaultValue": 0,
                             "validation": { "min": 0 },
@@ -885,6 +1028,8 @@
                         {
                             "id": "is_elec_transformadores_array",
                             "label": "Detalles por Transformador",
+                            "context": "Describe el campo «Detalles por Transformador». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Detalles por Transformador» y sea coherente.",
                             "type": "array_of_objects",
                             "row_index_path": true,
                             "array_count_source_field_id": "is_elec_num_transformadores",
@@ -895,6 +1040,8 @@
                                     {
                                         "id": "transf_caracteristicas_fabricante_ano",
                                         "label": "Características técnicas, Fabricante y Año Fabricación",
+                                        "context": "Describe el campo «Características técnicas, Fabricante y Año Fabricación». Referencias NFPA y RSCIEI aplicables.",
+                                        "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Características técnicas, Fabricante y Año Fabricación» y sea coherente.",
                                         "type": "textarea",
                                         "tooltip": "Potencia MVA/kVA, Relación kV/kV, Refrigeración, Aceite L, Seco. Incluir fabricante y año.",
                                         "scoring": { "field_weight": 2 }
@@ -902,6 +1049,8 @@
                                     {
                                         "id": "transf_ubicacion_proteccion",
                                         "label": "Ubicación y Protección",
+                                        "context": "Describe el campo «Ubicación y Protección». Referencias NFPA y RSCIEI aplicables.",
+                                        "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Ubicación y Protección» y sea coherente.",
                                         "type": "textarea",
                                         "tooltip": "Ubicación (Subestación principal/secundaria, sala sectorizada, almacén repuestos). Protección (Diluvio, Detección de incendios, Ninguna).",
                                         "scoring": { "field_weight": 2.5 }
@@ -914,6 +1063,8 @@
                 {
                     "id": "is_otras_instalaciones_electricas_presion_calor",
                     "label": "Otras Instalaciones: Gen. Eléctrica, Baterías Litio, Aparatos Presión, Calentamiento Proceso",
+                    "context": "Describe el campo «Otras Instalaciones: Gen. Eléctrica, Baterías Litio, Aparatos Presión, Calentamiento Proceso». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Otras Instalaciones: Gen. Eléctrica, Baterías Litio, Aparatos Presión, Calentamiento Proceso» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Detallar instalaciones de generación eléctrica (ciclos combinados, motores, fotovoltaicos, etc.), baterías de litio para almacenamiento, aparatos a presión (descripción, número, ubicación, protecciones), y sistema de calentamiento de proceso (tipo, combustible, capacidad, ubicación, protecciones).",
                     "validation": {},
@@ -922,6 +1073,8 @@
                 {
                     "id": "is_instalaciones_gas_vapor_aire_frio",
                     "label": "Instalaciones: Redes Gas/ERM, Calderas, Compresores Aire, Sist. Refrigeración",
+                    "context": "Describe el campo «Instalaciones: Redes Gas/ERM, Calderas, Compresores Aire, Sist. Refrigeración». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Instalaciones: Redes Gas/ERM, Calderas, Compresores Aire, Sist. Refrigeración» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Detallar redes de gas / ERM, caldera generadora de agua caliente/vapor (tipo, combustible, capacidad, ubicación, protecciones), compresores de aire (tipo, capacidad, ubicación, protecciones), y sistema de refrigeración (tipo de refrigerante, capacidad, ubicación, protecciones).",
                     "validation": {},
@@ -935,6 +1088,8 @@
                         {
                             "id": "is_transp_gruas_carretillas_camiones",
                             "label": "Transporte: Grúas, Carretillas/Baterías, Camiones/Surtidores",
+                            "context": "Describe el campo «Transporte: Grúas, Carretillas/Baterías, Camiones/Surtidores». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Transporte: Grúas, Carretillas/Baterías, Camiones/Surtidores» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Grúas (tipo, capacidad, mantenimiento). Carretillas y áreas de carga y tipos de baterías (plomo-ácido, litio; sala de carga ventilada, protegida). Camiones y surtidores de combustible (internos).",
                             "validation": {},
@@ -945,6 +1100,8 @@
                 {
                     "id": "is_otras_instalaciones_servicio",
                     "label": "Otras instalaciones de servicio relevantes",
+                    "context": "Describe el campo «Otras instalaciones de servicio relevantes». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Otras instalaciones de servicio relevantes» y sea coherente.",
                     "type": "textarea",
                     "validation": {},
                     "scoring": { "field_weight": 1 }
@@ -952,6 +1109,8 @@
                 {
                     "id": "is_gestion_instaladores_manipulacion",
                     "label": "Gestión de Instalaciones: Análisis especializado, Cualificación instaladores, Manipulación",
+                    "context": "Describe el campo «Gestión de Instalaciones: Análisis especializado, Cualificación instaladores, Manipulación». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Gestión de Instalaciones: Análisis especializado, Cualificación instaladores, Manipulación» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Riesgos de inst. de servicios (¿Lo analizará ing. especializado? Sí/No). Inst. realizadas por instaladores cualificados y certificadas (Sí/No). Cambios/extensiones por inst. cualificados (Sí/No). Manipulación por personal propio (¿Formado? Sí formado/Sí no formado/No externo).",
                     "validation": {},
@@ -969,6 +1128,8 @@
                 {
                     "id": "gs_dpto_seguridad_cumplimiento_lprl",
                     "label": "Departamento Seguridad (Organización, Nº personas, Formación) y Cumplimiento LPRL/RSP",
+                    "context": "Describe el campo «Departamento Seguridad (Organización, Nº personas, Formación) y Cumplimiento LPRL/RSP». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Departamento Seguridad (Organización, Nº personas, Formación) y Cumplimiento LPRL/RSP» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "A nivel organizativo, dependencia del dpto. de seguridad. Nº personas del dpto. y su formación. Cumplimiento Reg. disposiciones mínimas seguridad y salud (LPRL y RSP) (Sí/No).",
                     "validation": {},
@@ -977,6 +1138,8 @@
                 {
                     "id": "gs_prevencion_analisis_riesgos_proceso",
                     "label": "Prevención Externa, Análisis Riesgos y Seguridad Proceso",
+                    "context": "Describe el campo «Prevención Externa, Análisis Riesgos y Seguridad Proceso». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Prevención Externa, Análisis Riesgos y Seguridad Proceso» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Empresa externa de servicio de prevención. Metodología de análisis y evaluación de riesgos de proceso e instalación (Hazop, SIL, etc.). Gestión de seguridad en el proceso (gestión de cambios, by-passes).",
                     "validation": {},
@@ -985,6 +1148,8 @@
                 {
                     "id": "gs_procedimientos_formacion_incidentes_kpis",
                     "label": "Procedimientos Seguridad, Formación Operarios, Incidentes/Accidentes y KPIs",
+                    "context": "Describe el campo «Procedimientos Seguridad, Formación Operarios, Incidentes/Accidentes y KPIs». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Procedimientos Seguridad, Formación Operarios, Incidentes/Accidentes y KPIs» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Procedimientos/implementación de seguridad (trabajos en caliente, prohibición fumar, orden y limpieza, etc.). Formación de operarios (puesto y seguridad planta), programa de formación. Estudio de incidentes y accidentes (causa-raíz, lecciones aprendidas). KPI‘s de seguridad.",
                     "validation": {},
@@ -998,6 +1163,8 @@
                         {
                             "id": "gs_planauto_elaboracion_personal_formacion",
                             "label": "Elaboración, Personal de Intervención y Formación",
+                            "context": "Describe el campo «Elaboración, Personal de Intervención y Formación». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Elaboración, Personal de Intervención y Formación» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Elaborado interna o externamente. Nº personas de primera y segunda intervención (por turno, día semana, etc.). Formación del personal de intervención.",
                             "validation": {},
@@ -1008,6 +1175,8 @@
                 {
                     "id": "gs_seveso_plan_emergencia_simulacros",
                     "label": "SEVESO III, Plan Emergencia y Simulacros",
+                    "context": "Describe el campo «SEVESO III, Plan Emergencia y Simulacros». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «SEVESO III, Plan Emergencia y Simulacros» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Actividad afectada por SEVESO III (Sí/No). Plan de emergencia interior / Exterior (si aplica SEVESO). Simulacros periódicos (frecuencia, alcance).",
                     "validation": {},
@@ -1021,6 +1190,8 @@
                         {
                             "id": "gs_bombprop_existen",
                             "label": "¿Existen bomberos profesionales propios?",
+                            "context": "Describe el campo «¿Existen bomberos profesionales propios?». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «¿Existen bomberos profesionales propios?» y sea coherente.",
                             "type": "boolean",
                             "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
                             "validation": {},
@@ -1029,6 +1200,8 @@
                         {
                             "id": "gs_bombprop_detalles",
                             "label": "Detalles Bomberos Propios (Nº, Equipos, Camiones)",
+                            "context": "Describe el campo «Detalles Bomberos Propios (Nº, Equipos, Camiones)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Detalles Bomberos Propios (Nº, Equipos, Camiones)» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Nº de bomberos, equipos para primera y segunda intervención, y camiones de bomberos.",
                             "validation": { "visible_if": { "field_id": "gs_bombprop_existen", "operator": "is_true" } },
@@ -1044,6 +1217,8 @@
                         {
                             "id": "gs_bombpub_distancia_tiempo_visita",
                             "label": "Respuesta Bomberos Públicos (Distancia km, Tiempo intervención min, Visita planta Sí/No)",
+                            "context": "Describe el campo «Respuesta Bomberos Públicos (Distancia km, Tiempo intervención min, Visita planta Sí/No)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Respuesta Bomberos Públicos (Distancia km, Tiempo intervención min, Visita planta Sí/No)» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Indicar distancia en km, tiempo de intervención en minutos, y si han visitado la planta.",
                             "validation": {},
@@ -1063,6 +1238,8 @@
                 {
                     "id": "mpci_reglamentacion_considerada",
                     "label": "Reglamentación de PCI considerada (RCPIEI Año XXX, NFPA, FM, otros)",
+                    "context": "Describe el campo «Reglamentación de PCI considerada (RCPIEI Año XXX, NFPA, FM, otros)». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Reglamentación de PCI considerada (RCPIEI Año XXX, NFPA, FM, otros)» y sea coherente.",
                     "type": "text",
                     "validation": {},
                     "scoring": { "field_weight": 1 }
@@ -1075,6 +1252,8 @@
                         {
                             "id": "mpci_man_descripcion_general",
                             "label": "Descripción Medios Manuales (Extintores, BIEs, Hidrantes, Otros)",
+                            "context": "Describe el campo «Descripción Medios Manuales (Extintores, BIEs, Hidrantes, Otros)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Descripción Medios Manuales (Extintores, BIEs, Hidrantes, Otros)» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Extintores: Tipo, agente, número, ubicación, sin obstaculizar. BIEs: Tipo, número, presión estática BIE más alejada, ubicación, sin obstaculizar. Hidrantes: Públicos/propios, tipo, número, ubicación, sin obstaculizar. Otros medios: Columnas secas, lanzas, monitores, etc.",
                             "validation": {},
@@ -1090,6 +1269,8 @@
                         {
                             "id": "mpci_det_sistema_deteccion_existe_transmision",
                             "label": "Existencia Sistema Detección (Sí/No) y Transmisión Alarmas (Sí/No)",
+                            "context": "Describe el campo «Existencia Sistema Detección (Sí/No) y Transmisión Alarmas (Sí/No)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Existencia Sistema Detección (Sí/No) y Transmisión Alarmas (Sí/No)» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Sistemas de detección de incendios (Sí/NO). Transmisión de alarmas de incendio a zona permanentemente ocupada 24h o CRA 24h (Sí/No).",
                             "validation": {},
@@ -1098,9 +1279,11 @@
                         {
                             "id": "mpci_det_tipo_sistemas_reglamento",
                             "label": "Tipo de Sistemas Detección, Áreas Protegidas y Reglamento Diseño",
+                            "context": "Describe el campo «Tipo de Sistemas Detección, Áreas Protegidas y Reglamento Diseño». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Tipo de Sistemas Detección, Áreas Protegidas y Reglamento Diseño» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Tipo de sistemas (humos, llama, video-detección, etc.) / Áreas protegidas. Reglamento considerado para diseño.",
-                            "validation": { "visible_if": { "field_id": "mpci_det_sistema_deteccion_existe", "operator": "is_true" } }, /* Note: This visible_if might need adjustment if mpci_det_sistema_deteccion_existe is part of the textarea above */
+                            "validation": { "visible_if": { "field_id": "mpci_det_sistema_deteccion_existe", "operator": "is_true" } },
                             "scoring": { "field_weight": 2 }
                         }
                     ]
@@ -1113,6 +1296,8 @@
                         {
                             "id": "mpci_auto_tipo_instalaciones_diseno_mantenimiento",
                             "label": "Tipo Instalaciones, Áreas Protegidas, Diseño y Mantenimiento Adecuado",
+                            "context": "Describe el campo «Tipo Instalaciones, Áreas Protegidas, Diseño y Mantenimiento Adecuado». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Tipo Instalaciones, Áreas Protegidas, Diseño y Mantenimiento Adecuado» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Tipo de instalaciones de extinción (ej: rociadores, agua pulverizada, CO2, espuma) y áreas protegidas. Diseño adecuado (Sí/No). Inspección y mantenimiento adecuado (Sí/No).",
                             "validation": {},
@@ -1128,6 +1313,8 @@
                         {
                             "id": "mpci_agua_fuente_redes_bombeo",
                             "label": "Fuente Alimentación, Redes Suministro y Equipos Bombeo",
+                            "context": "Describe el campo «Fuente Alimentación, Redes Suministro y Equipos Bombeo». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Fuente Alimentación, Redes Suministro y Equipos Bombeo» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Fuente de alimentación (ej: red pública, depósito propio, mixto). Redes de suministro (Externo/Interno: Diámetros, anillo o no, material, etc.). Equipos de bombeo (exclusivos incendio o no, nº bombas, tipo, motorización).",
                             "validation": {},
@@ -1136,6 +1323,8 @@
                         {
                             "id": "mpci_agua_inspeccion_mantenimiento_pruebas",
                             "label": "Inspección y mantenimiento. Estado y mantenimiento adecuado. Pruebas de bombas (periodicidad, resultados).",
+                    "context": "Describe el campo «Inspección y mantenimiento. Estado y mantenimiento adecuado. Pruebas de bombas (periodicidad, resultados).». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Inspección y mantenimiento. Estado y mantenimiento adecuado. Pruebas de bombas (periodicidad, resultados).» y sea coherente.",
                             "type": "textarea",
                             "validation": {},
                             "scoring": { "field_weight": 1.5 }
@@ -1145,6 +1334,8 @@
                 {
                     "id": "mpci_inspeccion_mantenimiento_general_cumplimiento_reglamentacion",
                     "label": "Inspección y Mantenimiento General PCI y Cumplimiento Reglamentación",
+                    "context": "Describe el campo «Inspección y Mantenimiento General PCI y Cumplimiento Reglamentación». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Inspección y Mantenimiento General PCI y Cumplimiento Reglamentación» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Detallar la inspección y mantenimiento general de los medios de extinción. Indicar cumplimiento reglamentación de instalaciones de PCI (Año XXX) u otros reglamentos (NFPA,…).",
                     "validation": {},
@@ -1162,6 +1353,8 @@
                 {
                     "id": "sfv_proteccion_accesos_iluminacion_parcela",
                     "label": "Protección Física, Accesos e Iluminación de Parcela",
+                    "context": "Describe el campo «Protección Física, Accesos e Iluminación de Parcela». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Protección Física, Accesos e Iluminación de Parcela» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Protección física (vallados/muros perimetrales/Rejas, bolardos anti impacto, etc.). Nº de accesos a la parcela y tipo de control. Iluminación interior de la parcela y alrededor de los edificios (Sí/No).",
                     "validation": {},
@@ -1170,6 +1363,8 @@
                 {
                     "id": "sfv_proteccion_accesos_edificios_sistemas_deteccion",
                     "label": "Medidas Intrusion Edificios, Control Acceso, Sistemas Detección y Transmisión Alarmas",
+                    "context": "Describe el campo «Medidas Intrusion Edificios, Control Acceso, Sistemas Detección y Transmisión Alarmas». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Medidas Intrusion Edificios, Control Acceso, Sistemas Detección y Transmisión Alarmas» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Medidas físicas adecuadas frente a intrusión en edificios (puertas seguridad, cerraduras, rejas, vidrio seguridad, etc.). Control de acceso a edificios (tipo). Sistemas de detección de intrusión (perimetral, periférica, volumétrica). Transmisión de alarmas de intrusión a zona ocupada 24h o CRA 24h (Sí/No).",
                     "validation": {},
@@ -1178,6 +1373,8 @@
                 {
                     "id": "sfv_otros_sistemas_proteccion",
                     "label": "Otros sistema de protección (C.C.T.V., cajas fuertes, etc.)",
+                    "context": "Describe el campo «Otros sistema de protección (C.C.T.V., cajas fuertes, etc.)». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Otros sistema de protección (C.C.T.V., cajas fuertes, etc.)» y sea coherente.",
                     "type": "textarea",
                     "validation": {},
                     "scoring": { "field_weight": 1 }
@@ -1190,6 +1387,8 @@
                         {
                             "id": "sfv_vig_empresa_propia_externa",
                             "label": "Empresa de vigilancia (propia/externa/NA)",
+                            "context": "Describe el campo «Empresa de vigilancia (propia/externa/NA)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Empresa de vigilancia (propia/externa/NA)» y sea coherente.",
                             "type": "select",
                             "options": [ { "label": "Propia", "value": "propia" }, { "label": "Externa", "value": "externa" }, { "label": "No aplica", "value": "na" } ],
                             "validation": {},
@@ -1198,6 +1397,8 @@
                         {
                             "id": "sfv_vig_detalles_actuacion",
                             "label": "Detalles Vigilancia (Nº vigilantes/turno, Control accesos/rondas, Armas, Actuación emergencias)",
+                            "context": "Describe el campo «Detalles Vigilancia (Nº vigilantes/turno, Control accesos/rondas, Armas, Actuación emergencias)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Detalles Vigilancia (Nº vigilantes/turno, Control accesos/rondas, Armas, Actuación emergencias)» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Nº de vigilantes por turno. Control de accesos, rondas (exterior parcela, interior edificaciones). Autorizados a llevar pistolas (Sí/No). Actuación en emergencias.",
                             "validation": { "visible_if": { "field_id": "sfv_vig_empresa_propia_externa", "operator": "not_equals", "value": "na" } },
@@ -1217,6 +1418,8 @@
                 {
                     "id": "mnt_gestion_organizacion_programas",
                     "label": "Gestión Mantenimiento (Organización) y Programas (Maquinaria Proceso, Inst. Servicio)",
+                    "context": "Describe el campo «Gestión Mantenimiento (Organización) y Programas (Maquinaria Proceso, Inst. Servicio)». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Gestión Mantenimiento (Organización) y Programas (Maquinaria Proceso, Inst. Servicio)» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Gestión de mantenimiento: Dependencia del dpto. de mantenimiento a nivel organizativo. Programa de mantenimiento de maquinaria de proceso (Sí/No). Programa de mantenimiento de instalaciones de servicio (Sí/No).",
                     "validation": {},
@@ -1230,14 +1433,20 @@
                         {
                             "id": "mnt_propio_existen",
                             "label": "¿Existen técnicos de mantenimiento propio?",
+                    "context": "Describe el campo «¿Existen técnicos de mantenimiento propio?». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «¿Existen técnicos de mantenimiento propio?» y sea coherente.",
                             "type": "boolean",
                             "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
+                    "context": "Describe el campo «Sí","value":"true"},{"label":"No","value":"false». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Sí","value":"true"},{"label":"No","value":"false» y sea coherente.",
                             "validation": {},
                             "scoring": { "field_weight": 0.5 }
                         },
                         {
                             "id": "mnt_propio_numero_formacion_experiencia",
                             "label": "Número, Formación y Experiencia de Técnicos Propios",
+                            "context": "Describe el campo «Número, Formación y Experiencia de Técnicos Propios». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Número, Formación y Experiencia de Técnicos Propios» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Indicar el número de técnicos de mantenimiento, su formación y experiencia.",
                             "validation": { "visible_if": { "field_id": "mnt_propio_existen", "operator": "is_true" } },
@@ -1253,6 +1462,8 @@
                         {
                             "id": "mnt_externo_existe",
                             "label": "¿Se realiza mantenimiento externo?",
+                    "context": "Describe el campo «¿Se realiza mantenimiento externo?». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «¿Se realiza mantenimiento externo?» y sea coherente.",
                             "type": "boolean",
                             "options":[{"label":"Sí","value":"true"},{"label":"No","value":"false"}],
                             "validation": {},
@@ -1261,6 +1472,8 @@
                         {
                             "id": "mnt_externo_detalles",
                             "label": "Detalles Mantenimiento Externo (Técnicos/Empresas, Prestigio, Formación/Experiencia)",
+                            "context": "Describe el campo «Detalles Mantenimiento Externo (Técnicos/Empresas, Prestigio, Formación/Experiencia)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Detalles Mantenimiento Externo (Técnicos/Empresas, Prestigio, Formación/Experiencia)» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Técnicos de mantenimiento externo (empresas). Empresas de mantenimiento de reconocido prestigio técnico (Sí/No). Formación y experiencia de técnicos de mantenimiento externo.",
                             "validation": { "visible_if": { "field_id": "mnt_externo_existe", "operator": "is_true" } },
@@ -1271,6 +1484,8 @@
                 {
                     "id": "mnt_herramienta_gmao_formacion_experiencia_general",
                     "label": "Herramienta GMAO y Formación/Experiencia General del Personal de Mantenimiento",
+                    "context": "Describe el campo «Herramienta GMAO y Formación/Experiencia General del Personal de Mantenimiento». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Herramienta GMAO y Formación/Experiencia General del Personal de Mantenimiento» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Herramienta de gestión de mantenimiento GMAO. Ordenes de trabajo (Sí/No). Formación del personal de mantenimiento (general). Experiencia del personal de mantenimiento (general).",
                     "validation": {},
@@ -1284,6 +1499,8 @@
                         {
                             "id": "mnt_tipo_tecnicas_monitorizacion",
                             "label": "Tipo Mantenimiento (Preventivo, Predictivo, Correctivo), Preventivo (Fabricante/Experiencia Sí/No), Monitorización Variables (Sí/No)",
+                            "context": "Describe el campo «Tipo Mantenimiento (Preventivo, Predictivo, Correctivo), Preventivo (Fabricante/Experiencia Sí/No), Monitorización Variables (Sí/No)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Tipo Mantenimiento (Preventivo, Predictivo, Correctivo), Preventivo (Fabricante/Experiencia Sí/No), Monitorización Variables (Sí/No)» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Indicar tipo de mantenimiento. Mantenimiento preventivo según fabricante y/o experiencia del mantenedor (Sí/No). Monitorización de variables de maquinas (vibraciones, termografía, etc.) (Sí/No).",
                             "validation": {},
@@ -1294,6 +1511,8 @@
                 {
                     "id": "mnt_inspecciones_parada_anual_estado_conservacion",
                     "label": "Inspecciones Periódicas, Empresas, Parada Anual y Estado Conservación",
+                    "context": "Describe el campo «Inspecciones Periódicas, Empresas, Parada Anual y Estado Conservación». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Inspecciones Periódicas, Empresas, Parada Anual y Estado Conservación» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Inspecciones y mantenimiento periódico de maquinaria e instalaciones por personal especializado (propio/terceros) (¿Se realizan? Sí/No). Empresas encargadas (si aplica). Parada anual de mantenimiento (Sí/No). Estado de conservación de las instalaciones (Bueno/Regular/Malo).",
                     "validation": {},
@@ -1316,6 +1535,8 @@
                         {
                             "id": "pb_mp_proveedores_detalles",
                             "label": "Proveedores MP (Principales, Nº Total, Origen, % Mayor Proveedor, Exigencia Stock)",
+                            "context": "Describe el campo «Proveedores MP (Principales, Nº Total, Origen, % Mayor Proveedor, Exigencia Stock)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Proveedores MP (Principales, Nº Total, Origen, % Mayor Proveedor, Exigencia Stock)» y sea coherente.",
                             "type": "textarea",
                             "validation": {},
                             "scoring": { "field_weight": 3 }
@@ -1323,6 +1544,8 @@
                         {
                             "id": "pb_mp_stock_transporte_contingencia",
                             "label": "Stock MP (Planta/Almacén), Transporte y Contingencia (Suministro Alternativo, Extracoste)",
+                            "context": "Describe el campo «Stock MP (Planta/Almacén), Transporte y Contingencia (Suministro Alternativo, Extracoste)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Stock MP (Planta/Almacén), Transporte y Contingencia (Suministro Alternativo, Extracoste)» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Stock MP (toneladas/días, semanas, meses) en planta/Almacén. Transporte MP (tipo, criticidad). Posibilidad de suministro alternativo y % sobre total. Extra-coste de producción por terceros o plantas (si MP falla).",
                             "validation": {},
@@ -1338,6 +1561,8 @@
                         {
                             "id": "pb_pse_stock_contingencia",
                             "label": "Stock Producto Semielaborado y Contingencia (Suministro Alternativo, Extracoste)",
+                            "context": "Describe el campo «Stock Producto Semielaborado y Contingencia (Suministro Alternativo, Extracoste)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Stock Producto Semielaborado y Contingencia (Suministro Alternativo, Extracoste)» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Stock (toneladas/días, semanas, meses) en planta/Almacén. Posibilidad de suministro alternativo de otras plantas/proveedores. Extra-coste en caso de alternativa.",
                             "validation": {},
@@ -1353,6 +1578,8 @@
                         {
                             "id": "pb_pt_stock_requisitos_cliente",
                             "label": "Stock PT (Planta) y Requisitos Cliente (Exigencia Stock, Cantidades)",
+                            "context": "Describe el campo «Stock PT (Planta) y Requisitos Cliente (Exigencia Stock, Cantidades)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Stock PT (Planta) y Requisitos Cliente (Exigencia Stock, Cantidades)» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Stock PT (toneladas/días, semanas, meses) en planta. Se exige por cliente mantener stocks (Sí/No) y cantidades.",
                             "validation": {},
@@ -1361,6 +1588,8 @@
                         {
                             "id": "pb_pt_clientes_ventas_transporte",
                             "label": "Clientes (Nº Total, % Mayor Cliente), Sectores Venta (%) y Transporte PT",
+                            "context": "Describe el campo «Clientes (Nº Total, % Mayor Cliente), Sectores Venta (%) y Transporte PT». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Clientes (Nº Total, % Mayor Cliente), Sectores Venta (%) y Transporte PT» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Nº Clientes total. % de PT vendido al mayor cliente. Sectores de venta y % por sector. Transporte PT (tipo, criticidad).",
                             "validation": {},
@@ -1369,6 +1598,8 @@
                         {
                             "id": "pb_pt_contingencia_suministro",
                             "label": "Contingencia PT (Suministro Alternativo Grupo/Terceros, Extracoste)",
+                            "context": "Describe el campo «Contingencia PT (Suministro Alternativo Grupo/Terceros, Extracoste)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Contingencia PT (Suministro Alternativo Grupo/Terceros, Extracoste)» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Posibilidad de suministro de PT de otras plantas del grupo o de terceros, y % sobre total. Extra-coste de producción alternativa.",
                             "validation": {},
@@ -1384,6 +1615,8 @@
                         {
                             "id": "pb_flex_proceso_maquinaria_instalaciones_criticas",
                             "label": "Flexibilidad Proceso, Maquinaria (Origen) e Instalaciones Críticas (Tiempos Reemplazo)",
+                            "context": "Describe el campo «Flexibilidad Proceso, Maquinaria (Origen) e Instalaciones Críticas (Tiempos Reemplazo)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Flexibilidad Proceso, Maquinaria (Origen) e Instalaciones Críticas (Tiempos Reemplazo)» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Tipo de Proceso (lineal/diversificado). Líneas únicas o duplicidad. Cuellos de botella. Maquinaria Nacional/Internacional (disponibilidad repuestos, servicio técnico). Tiempos de reemplazo de instalaciones críticas.",
                             "validation": {},
@@ -1394,6 +1627,8 @@
                 {
                     "id": "pb_produccion_facturacion_por_linea_equipo_array",
                     "label": "% de producción y % de facturación que pasa por cada línea de proceso o equipo principal:",
+                    "context": "Describe el campo «% de producción y % de facturación que pasa por cada línea de proceso o equipo principal:». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «% de producción y % de facturación que pasa por cada línea de proceso o equipo principal:» y sea coherente.",
                     "type": "array_of_objects",
                     "row_index_path": true,
                     "allow_add_remove_rows": true,
@@ -1401,14 +1636,31 @@
                     "item_schema": {
                         "id": "pb_prod_fact_linea_item",
                         "fields": [
-                            { "id": "linea_nombre", "label": "Línea de producción / maquinaria", "type": "text", "validation": { "required": true }, "scoring": { "field_weight": 0.5 } },
-                            { "id": "linea_porc_produccion_facturacion", "label": "% Producción Total y % Facturación Total", "type": "textarea", "tooltip":"Indicar % Producción y % Facturación. Ej: Prod: 60%, Fact: 55%", "scoring": { "field_weight": 1 } }
+                            { 
+                                "id": "linea_nombre", 
+                                "label": "Línea de producción / maquinaria", 
+                                "type": "text", 
+                                "validation": { "required": true }, 
+                                "scoring": { "field_weight": 0.5 },
+                                "context": "Describe el campo «Línea de producción / maquinaria",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Línea de producción / maquinaria"
+                            },
+                           { "id": "linea_porc_produccion_facturacion", 
+                           "label": "% Producción Total y % Facturación Total", 
+                           "type": "textarea", 
+                           "tooltip":"Indicar % Producción y % Facturación. Ej: Prod: 60%, Fact: 55%", 
+                           "scoring": { "field_weight": 1 },
+                            "context": "Describe el campo «% Producción Total y % Facturación Total", 
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «% Producción Total y % Facturación Total"
+                            }
                         ]
                     }
                 },
                 {
                     "id": "pb_tiempo_reposicion_equipos_principales_array",
                     "label": "Tiempo reposición equipos principales y cuello de botella hasta la vuelta a normalidad",
+                    "context": "Describe el campo «Tiempo reposición equipos principales y cuello de botella hasta la vuelta a normalidad». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Tiempo reposición equipos principales y cuello de botella hasta la vuelta a normalidad» y sea coherente.",
                     "type": "array_of_objects",
                     "row_index_path": true,
                     "allow_add_remove_rows": true,
@@ -1416,14 +1668,32 @@
                     "item_schema": {
                         "id": "pb_t_rep_equip_princ_item",
                         "fields": [
-                            { "id": "equip_princ_nombre", "label": "Línea de producción/Maquinaria", "type": "text", "validation": { "required": true }, "scoring": { "field_weight": 0.5 } },
-                            { "id": "equip_princ_tiempos_coste", "label": "Tiempos (Reposición, Montaje) y Coste Reemplazo (€)", "type": "textarea", "tooltip":"Tiempo de reposición (semanas/meses), tiempo de montaje (semanas/meses), coste de reemplazo (€).", "scoring": { "field_weight": 2 } }
+                            { 
+                                "id": "equip_princ_nombre", 
+                                "label": "Línea de producción/Maquinaria", 
+                                "type": "text", 
+                                "validation": { "required": true }, 
+                                "scoring": { "field_weight": 0.5 },
+                                "context": "Describe el campo «Línea de producción/Maquinaria",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Línea de producción/Maquinaria"
+                            },
+                           { 
+                            "id": "equip_princ_tiempos_coste", 
+                            "label": "Tiempos (Reposición, Montaje) y Coste Reemplazo (€)", 
+                            "type": "textarea", 
+                            "tooltip":"Tiempo de reposición (semanas/meses), tiempo de montaje (semanas/meses), coste de reemplazo (€).", 
+                            "scoring": { "field_weight": 2 },
+                            "context": "Describe el campo «Tiempos (Reposición, Montaje) y Coste Reemplazo (€)", "type": "textarea", "tooltip":"Tiempo de reposición (semanas/meses), tiempo de montaje (semanas/meses), coste de reemplazo (€).",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Tiempos (Reposición, Montaje) y Coste Reemplazo (€)"
+                            }
                         ]
                     }
                 },
                 {
                     "id": "pb_produccion_facturacion_por_instalacion_servicio_array",
                     "label": "% de producción y % de facturación que pasa por cada instalación de servicio principal:",
+                    "context": "Describe el campo «% de producción y % de facturación que pasa por cada instalación de servicio principal:». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «% de producción y % de facturación que pasa por cada instalación de servicio principal:» y sea coherente.",
                     "type": "array_of_objects",
                     "row_index_path": true,
                     "allow_add_remove_rows": true,
@@ -1431,14 +1701,30 @@
                     "item_schema": {
                         "id": "pb_prod_fact_is_item",
                         "fields": [
-                            { "id": "is_nombre", "label": "Instalaciones de servicio (Transformadores, Calderas, etc.)", "type": "text", "validation": { "required": true }, "scoring": { "field_weight": 0.5 } },
-                            { "id": "is_porc_produccion_facturacion", "label": "% Producción Total y % Facturación Total dependiente", "type": "textarea", "tooltip":"Indicar % Producción y % Facturación. Ej: Prod: 60%, Fact: 55%", "scoring": { "field_weight": 1 } }
+                            { 
+                                "id": "is_nombre", 
+                                "label": "Instalaciones de servicio (Transformadores, Calderas, etc.)", 
+                                "type": "text", 
+                                "validation": { "required": true }, 
+                                "scoring": { "field_weight": 0.5 },
+                                "context": "Describe el campo «Instalaciones de servicio (Transformadores, Calderas, etc.)", 
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Instalaciones de servicio (Transformadores, Calderas, etc.)"
+                            },
+                            { 
+                                "id": "is_porc_produccion_facturacion", 
+                                "label": "% Producción Total y % Facturación Total dependiente", 
+                                "type": "textarea", 
+                                "tooltip":"Indicar % Producción y % Facturación. Ej: Prod: 60%, Fact: 55%", 
+                                "scoring": { "field_weight": 1 } 
+                            }
                         ]
                     }
                 },
                 {
                     "id": "pb_tiempo_reposicion_instalaciones_servicio_array",
                     "label": "Tiempo reposición instalaciones de servicios/auxiliares principales y cuello de botella hasta la vuelta a normalidad",
+                    "context": "Describe el campo «Tiempo reposición instalaciones de servicios/auxiliares principales y cuello de botella hasta la vuelta a normalidad». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Tiempo reposición instalaciones de servicios/auxiliares principales y cuello de botella hasta la vuelta a normalidad» y sea coherente.",
                     "type": "array_of_objects",
                     "row_index_path": true,
                     "allow_add_remove_rows": true,
@@ -1446,14 +1732,31 @@
                     "item_schema": {
                         "id": "pb_t_rep_is_princ_item",
                         "fields": [
-                            { "id": "is_princ_nombre", "label": "Instalación de servicio/auxiliar", "type": "text", "validation": { "required": true }, "scoring": { "field_weight": 0.5 } },
-                            { "id": "is_princ_tiempos_coste", "label": "Tiempos (Reposición, Montaje) y Coste Reemplazo (€)", "type": "textarea", "tooltip":"Tiempo de reposición (semanas/meses), tiempo de montaje (semanas/meses), coste de reemplazo (€).", "scoring": { "field_weight": 2 } }
+                            { "id": "is_princ_nombre", 
+                            "label": "Instalación de servicio/auxiliar", 
+                            "type": "text", 
+                            "validation": { "required": true }, 
+                            "scoring": { "field_weight": 0.5 },
+                            "context": "Describe el campo «Instalación de servicio/auxiliar",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Instalación de servicio/auxiliar"
+                            },
+                            { 
+                                "id": "is_princ_tiempos_coste", 
+                                "label": "Tiempos (Reposición, Montaje) y Coste Reemplazo (€)", 
+                                "type": "textarea", 
+                                "tooltip":"Tiempo de reposición (semanas/meses), tiempo de montaje (semanas/meses), coste de reemplazo (€).", 
+                                "scoring": { "field_weight": 2 },
+                                "context": "Describe el campo «Tiempos (Reposición, Montaje) y Coste Reemplazo (€)",
+                                "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Tiempos (Reposición, Montaje) y Coste Reemplazo (€)"
+                            }
                         ]
                     }
                 },
                 {
                     "id": "pb_equipos_informaticos_backup_proteccion",
                     "label": "Equipos informáticos (backup, protecciones, etc.)",
+                    "context": "Describe el campo «Equipos informáticos (backup, protecciones, etc.)». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Equipos informáticos (backup, protecciones, etc.)» y sea coherente.",
                     "type": "textarea",
                     "validation": {},
                     "scoring": { "field_weight": 1 }
@@ -1466,6 +1769,8 @@
                         {
                             "id": "pb_interdep_produccion_horarios_estacionalidad",
                             "label": "Producción (Turnos, Estabilidad Ventas, Estacionalidad Detalles, Bajo Pedido %)",
+                            "context": "Describe el campo «Producción (Turnos, Estabilidad Ventas, Estacionalidad Detalles, Bajo Pedido %)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Producción (Turnos, Estabilidad Ventas, Estacionalidad Detalles, Bajo Pedido %)» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Turnos de trabajo. Estabilidad anual ventas (Regular/Estacionaria). Si estacionaria: Meses mayor/menor producción y % total. Producción bajo pedido (Sí/No) y %.",
                             "validation": {},
@@ -1474,6 +1779,8 @@
                         {
                             "id": "pb_interdep_plantas_grupo_detalles_impacto",
                             "label": "Plantas Grupo (Nº, Descripción, Interdependencia, Diagrama, Impacto Paralización, Prod. Alternativa)",
+                            "context": "Describe el campo «Plantas Grupo (Nº, Descripción, Interdependencia, Diagrama, Impacto Paralización, Prod. Alternativa)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Plantas Grupo (Nº, Descripción, Interdependencia, Diagrama, Impacto Paralización, Prod. Alternativa)» y sea coherente.",
                             "type": "textarea_file_combination",
                             "file_label": "Adjuntar diagrama de interdependencia (si existe)",
                             "textarea_label": "Número de plantas (Una/Varias) y descripción. Interdependencia con planta actual. En caso de siniestro aquí, ¿paralización en otros centros? (% paralización). Posibilidad de producción alternativa en grupo/terceros y extracoste.",
@@ -1490,6 +1797,8 @@
                         {
                             "id": "pb_pcn_estado_gestion_bia",
                             "label": "BCP (Elaborado/Implantado), SGCN, Operación GCN y Análisis Impacto (BIA)",
+                            "context": "Describe el campo «BCP (Elaborado/Implantado), SGCN, Operación GCN y Análisis Impacto (BIA)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «BCP (Elaborado/Implantado), SGCN, Operación GCN y Análisis Impacto (BIA)» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Plan de continuidad elaborado/implantado (Sí/No). Sistema de Gestión continuidad de negocio (SGCN) (alcance, política, roles, etc.). Continuidad de negocio · Operación (GCN) (BIA, estrategias, estructuras respuesta, etc.). Existe análisis impacto pérdida negocio (Sí/No).",
                             "validation": {},
@@ -1498,9 +1807,11 @@
                         {
                             "id": "pb_pcn_detalles_estrategia_revision",
                             "label": "Detalles BCP (Productos Principales/Impacto, Estrategia Minimización, Plan Contingencia, Implementación, Revisión)",
+                            "context": "Describe el campo «Detalles BCP (Productos Principales/Impacto, Estrategia Minimización, Plan Contingencia, Implementación, Revisión)». Referencias NFPA y RSCIEI aplicables.",
+                            "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Detalles BCP (Productos Principales/Impacto, Estrategia Minimización, Plan Contingencia, Implementación, Revisión)» y sea coherente.",
                             "type": "textarea",
                             "tooltip": "Productos principales (facturación, áreas geo), impacto financiero, escenarios críticos. Estrategia minimización pérdidas. Plan de contingencia/continuidad (detalles). Implementación adecuada (Sí/No). Revisión periódica plan (Sí/No).",
-                            "validation": { "visible_if": { "field_id": "pb_pcn_elaborado_implantado", "operator": "is_true" } }, /* This visible_if may need adjustment */
+                            "validation": { "visible_if": { "field_id": "pb_pcn_elaborado_implantado", "operator": "is_true" } },
                             "scoring": { "field_weight": 5.5 }
                         }
                     ]
@@ -1517,6 +1828,8 @@
                 {
                     "id": "esg_politicas_practicas_certificaciones",
                     "label": "Políticas, Prácticas y Certificaciones ESG",
+                    "context": "Describe el campo «Políticas, Prácticas y Certificaciones ESG». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Políticas, Prácticas y Certificaciones ESG» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Políticas y prácticas de Sostenibilidad / ESG implementadas (medioambientales, sociales, gobernanza). Certificaciones ESG (ISO 14001, EMAS, etc.)",
                     "validation": {},
@@ -1527,6 +1840,8 @@
                 {
                     "id": "esg_riesgos_oportunidades",
                     "label": "Principales riesgos y oportunidades ESG identificados para el negocio",
+                    "context": "Describe el campo «Principales riesgos y oportunidades ESG identificados para el negocio». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Principales riesgos y oportunidades ESG identificados para el negocio» y sea coherente.",
                     "type": "textarea",
                     "validation": {},
                     "scoring": {
@@ -1545,6 +1860,8 @@
                 {
                     "id": "epr_descripcion_escenarios_pml_eml",
                     "label": "Descripción Escenarios Pérdidas y Estimación PML/EML",
+                    "context": "Describe el campo «Descripción Escenarios Pérdidas y Estimación PML/EML». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Descripción Escenarios Pérdidas y Estimación PML/EML» y sea coherente.",
                     "type": "textarea",
                     "tooltip": "Descripción de los principales escenarios de pérdidas identificados (incendio, explosión, inundación, avería maquinaria crítica, fallo proveedor clave, ciberataque, etc.). Estimación de PML (Probable Maximum Loss) y EML (Estimated Maximum Loss) para los escenarios principales.",
                     "validation": {},
@@ -1564,6 +1881,8 @@
                 {
                     "id": "otros_comentarios_adicionales",
                     "label": "Comentarios adicionales o aspectos no cubiertos anteriormente que sean relevantes para la inspección de riesgos.",
+                    "context": "Describe el campo «Comentarios adicionales o aspectos no cubiertos anteriormente que sean relevantes para la inspección de riesgos.». Referencias NFPA y RSCIEI aplicables.",
+                    "assistant_instructions": "Valida que la respuesta cumpla con los requisitos del campo «Comentarios adicionales o aspectos no cubiertos anteriormente que sean relevantes para la inspección de riesgos.» y sea coherente.",
                     "type": "textarea",
                     "validation": {},
                     "scoring": {
