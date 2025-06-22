@@ -171,7 +171,6 @@ class MessagesController < ApplicationController
             field_asked: last_q.field_asked,
             thread_id:   current_thread
           )
-          redirect_to risk_assistant_path(@risk_assistant) and return
         end
       end
     end
