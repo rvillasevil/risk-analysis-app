@@ -46,8 +46,9 @@ module SemanticGuard
     #    contra todos los datos confirmados en 'context'.  
     #    Construimos un prompt muy simple para que el LLM decida:
     prompt = <<~PROMPT
-      Eres un validador encargado únicamente de detectar incompatibilidades
-      entre la última respuesta del usuario y los datos ya confirmados. Debes buscar incompatibilidades generales, por ejemplo, productos o procesos fuera de la actividad principal, cantidades alejadas de los datos de producción proporcionados etc. Debes usar el sentido común, desde un punto de vista de un asistente que busca la uniformidad entre todos los datos capturados.
+      Eres un validador encargado de comprobar si la última respuesta del usuario
+      se correlaciona con los datos ya confirmados. Debes usar el sentido común y
+      detectar posibles incoherencias o falta de relación con ese contexto.
 
       ### Datos confirmados (contexto):
       #{context}
@@ -58,12 +59,12 @@ module SemanticGuard
       ### Nueva respuesta del usuario:
       #{answer}
 
-      Si encuentras alguna incompatibilidad (por ejemplo, que la nueva respuesta contradiga
-       un valor ya dado), devuelve **exactamente**:
-        Validador: <motivo en máximo 20 palabras>.
-      Si no hay incompatibilidad, devuelve **exactamente**:
+      Si la respuesta no se relaciona bien con el contexto o es incoherente,
+      devuelve **exactamente**:
+        Aviso: <motivo en máximo 20 palabras>.
+      Si todo se correlaciona correctamente, devuelve **exactamente**:
         OK
-      Si el usuario confirma la incompatibilidad, devuelve **exactamente**:
+      Si el usuario confirma la incoherencia, devuelve **exactamente**:
         OK
 
       Si el usuario indica siguiente pregunta, expresa desconocimiento a la respuesta, contestar: OK

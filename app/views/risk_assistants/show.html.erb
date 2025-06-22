@@ -77,7 +77,7 @@
     <main class="col-lg-8 col-md-7 d-flex flex-column chat-page">
       <h1 class="h1 mb-0"><%= @risk_assistant.name %></h1>
         <% display_msgs = @risk_assistant.messages
-                             .where.not(role: 'assistant')
+                             .where.not(role: 'developer')
                              .order(created_at: :asc) %>
         <div class="chat-history">
           <% if display_msgs.empty? %>
