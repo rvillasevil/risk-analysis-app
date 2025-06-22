@@ -19,7 +19,11 @@
       <div class="d-none d-md-block">
         <div class="sidebar-box">
           <%#── Sección de “Archivos subidos” ──────────────────────────────────── %>
-          <h4 class="text-lg font-semibold mb-2">Archivos subidos</h4>
+          <div class="mt-4">
+            <%= link_to "📋 Ver resumen de datos", summary_risk_assistant_path(@risk_assistant),
+                        class: "btn btn-outline-primary w-100" %>
+          </div> 
+          <h5 class="text-lg font-semibold mb-2" style="padding-top: 20px;">Archivos subidos</h5>
           <% if @risk_assistant.uploaded_files.attached? %>
             <div class="uploaded-files-section p-4 mb-6 border rounded bg-gray-50">
               <ul class="list-unstyled">
@@ -39,11 +43,7 @@
             <div class="uploaded-files-section p-4 mb-6 border rounded bg-gray-50">
               <p class="text-muted">No hay archivos subidos.</p>
             </div>
-          <% end %>
-          <div class="mt-4">
-            <%= link_to "📋 Ver resumen de datos", summary_risk_assistant_path(@risk_assistant),
-                        class: "btn btn-outline-primary w-100" %>
-          </div>          
+          <% end %>         
           <%= render partial: "sidebar",
                      locals: {
                        sections: @sections,
@@ -76,21 +76,31 @@
     <!-- MAIN / CHAT -->
     <main class="col-lg-8 col-md-7 d-flex flex-column chat-page">
       <h1 class="h1 mb-0"><%= @risk_assistant.name %></h1>
-      <div class="chat-history">
-        <%# Mensajes en orden ascendente pero invertidos vía flex-column-reverse %>
-        <% @risk_assistant.messages.where.not(role: 'developer').order(created_at: :asc).each do |m| %>
-          <% row_cls = m.sender == 'user' ? 'user' : 'assistant' %>
-          <div class="message-row <%= row_cls %>">
-            <div class="message-box <%= row_cls %>">
-              <div class="header">
-                <strong><%= m.sender.capitalize %></strong>
-                <small><%= l m.created_at, format: :short %></small>
-              </div>
-              <div class="body"><%= simple_format m.content %></div>
+        <% display_msgs = @risk_assistant.messages
+                             .where.not(role: 'developer')
+                             .order(created_at: :asc) %>
+        <div class="chat-history">
+          <% if display_msgs.empty? %>
+            <div class="d-flex flex-column justify-content-center align-items-center text-muted empty-chat">
+              <i class="bi bi-robot display-6"></i>
+              <p class="mb-1 mt-3">Para comenzar la toma de datos, escribe <strong>“Iniciar”</strong>.</p>
+              <button class="btn btn-primary mt-2" id="start-chat-btn" type="button">Iniciar</button>
             </div>
-          </div>
-        <% end %>
-      </div>
+          <% else %>
+            <% display_msgs.each do |m| %>
+              <% row_cls = m.sender == 'user' ? 'user' : 'assistant' %>
+              <div class="message-row <%= row_cls %>">
+                <div class="message-box <%= row_cls %>">
+                  <div class="header">
+                    <strong><%= m.sender.capitalize %></strong>
+                    <small><%= l m.created_at, format: :short %></small>
+                  </div>
+                  <div class="body"><%= simple_format m.content %></div>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
 
       <!-- FORMULARIO fijo abajo -->
       <%= form_with url: risk_assistant_messages_path(@risk_assistant),
@@ -158,6 +168,19 @@
         nameSpan.textContent = '';
       }
     });
+  });
+  
+  // Botón “Iniciar” envía automáticamente el mensaje inicial
+  document.addEventListener('DOMContentLoaded', () => {
+    const startBtn = document.getElementById('start-chat-btn');
+    if(startBtn){
+      startBtn.addEventListener('click', () => {
+        const form     = document.querySelector('.chat-form');
+        const textarea = form.querySelector('textarea');
+        textarea.value = 'Iniciar';
+        form.submit();
+      });
+    }
   });
 </script>
 

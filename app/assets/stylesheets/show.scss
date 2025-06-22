@@ -178,8 +178,17 @@ main.col-lg-8.col-md-7 {
     top: calc(#{$header-h} + #{$sidebar-pad});
     max-height: calc(100vh - #{$header-h} - 2 * #{$sidebar-pad});
     overflow-y: auto;              /* sólo el sidebar scrollea dentro */
-    overflow-x: hidden;
+  overflow-x: hidden;
   }
+}
+
+// Mensaje inicial cuando no hay historial
+.empty-chat {
+  min-height: 200px;
+  text-align: center;
+  color: $color-muted;
+  i {
+    color: $color-primary;  }
 }
 
 
