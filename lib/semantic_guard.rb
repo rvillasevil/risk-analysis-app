@@ -88,7 +88,8 @@ module SemanticGuard
                    .strip
 
     Rails.logger.debug { "SemanticGuard ◀ Response: #{resp_txt.inspect}" }
-    resp_txt == "OK" ? nil : resp_txt
+    normalized = resp_txt.strip.gsub(/[.!\s]/, '').casecmp('ok').zero?
+    normalized ? nil : resp_txt
   rescue => e
     Rails.logger.error "SemanticGuard error: #{e.message}"
     nil

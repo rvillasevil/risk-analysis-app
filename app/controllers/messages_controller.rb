@@ -40,7 +40,7 @@ class MessagesController < ApplicationController
       unless extracted_text.blank?
         @risk_assistant.messages.create!(
           sender:    "assistant",
-          role:      "assistant",
+          role:      "developer",
           content:   "[EXTRAÍDO]\n#{extracted_text}",
           thread_id: current_thread
         )
@@ -145,6 +145,7 @@ class MessagesController < ApplicationController
             field_asked: last_q.field_asked,
             thread_id:   current_thread
           )
+          redirect_to risk_assistant_path(@risk_assistant) and return
         end
       end
     end
@@ -223,10 +224,8 @@ class MessagesController < ApplicationController
         thread_id: runner.thread_id
       )
     end
-
+=begin
     # 6.C) Publicar la nueva pregunta “limpia” para el cliente
-
-
     answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
     next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
 
@@ -242,12 +241,13 @@ class MessagesController < ApplicationController
         thread_id:   runner.thread_id
       )      
     end
-
+=end
     redirect_to @risk_assistant
 
   rescue => e
     Rails.logger.error "💥 Error en MessagesController#create: #{e.class} – #{e.message}"
-    flash[:error] = "Se produjo un error al procesar tu mensaje."
+    flash[:error] = "Se produjo un error
+     al procesar tu mensaje."
     redirect_to risk_assistant_path(@risk_assistant)
   end
 
