@@ -30,6 +30,32 @@ class MessagesController < ApplicationController
 
     # 3) Si el usuario sube un archivo, extraer el texto y buscar campos automáticamente
     if params[:file].present?
+      if image_file?(params[:file])
+        params[:file].rewind
+        @risk_assistant.uploaded_files.attach(params[:file])
+
+        @risk_assistant.messages.create!(
+          sender:    "assistant",
+          role:      "assistant",
+          content:   "Imagen subida correctamente.",
+          thread_id: current_thread
+        )
+
+        answered = @risk_assistant.messages.where.not(key: nil).pluck(:key)
+        next_field = RiskFieldSet.next_field_hash(answered)
+        if next_field
+          display_text = RiskFieldSet.question_for(next_field[:id])
+          @risk_assistant.messages.create!(
+            sender:      "assistant",
+            role:        "assistant",
+            content:     display_text,
+            field_asked: next_field[:id],
+            thread_id:   current_thread
+          )
+        end
+        return redirect_to risk_assistant_path(@risk_assistant)
+      end
+
       # A partir de aquí, el fichero queda disponible localmente para descargarlo.
       # Luego extraer texto, subir a OpenA<I, etc. (tal como ya tenías).
       extracted_text = TextExtractor.call(params[:file])
@@ -321,6 +347,11 @@ class MessagesController < ApplicationController
       { role: role, content: content }
     end
   end
+
+  def image_file?(file)
+    file.content_type.to_s.start_with?("image/")
+  end
+
 
   def fetch_response_from_openai(messages)
 
