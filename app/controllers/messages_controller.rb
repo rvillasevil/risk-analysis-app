@@ -204,10 +204,20 @@ class MessagesController < ApplicationController
 
 
      # Opcional: guardar la respuesta completa del asistente para auditoría
+
+         # 6.C) Publicar la nueva pregunta “limpia” para el cliente
+    answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
+    next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
+
+    next_id    = next_field_hash[:id]
+    next_label = next_field_hash[:label]
+    display_text = RiskFieldSet.question_for(next_id)     
+
     @risk_assistant.messages.create!(
-      sender:    "assistant",
+      sender:    "assistant2",
       role:      "developer",
       content:   assistant_text,
+      field_asked: next_label,
       thread_id: runner.thread_id
     )
 
@@ -228,7 +238,7 @@ class MessagesController < ApplicationController
 
         @risk_assistant.messages.create!(
           content:     "✅ Perfecto, #{RiskFieldSet.label_for(clean_id)} es &&#{value}&&.",
-          sender:      "assistant",
+          sender:      "assistant_confirmation",
           role:        "developer",
           key:         clean_id,
           item_label:  item_label,
@@ -249,24 +259,22 @@ class MessagesController < ApplicationController
         thread_id: runner.thread_id
       )
     end
-=begin
+
     # 6.C) Publicar la nueva pregunta “limpia” para el cliente
     answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
     next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
-
     if next_field_hash
       next_id    = next_field_hash[:id]
       next_label = next_field_hash[:label]
       display_text = RiskFieldSet.question_for(next_id)
       @risk_assistant.messages.create!(
-        sender:      "assistant",
+        sender:      "assistant_dnk",
         role:        "assistant",
         content:     display_text,
         field_asked: next_id,
         thread_id:   runner.thread_id
       )      
     end
-=end
     redirect_to @risk_assistant
 
   rescue => e

@@ -74,16 +74,16 @@ class AssistantRunner
     instr    = field[:assistant_instructions].to_s.strip
 
     # guarda la PREGUNTA para que el guardia pueda validarla
-=begin
+
     risk_assistant.messages.create!(
-      sender:      "assistant",
+      sender:      "assistant_guard",
       role:        "assistant",
       field_asked: field_id,
       key:         nil,
       content:     question,
       thread_id:   thread_id
     )
-=end
+
     extra = +""
     extra << "### Instrucciones de campo:\n#{instr}\n\n" if instr.present?
     extra << "### Pregunta EXACTA:\n#{question}\n\n"

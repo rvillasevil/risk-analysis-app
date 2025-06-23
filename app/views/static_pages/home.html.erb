@@ -15,6 +15,15 @@
     .ribbon-early    { position: absolute; top: -10px; right: -10px; background:#dc3545; color:#fff; padding: .25rem .5rem; font-size:.8rem; font-weight:600; border-radius:.25rem; }
     .testimonial     { background:#fff; padding:2rem; border-radius:.5rem; box-shadow:0 .25rem .5rem rgba(0,0,0,.1); }
     .cta-banner      { background: linear-gradient(90deg,#6610f2,#0d6efd); color:#fff; padding:4rem 1rem; animation:pulseBg 8s infinite; }
+    @keyframes fadeInUp { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+    @keyframes pulseBg {0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+
+    .feature-icon  {font-size:2.5rem; color:#0d6efd;}
+    .benefit-icon  {font-size:2rem; color:#6610f2;}
+    .plan-card     {transition:transform .3s,box-shadow .3s;}
+    .plan-card:hover{transform:translateY(-6px);box-shadow:0 .75rem 1.5rem rgba(0,0,0,.1);}  
+    .ribbon-early  {position:absolute;top:-10px;right:-10px;background:#dc3545;color:#fff;padding:.25rem .5rem;font-size:.75rem;font-weight:600;border-radius:.25rem;}
+    .cta-banner    {background:linear-gradient(90deg,#6610f2,#0d6efd);color:#fff;padding:4rem 1rem;animation:pulseBg 8s infinite;}    
   </style>
     
   <div class="container-fluid pt-5">
@@ -40,27 +49,57 @@
       </div><!-- /col -->
     </div>
   </div>
-  <div class="container" style="margin-top: -27%;">
+  <div class="container" style="margin-top: -33%;">
     <div class="row justify-content-center">
       <div class="lc-block text-center col-md-8">
         <div editable="rich">
-          <h1 class="display-3 fw-bold mb-3" style="animation:fadeInUp .8s ease-out;">Riesgos claros. <span class="text-primary">Decisiones ágiles</span> para brokers.</h1>
+          <h1 class="display-3 fw-bold mb-3" style="animation:fadeInUp .8s ease-out;">Di Adiós a los formularios.<span class="text-primary">Hola a las Conversaciones Inteligentes.</span></h1>
         </div>
       </div>
     </div>
     <div class="row justify-content-center">
       <div class="lc-block text-center col-xxl-6 col-md-8">
         <div editable="rich">
-          <p class="lead mb-4">Conversación inteligente, análisis de documentos. Una experiencia ágil y agradable para tus clientes, con insights de riesgo listos para actuar.</p>
+          <h5 class="">Transforma la captación de datos de tus clientes. Sustituye los tediosos documentos de Word y Excel por un chat conversacional con IA y ofrece una experiencia de cliente excepcional.</p>
 
           <a href="<%= new_user_registration_path %>" class="btn btn-danger btn-lg me-3">Solicitar Demo</a>
           <a href="<%= risk_assistants_path %>" class="btn btn-outline-primary btn-lg me-3">Ver Demo</a>
           <a href="<%= policy_analyses_path %>" class="btn btn-primary btn-lg">Comparativa de pólizas</a>       
         </div>
-        <small class="d-block mt-3 text-muted">Oferta Early‑Adopter: 20 % descuento hasta el 30 de septiembre de 2025</small>
+        <small class="d-block mt-3 text-muted">Oferta Early‑Adopter: 20 % descuento hasta el 30 de septiembre de 2025.</small>
+        <small class="d-block mt-2 text-muted">Sin compromiso. Descubre el futuro de la intermediación de seguros.</small> 
       </div><!-- /lc-block -->
     </div>
   </div>
+
+<!-- ========== PROBLEMA ============================================= -->
+<section class="py-5">
+  <div class="container">
+    <div class="row align-items-center gx-5">
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        <h2 class="fw-bold mb-3">¿Cansado de Perseguir Datos y Descifrar Documentos?</h2>
+        <p class="mb-4">Interminables emails, archivos de Excel eternos y datos incompletos. Ese proceso anticuado consume tiempo y limita tu visibilidad para colocar riesgos con eficacia.</p>
+        <ul class="list-unstyled">
+          <li class="d-flex align-items-start mb-3"><i class="bi bi-file-earmark-excel-fill text-danger me-2"></i> Formularios confusos que tu cliente nunca termina.</li>
+          <li class="d-flex align-items-start mb-3"><i class="bi bi-clock-history text-warning me-2"></i> Horas perdidas ordenando información.</li>
+          <li class="d-flex align-items-start"><i class="bi bi-envelope-exclamation text-secondary me-2"></i> Información incompleta que provoca reprocesos.</li>
+        </ul>
+      </div>
+      <div class="col-lg-6 text-center">
+        <img src="https://placehold.co/900x600?text=Paperwork" class="img-fluid rounded-4" alt="Documentos desorganizados"/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SOLUCIÓN ============================================ -->
+<section class="py-5 bg-light">
+  <div class="container text-center">
+    <h2 class="fw-bold mb-4">Presentamos DataRisk: La Revolución Conversacional para el Bróker de Seguros</h2>
+    <p class="lead mb-4">Reemplaza formularios estáticos por un asistente de chat inteligente. Guiamos a tu cliente, estructuramos la información y te entregamos datos listos para analizar.</p>
+    <a href="#como-funciona" class="btn btn-outline-primary btn-lg">Ver Cómo Funciona</a>
+  </div>
+</section>
  
  
 <!-- ================= FEATURES ================= -->
@@ -98,6 +137,111 @@
       </div>
     </div>
   </section>
+<!-- ========== BENEFICIOS BROKER =================================== -->
+<section class="py-5">
+  <div class="container">
+    <h2 class="text-center fw-bold mb-5">Potencia tu Correduría: Más Datos, Mejores Decisiones</h2>
+    <div class="row text-center g-4">
+      <div class="col-md-3">
+        <div class="px-3 py-4 h-100 border rounded-4">
+          <div class="benefit-icon mb-3"><i class="bi bi-graph-up-arrow"></i></div>
+          <h6 class="mb-2">+30 % Información</h6>
+          <p class="small">Preguntas inteligentes capturan detalles que un formulario nunca ve.</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="px-3 py-4 h-100 border rounded-4">
+          <div class="benefit-icon mb-3"><i class="bi bi-search"></i></div>
+          <h6 class="mb-2">Identifica Riesgos</h6>
+          <p class="small">Cada dato se estructura, mostrando puntos fuertes y brechas.</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="px-3 py-4 h-100 border rounded-4">
+          <div class="benefit-icon mb-3"><i class="bi bi-clock"></i></div>
+          <h6 class="mb-2">Optimiza tu Tiempo</h6>
+          <p class="small">Menos administración, más asesoramiento de valor.</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="px-3 py-4 h-100 border rounded-4">
+          <div class="benefit-icon mb-3"><i class="bi bi-stars"></i></div>
+          <h6 class="mb-2">Moderniza tu Marca</h6>
+          <p class="small">Ofrece una experiencia digital que tus competidores no igualan.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== BENEFICIOS CLIENTE ================================== -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row align-items-center gx-5">
+      <div class="col-lg-6 mb-4 mb-lg-0 text-center order-lg-2">
+        <img src="https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?auto=format&fit=crop&w=700&q=80" class="img-fluid rounded-4" alt="Cliente feliz">
+      </div>
+      <div class="col-lg-6 order-lg-1">
+        <h2 class="fw-bold mb-3">Facilítale la Vida a tu Cliente</h2>
+        <ul class="list-unstyled lh-lg">
+          <li><i class="bi bi-chat-left-text benefit-icon me-2"></i>Experiencia intuitiva: tan fácil como chatear.</li>
+          <li><i class="bi bi-lightning-charge benefit-icon me-2"></i>Proceso rápido y guiado: sin omisiones.</li>
+          <li><i class="bi bi-shield-lock benefit-icon me-2"></i>Portal seguro: sube y consulta documentación en un clic.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CÓMO FUNCIONA ======================================= -->
+<section id="como-funciona" class="py-5">
+  <div class="container text-center">
+    <h2 class="fw-bold mb-5">En Solo Tres Pasos</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="px-4 py-5 h-100 border rounded-4">
+          <div class="feature-icon mb-3"><i class="bi bi-person-plus"></i></div>
+          <h6 class="mb-2">1. Invita</h6>
+          <p class="small">Envía a tu cliente un enlace único para iniciar la conversación.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="px-4 py-5 h-100 border rounded-4">
+          <div class="feature-icon mb-3"><i class="bi bi-chat-dots"></i></div>
+          <h6 class="mb-2">2. Conversa y Recopila</h6>
+          <p class="small">El asistente guía y estructura toda la información automáticamente.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="px-4 py-5 h-100 border rounded-4">
+          <div class="feature-icon mb-3"><i class="bi bi-bar-chart-line"></i></div>
+          <h6 class="mb-2">3. Analiza y Actúa</h6>
+          <p class="small">Accede a datos organizados, genera informes y toma decisiones.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PLATAFORMA GESTIÓN ================================== -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row align-items-center gx-5">
+      <div class="col-lg-6 mb-4 mb-lg-0 text-center">
+        <img src="https://images.unsplash.com/photo-1590086782792-42dd2457abd4?auto=format&fit=crop&w=900&q=80" class="img-fluid rounded-4 shadow" alt="Dashboard plataforma">
+      </div>
+      <div class="col-lg-6">
+        <h2 class="fw-bold mb-3">Tu Centro de Mando Inteligente</h2>
+        <ul class="list-unstyled lh-lg">
+          <li><i class="bi bi-people benefit-icon me-2"></i>Visión 360º del cliente en un único perfil.</li>
+          <li><i class="bi bi-cloud-arrow-up benefit-icon me-2"></i>Carga y descarga de archivos seguros.</li>
+          <li><i class="bi bi-file-earmark-text benefit-icon me-2"></i>Análisis y reportes listos para las aseguradoras.</li>
+          <li><i class="bi bi-shield-check benefit-icon me-2"></i>Seguridad de nivel bancario y cumplimiento RGPD.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ================= HOW IT WORKS ================= -->
   <section class="py-5 bg-light">
