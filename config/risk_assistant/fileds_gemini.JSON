@@ -1,0 +1,389 @@
+{
+    "form_title": "INFORME DE INSPECCIÓN DE RIESGOS (VERSIÓN CONSOLIDADA)",
+    "sections": [
+        {
+            "id": "informe_metadata",
+            "title": "INFORMACIÓN DEL INFORME",
+            "fields": [
+                {
+                    "id": "metadata_redactores_informe",
+                    "label": "Nombre y cargo de las personas que redactan el informe",
+                    "type": "select",
+                    "assistant_instructions": "Pregunta quién o quiénes son las personas responsables de proporcionar la información para este informe y cuál es su cargo en la empresa. Es importante registrar tanto el nombre como el puesto. Ej: '¿Podría indicarme su nombre completo y su cargo, por favor?'",
+                    "normative_tips": "Identificar a los interlocutores es clave para validar la información técnica y de gestión, un principio básico en cualquier auditoría de riesgos."
+                }
+            ]
+        },
+        {
+            "id": "descripcion_general_instalacion",
+            "title": "DESCRIPCIÓN GENERAL DE LA INSTALACIÓN",
+            "fields": [
+                {
+                    "id": "dgi_actividad_operacion_resumen",
+                    "label": "Descripción de la Actividad y Operación",
+                    "type": "textarea",
+                    "assistant_instructions": "Pide al usuario una descripción completa del negocio. Debes obtener: 1) El sector de actividad y los productos que fabrican (Ej: 'Fabricamos componentes de automoción'). 2) El tamaño de la empresa, en número de trabajadores o facturación. 3) La capacidad de producción anual (en unidades, toneladas, etc.). 4) El mercado al que se dirigen (nacional, internacional, o ambos).",
+                    "normative_tips": "Tip RSCIEI: La actividad y los materiales procesados son clave para calcular la Densidad de Carga de Fuego (MJ/m²), que determinará el Nivel de Riesgo Intrínseco (Bajo, Medio o Alto) de cada sector de incendio."
+                },
+                {
+                    "id": "dgi_localizacion_exposicion",
+                    "label": "Localización y Exposiciones Externas",
+                    "type": "textarea",
+                    "assistant_instructions": "Pregunta por la ubicación exacta de la planta. Solicita la dirección completa y una descripción del entorno: si está en un polígono industrial, una zona urbana, o aislada. Es crucial que preguntes por los colindantes: '¿Qué tienen en las parcelas de al lado? ¿Son otras fábricas, un río, campo abierto?'. Pide que especifiquen los riesgos que estos colindantes podrían suponer y la distancia aproximada en metros.",
+                    "normative_tips": "Tip RSCIEI: La distancia a colindantes define el tipo de establecimiento (A, B, C, D, E). Por ejemplo, un establecimiento a más de 3 metros del vecino más próximo se considera 'Tipo C', lo que permite mayores superficies por sector de incendio."
+                },
+                {
+                    "id": "dgi_planos_fotos_generales",
+                    "label": "Planos y Fotografías Aéreas (Layouts generales, exteriores e interiores)",
+                    "type": "file_multiple",
+                    "assistant_instructions": "Pide al usuario que, si los tiene a mano, adjunte planos o fotografías que ayuden a entender la distribución general de la planta. Pueden ser layouts, vistas aéreas o planos de las instalaciones. Ej: '¿Tendría algún plano o foto aérea de la instalación que pudiera compartir?'",
+                    "normative_tips": "Disponer de planos actualizados es un requisito para el Plan de Autoprotección y facilita enormemente la labor de los servicios de emergencia."
+                }
+            ]
+        },
+        {
+            "id": "construccion",
+            "title": "CONSTRUCCIÓN",
+            "fields": [
+                {
+                    "id": "constr_caracteristicas_generales",
+                    "label": "Características Generales de la Edificación",
+                    "type": "textarea",
+                    "assistant_instructions": "Pregunta por los datos básicos del edificio principal: Año de construcción, superficie total de la parcela y construida (m²), y número de plantas.",
+                    "normative_tips": "La superficie construida de un sector de incendio es un dato fundamental para determinar las exigencias de protección del RSCIEI."
+                },
+                {
+                    "id": "constr_material_estructura",
+                    "label": "Estructura Portante",
+                    "type": "text",
+                    "assistant_instructions": "Pregunta de qué material es la estructura principal que soporta el edificio (pilares y vigas). Las opciones comunes son hormigón, metálica o madera.",
+                    "normative_tips": "Tip RSCIEI: La normativa exige una resistencia al fuego para la estructura (Estabilidad al Fuego 'R', ej. R-90). Una estructura metálica sin protección específica (pintura intumescente, mortero) suele tener una R-15, insuficiente para la mayoría de riesgos industriales."
+                },
+                {
+                    "id": "constr_material_cubierta",
+                    "label": "Cubierta (Tejado)",
+                    "type": "text",
+                    "assistant_instructions": "Pregunta por el tipo de cubierta o tejado. Es importante saber si es de chapa metálica simple, panel sándwich, tipo 'deck', etc. Si es panel sándwich, pregunta por el material aislante (PUR, PIR, lana de roca).",
+                    "normative_tips": "Tip RSCIEI: La reacción al fuego de la cubierta es clave. El reglamento exige una clasificación mínima (ej. C-s3,d0) y prohíbe materiales que goteen en caso de incendio si hay rociadores. Los paneles con núcleo de espuma PUR son especialmente peligrosos."
+                },
+                {
+                    "id": "constr_material_cerramientos",
+                    "label": "Cerramientos (Paredes Exteriores)",
+                    "type": "text",
+                    "assistant_instructions": "Pregunta de qué material son las paredes exteriores o fachadas. Las opciones comunes son bloque de hormigón, panel metálico prefabricado o panel sándwich.",
+                    "normative_tips": "La fachada también debe cumplir con una reacción al fuego mínima según el RSCIEI para evitar la propagación del incendio por el exterior del edificio."
+                },
+                {
+                    "id": "constr_sectores_incendio_principales_array",
+                    "label": "Sectores de Incendio Principales",
+                    "type": "array_of_objects",
+                    "assistant_instructions": "Indica al usuario que ahora vais a detallar los principales sectores de incendio, que son espacios delimitados para que el fuego no se propague. Pregúntale cuántos sectores significativos quiere detallar para preparar la tabla.",
+                    "normative_tips": "Tip RSCIEI: La sectorización es una de las medidas más importantes. Un establecimiento Tipo B (adosado) no puede tener sectores de más de 2.500 m², y uno Tipo C (aislado) no más de 10.000 m², sin que se exijan medidas adicionales.",
+                    "allow_add_remove_rows": true,
+                    "item_label_template": "Sector de Incendio {{index + 1}}",
+                    "item_schema": {
+                        "id": "sector_incendio_item_detallado",
+                        "fields": [
+                            {"id": "sector_nombre_uso", "label": "Nombre/Uso del Sector", "type": "text", "assistant_instructions": "Para cada sector, pregunta por su nombre o el uso principal que tiene. Ej: 'Almacén de Materia Prima', 'Zona de Producción 1', 'Oficinas'."},
+                            {"id": "sector_superficie", "label": "Superficie (m²)", "type": "number", "assistant_instructions": "Para cada sector, pregunta por su superficie aproximada en metros cuadrados."},
+                            {"id": "sector_resistencia_fuego_elementos", "label": "Resistencia al Fuego de Paredes/Puertas (EI)", "type": "text", "assistant_instructions": "Pregunta cuál es la resistencia al fuego (ej. 'EI-60', 'EI-120') de las paredes y puertas que lo separan de otros sectores. Esto es un dato técnico muy importante.", "normative_tips": "Tip RSCIEI: La resistencia al fuego de los elementos separadores debe ser 'EI' (Integridad y Aislamiento) y la de las puertas 'EI₂' (ej. EI-120 para riesgo alto)."},
+                            {"id": "sector_comunicacion_proteccion", "label": "Protección de huecos de comunicación", "type": "textarea", "assistant_instructions": "Pregunta cómo se comunican los sectores entre sí. ¿Hay cintas transportadoras que los atraviesan? ¿Grandes portones? Si es así, pregunta si estos huecos tienen sistemas de cierre automático en caso de incendio (compuertas cortafuegos, etc.).", "normative_tips": "Los huecos sin proteger entre sectores (para cintas, instalaciones, etc.) anulan completamente la sectorización y son un defecto grave de seguridad."}
+                        ]
+                    }
+                },
+                {
+                    "id": "constr_camaras_frigorificas_descripcion",
+                    "label": "Cámaras Frigoríficas",
+                    "type": "textarea",
+                    "assistant_instructions": "Pregunta específicamente si en la instalación existen cámaras frigoríficas. Si es así, pide que describa cuántas hay, su tamaño, y de qué material es el panel aislante (PUR, PIR, lana de roca). Pregunta también si tienen protección contra incendios (rociadores) en su interior.",
+                    "normative_tips": "Tip RSCIEI/NFPA: Los paneles sándwich con núcleo de espuma de poliuretano (PUR) son altamente combustibles. Se prefieren los de Poli-isocianurato (PIR) con certificación de reacción al fuego (ej. B-s1,d0) o los de Lana de Roca (no combustible). A menudo requieren rociadores específicos en su interior."
+                }
+            ]
+        },
+        {
+            "id": "proceso_productivo",
+            "title": "DESCRIPCIÓN DEL PROCESO PRODUCTIVO",
+            "fields": [
+                {
+                    "id": "pp_proceso_resumen",
+                    "label": "Descripción General del Proceso Productivo",
+                    "type": "textarea",
+                    "assistant_instructions": "Pide una descripción del proceso de fabricación. Pregunta: '¿Podría explicarme a grandes rasgos las fases principales de su proceso productivo? ¿Utilizan fuentes de calor importantes, altas presiones o manejan productos inflamables o explosivos?' Incluye también una pregunta sobre las materias primas principales.",
+                    "normative_tips": "Tip NFPA: Si se manejan líquidos inflamables, NFPA 30 es el estándar de referencia para su almacenamiento y trasvase. Para polvos combustibles (harina, madera, metal), NFPA 652 y 654 establecen los requisitos para prevenir explosiones."
+                },
+                {
+                    "id": "pp_diagrama_proceso",
+                    "label": "Diagrama del Proceso (Adjuntar archivo)",
+                    "type": "file",
+                    "assistant_instructions": "Pregunta si disponen de un diagrama de flujo del proceso que puedan compartir, ya que sería de gran ayuda para entenderlo.",
+                    "normative_tips": "Tener diagramas de proceso es fundamental para realizar análisis de riesgos más detallados como un HAZOP (Hazard and Operability Study)."
+                },
+                {
+                    "id": "pp_equipos_criticos_array",
+                    "label": "Líneas/Equipos Principales y Críticos del Proceso",
+                    "type": "array_of_objects",
+                    "assistant_instructions": "Informa al usuario de que vais a identificar los equipos más importantes del proceso. Pregunta cuáles son las 2-3 máquinas o líneas de producción más críticas para su negocio.",
+                    "normative_tips": "Identificar los 'cuellos de botella' es el primer paso para un análisis de continuidad de negocio (Business Continuity Plan), referenciado en estándares como NFPA 1600.",
+                    "allow_add_remove_rows": true,
+                    "item_label_template": "Equipo/Línea Principal {{index + 1}}",
+                    "item_schema": {
+                        "id": "equipo_principal_item_simplificado",
+                        "fields": [
+                            {"id": "equipo_nombre_funcion", "label": "Nombre y Función", "type": "text", "assistant_instructions": "Para cada equipo crítico, pregunta por su nombre y su función principal."},
+                            {"id": "equipo_criticidad", "label": "Criticidad y Redundancia", "type": "text", "assistant_instructions": "Para cada equipo, pregunta si su parada detendría toda la producción (cuello de botella) y si existe alguna máquina de respaldo o alternativa para seguir produciendo."},
+                            {"id": "equipo_valor", "label": "Valor de Reposición (€)", "type": "number", "assistant_instructions": "Pregunta por el coste estimado para reemplazar ese equipo si se destruyera por completo."}
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "id": "almacenamiento",
+            "title": "ALMACENAMIENTO",
+            "fields": [
+                {
+                    "id": "alm_zonas_almacenamiento_principales_array",
+                    "label": "Principales Zonas de Almacenamiento",
+                    "type": "array_of_objects",
+                    "assistant_instructions": "Comunica al usuario que ahora hablaréis sobre cómo y dónde se almacenan los materiales. Pide que identifique las principales áreas de almacenamiento (materia prima, producto terminado, etc.).",
+                    "normative_tips": "Tip RSCIEI: El almacenamiento se regula por su propia normativa (APQ para químicos) y por el RSCIEI según la carga de fuego. | Tip NFPA: La protección de almacenamientos se detalla en NFPA 13 y depende de la mercancía, altura y tipo de almacenamiento.",
+                    "allow_add_remove_rows": true,
+                    "item_label_template": "Zona de Almacenamiento {{index + 1}}",
+                    "item_schema": {
+                        "id": "alm_zona_item_simplificado",
+                        "fields": [
+                            {"id": "alm_producto", "label": "Producto(s) Almacenado(s) y Tipo", "type": "text", "assistant_instructions": "Para cada zona, pregunta qué se almacena allí. Ej: 'Bobinas de cartón (Materia Prima)' o 'Producto terminado en palets de plástico'."},
+                            {"id": "alm_riesgo_principal", "label": "Riesgo Principal", "type": "text", "assistant_instructions": "Para cada zona, pregunta cuál es el principal riesgo de incendio. Ej: '¿El material es muy combustible? ¿Es inflamable? ¿Genera polvo?'", "normative_tips": "Tip NFPA: La clasificación de la mercancía es clave (Clase I a IV, Plásticos Grupo A, B, C). Los plásticos no expandidos (ej. en cajas de cartón) suelen requerir protección con rociadores ESFR o rociadores en estantería ('in-rack')."},
+                            {"id": "alm_cantidad_maxima", "label": "Cantidad Máxima Aproximada", "type": "text", "assistant_instructions": "Pregunta por la cantidad máxima que suelen tener almacenada en esa zona (en palets, toneladas, m³, etc.)."},
+                            {"id": "alm_ubicacion_proteccion", "label": "Ubicación y Protección Contra Incendios", "type": "textarea", "assistant_instructions": "Pregunta dónde se ubica la zona (nave, exterior) y, muy importante, qué sistemas contra incendios específicos tiene (detectores, rociadores automáticos, etc.)."}
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "id": "instalaciones_servicio",
+            "title": "INSTALACIONES DE SERVICIO",
+            "fields": [
+                {
+                    "id": "is_instalacion_electrica_resumen",
+                    "label": "Instalación Eléctrica",
+                    "type": "textarea",
+                    "assistant_instructions": "Pregunta sobre la instalación eléctrica. Debes obtener información sobre: acometidas, transformadores principales (potencia, si son de aceite o secos), si hay generadores de emergencia y si un fallo eléctrico en un punto pararía toda la planta.",
+                    "normative_tips": "Tip RSCIEI: Se remite al Reglamento Electrotécnico de Baja Tensión (REBT). En zonas con riesgo de incendio o explosión (ATEX), los requisitos son mucho más estrictos. | Tip NFPA: NFPA 70 (NEC) es el código eléctrico de referencia. NFPA 70B recomienda el mantenimiento preventivo, como termografías periódicas a cuadros eléctricos."
+                },
+                {
+                    "id": "is_otras_instalaciones_clave",
+                    "label": "Otras Instalaciones de Servicio Clave",
+                    "type": "textarea",
+                    "assistant_instructions": "Pregunta por otras instalaciones auxiliares importantes. Ej: '¿Disponen de calderas de vapor o aceite térmico? ¿Compresores de aire? ¿Sistemas de refrigeración con amoniaco u otros gases?' Pide que describa su ubicación y criticidad.",
+                    "normative_tips": "Tip RSCIEI: Las salas de calderas o de equipos con fluidos combustibles deben constituir un sector de incendio propio y estar correctamente ventiladas. | Tip NFPA: NFPA 85 (calderas) y NFPA 30 (manejo de combustible) son relevantes."
+                },
+                {
+                    "id": "is_transporte_interno_baterias",
+                    "label": "Sistemas de Transporte y Carga de Baterías",
+                    "type": "textarea",
+                    "assistant_instructions": "Pregunta sobre las carretillas elevadoras. Es muy importante saber de qué tipo son sus baterías (plomo-ácido, litio) y cómo es la sala donde se cargan (si está ventilada, si tiene detectores o extintores, etc.).",
+                    "normative_tips": "Tip NFPA: NFPA 855 es el estándar para instalaciones de almacenamiento de energía. Las áreas de carga de baterías de litio son un riesgo emergente que requiere protección específica (a veces rociadores) debido al riesgo de 'thermal runaway' (fuego que no se apaga con agua)."
+                }
+            ]
+        },
+        {
+            "id": "gestion_seguridad_emergencia",
+            "title": "GESTIÓN DE LA SEGURIDAD Y EMERGENCIAS",
+            "fields": [
+                {
+                    "id": "gs_organizacion_seguridad",
+                    "label": "Organización de la Seguridad y Prevención",
+                    "type": "textarea",
+                    "assistant_instructions": "Pregunta sobre la gestión de la seguridad. '¿Quién es el responsable de seguridad en la planta? ¿Tienen un servicio de prevención propio o externo?' Confirma que cumplen con la Ley de Prevención de Riesgos Laborales.",
+                    "normative_tips": "Un sistema de gestión de la seguridad robusto es la base de la prevención. La existencia de un responsable claro y con autoridad es un factor muy positivo en la evaluación del riesgo."
+                },
+                {
+                    "id": "gs_procedimientos_riesgos",
+                    "label": "Procedimientos y Gestión de Riesgos",
+                    "type": "textarea",
+                    "assistant_instructions": "Indaga sobre los procedimientos de trabajo seguro. Pregunta: '¿Tienen procedimientos establecidos para trabajos especiales, como soldadura o trabajos en caliente? ¿Y políticas estrictas de orden y limpieza?'",
+                    "normative_tips": "Tip NFPA: NFPA 51B regula la seguridad en trabajos en caliente. Los 'permisos de trabajo en caliente' son una práctica estándar para controlar estas actividades de alto riesgo."
+                },
+                {
+                    "id": "gs_plan_emergencia_equipos",
+                    "label": "Plan de Emergencia y Equipos de Intervención",
+                    "type": "textarea",
+                    "assistant_instructions": "Pregunta sobre la preparación para emergencias. '¿Tienen un plan de autoprotección o de emergencia? ¿Cuentan con equipos de primera intervención (brigadas de emergencia) formados por sus propios trabajadores? Si es así, ¿cuántos hay por turno?'",
+                    "normative_tips": "Tip: El Real Decreto 393/2007 establece la obligatoriedad de implantar un Plan de Autoprotección para ciertas actividades industriales. Este plan debe incluir la organización de los equipos de emergencia."
+                },
+                {
+                    "id": "gs_recursos_bomberos",
+                    "label": "Recursos de Bomberos",
+                    "type": "textarea",
+                    "assistant_instructions": "Pregunta sobre la ayuda externa. '¿A qué distancia en minutos están los bomberos públicos más cercanos? ¿Han visitado alguna vez la planta para conocerla?'",
+                    "normative_tips": "Un tiempo de intervención de bomberos inferior a 20 minutos se considera favorable. Es muy recomendable que los bomberos locales conozcan los riesgos y accesos de la planta antes de una emergencia."
+                },
+                {
+                    "id": "gs_simulacros_seveso",
+                    "label": "Simulacros y Regulación SEVESO",
+                    "type": "textarea",
+                    "assistant_instructions": "Pregunta por la práctica de los planes. '¿Con qué frecuencia realizan simulacros de emergencia?'. Y una pregunta regulatoria importante: '¿Por la cantidad de productos químicos que almacenan, están afectados por la normativa SEVESO?'",
+                    "normative_tips": "Tip: El Plan de Autoprotección exige la realización de simulacros como mínimo una vez al año. La normativa SEVESO (Real Decreto 840/2015) aplica a industrias con grandes cantidades de sustancias peligrosas y exige medidas de seguridad y planes de emergencia mucho más estrictos."
+                }
+            ]
+        },
+        {
+            "id": "medios_proteccion_incendios",
+            "title": "MEDIOS DE PROTECCIÓN CONTRA INCENDIOS",
+            "fields": [
+                {
+                    "id": "mpci_deteccion_alarma_subseccion",
+                    "title": "Sistemas de Detección y Alarma",
+                    "type": "subsection",
+                    "fields": [
+                        {
+                            "id": "mpci_det_tipo_areas",
+                            "label": "Tipo de detectores y áreas cubiertas",
+                            "type": "textarea",
+                            "assistant_instructions": "Pregunta qué tipo de detectores de incendio tienen (humo, calor, llama, etc.) y qué zonas de la planta están cubiertas por ellos (toda la planta, solo almacenes, oficinas, etc.).",
+                            "normative_tips": "Tip RSCIEI: Se exige detección automática para Nivel de Riesgo Intrínseco Medio o Alto a partir de ciertas superficies. La elección del tipo de detector depende del riesgo (ej. detectores de llama para zonas de inflamables)."
+                        },
+                        {
+                            "id": "mpci_det_central_transmision",
+                            "label": "Central de detección y transmisión de alarmas",
+                            "type": "textarea",
+                            "assistant_instructions": "Pregunta dónde se reciben las señales de los detectores. '¿Tienen una central de alarmas? ¿La alarma se transmite automáticamente a una empresa de seguridad externa (CRA) o a un puesto de vigilancia interno 24h?'",
+                            "normative_tips": "Tip NFPA: NFPA 72 es el código de alarmas de incendio. La conexión a una estación de supervisión permanente es una práctica recomendada a nivel internacional y un factor clave para una respuesta rápida."
+                        }
+                    ]
+                },
+                {
+                    "id": "mpci_medios_manuales_subseccion",
+                    "title": "Medios Manuales de Extinción",
+                    "type": "subsection",
+                    "fields": [
+                        {
+                            "id": "mpci_man_extintores",
+                            "label": "Extintores portátiles",
+                            "type": "textarea",
+                            "assistant_instructions": "Pregunta si la planta está dotada de extintores portátiles, de qué tipo son (polvo ABC, CO2) y si su distribución y señalización son correctas.",
+                            "normative_tips": "Tip RSCIEI: Especifica el número y tipo de extintores según la superficie y la actividad, siendo la eficacia mínima habitual la '21A-113B'."
+                        },
+                        {
+                            "id": "mpci_man_bies",
+                            "label": "Bocas de Incendio Equipadas (BIEs)",
+                            "type": "textarea",
+                            "assistant_instructions": "Pregunta por las mangueras rojas que se ven en las paredes (BIEs). '¿Tienen BIEs? ¿De qué diámetro son (las pequeñas de 25 mm o las más grandes de 45 mm)?'",
+                            "normative_tips": "Tip RSCIEI: Se exigen BIEs de 25mm para riesgo Bajo/Medio y de 45mm para riesgo Alto. Su cobertura debe ser tal que toda la superficie del sector pueda ser alcanzada por al menos una BIE."
+                        },
+                        {
+                            "id": "mpci_man_hidrantes",
+                            "label": "Hidrantes Exteriores",
+                            "type": "textarea",
+                            "assistant_instructions": "Pregunta si existen hidrantes (tomas de agua para bomberos) en el exterior de los edificios y si son propios o de la red pública.",
+                            "normative_tips": "Tip RSCIEI: Para establecimientos de Tipo B o C con superficie mayor a 2.000 m², se exige una red de hidrantes propia que cubra todas las fachadas."
+                        }
+                    ]
+                },
+                {
+                    "id": "mpci_medios_automaticos_subseccion",
+                    "title": "Sistemas Automáticos de Extinción",
+                    "type": "subsection",
+                    "fields": [
+                        {
+                            "id": "mpci_auto_rociadores",
+                            "label": "Rociadores Automáticos (Sprinklers)",
+                            "type": "textarea",
+                            "assistant_instructions": "Esta es una pregunta muy importante. Pregunta detalladamente: '¿Disponen de un sistema de rociadores automáticos? ¿Qué zonas protege? ¿Conoce la norma de diseño (NFPA, CEPREVEN, etc.) y el tipo de riesgo para el que está diseñado (Riesgo Ligero, Ordinario, Extra)?'",
+                            "normative_tips": "Tip RSCIEI: Es obligatorio para riesgo Alto, y para riesgo Medio a partir de 2.000 m² (o 1.500 m² si la cubierta es combustible). | Tip NFPA: NFPA 13 es el estándar de diseño de referencia mundial. Un diseño correcto es fundamental para su eficacia."
+                        },
+                        {
+                            "id": "mpci_auto_otros",
+                            "label": "Otros sistemas automáticos (Gases, espuma, etc.)",
+                            "type": "textarea",
+                            "assistant_instructions": "Pregunta si además de rociadores, tienen otros sistemas automáticos para riesgos especiales, como sistemas de extinción por gas (CO2, Inergen) para salas eléctricas o de servidores, o sistemas de espuma para tanques de inflamables.",
+                            "normative_tips": "Tip NFPA: Existen estándares específicos para cada sistema: NFPA 11 (espuma), NFPA 12 (CO2), NFPA 2001 (agentes limpios), que definen los criterios de diseño para proteger riesgos concretos."
+                        }
+                    ]
+                },
+                {
+                    "id": "mpci_abastecimiento_agua_subseccion",
+                    "title": "Sistema de Abastecimiento de Agua (PCI)",
+                    "type": "subsection",
+                    "fields": [
+                        {
+                            "id": "mpci_agua_fuente_reserva",
+                            "label": "Fuente de agua y reserva",
+                            "type": "textarea",
+                            "assistant_instructions": "Pregunta por el suministro de agua para los sistemas de incendio. '¿De dónde cogen el agua (red pública, depósito propio, pozo)? ¿Tienen un depósito de reserva de agua exclusivo para incendios? Si es así, ¿qué capacidad (m³) tiene?'",
+                            "normative_tips": "Tip RSCIEI: Exige una autonomía de agua específica según el sistema y el riesgo (ej. 60 min para BIEs en riesgo Medio, 90 min para rociadores en riesgo Alto). | Tip NFPA: NFPA 22 es el estándar para depósitos de agua."
+                        },
+                        {
+                            "id": "mpci_agua_bombeo",
+                            "label": "Equipo de bombeo",
+                            "type": "textarea",
+                            "assistant_instructions": "Pide una descripción del grupo de bombeo. '¿Cuántas bombas tienen (principal, reserva, jockey)? ¿Son eléctricas o diésel? ¿Conoce su caudal y presión? ¿Con qué frecuencia las prueban?'",
+                            "normative_tips": "Tip NFPA: NFPA 20 es el estándar para bombas contra incendios. Se recomienda una bomba principal eléctrica y una de reserva con motor diésel para garantizar el funcionamiento incluso sin suministro eléctrico. La prueba semanal de la bomba diésel es un requisito."
+                        }
+                    ]
+                },
+                {
+                    "id": "mpci_mantenimiento_general",
+                    "label": "Mantenimiento de los Sistemas PCI",
+                     "type": "textarea",
+                     "assistant_instructions": "Como cierre de la sección, pregunta: '¿Tienen un contrato de mantenimiento con una empresa autorizada para todos estos sistemas contra incendios que hemos comentado?'",
+                     "normative_tips": "Tip RSCIEI: El RIPCI (Reglamento de Instalaciones de Protección Contra Incendios) obliga a realizar mantenimientos trimestrales y anuales a todos los sistemas de PCI por parte de empresas mantenedoras habilitadas para garantizar su operatividad."
+                }
+            ]
+        },
+        {
+            "id": "mantenimiento",
+            "title": "MANTENIMIENTO",
+            "fields": [
+                {
+                    "id": "mnt_gestion_programas",
+                    "label": "Gestión y Programas de Mantenimiento",
+                    "type": "textarea",
+                    "assistant_instructions": "Pregunta sobre la planificación del mantenimiento. '¿Siguen un programa de mantenimiento preventivo para las máquinas e instalaciones críticas? ¿Utilizan algún programa informático de gestión de mantenimiento (GMAO)?'",
+                    "normative_tips": "Tip: Un buen mantenimiento no solo previene averías, sino también incendios. Un programa de mantenimiento preventivo es esencial para equipos eléctricos, térmicos y mecánicos."
+                },
+                {
+                    "id": "mnt_pci",
+                    "label": "Mantenimiento de los Sistemas de Protección Contra Incendios",
+                    "type": "textarea",
+                    "assistant_instructions": "Pregunta específicamente por el mantenimiento de los sistemas de seguridad. '¿Tienen un contrato de mantenimiento con una empresa autorizada para todos sus sistemas contra incendios (extintores, detectores, BIEs, rociadores)?'",
+                    "normative_tips": "Tip RSCIEI: El RIPCI (Reglamento de Instalaciones de Protección Contra Incendios) obliga a realizar mantenimientos trimestrales y anuales a los sistemas de PCI por parte de empresas mantenedoras habilitadas. | Tip NFPA: NFPA 25 es el estándar para la inspección, prueba y mantenimiento de sistemas de protección a base de agua."
+                }
+            ]
+        },
+        {
+            "id": "perdida_beneficio",
+            "title": "PÉRDIDA DE BENEFICIO",
+            "fields": [
+                {
+                    "id": "pb_equipos_cuellos_botella_array",
+                    "label": "Equipos e Instalaciones Críticas (Cuellos de Botella)",
+                    "type": "array_of_objects",
+                    "assistant_instructions": "Informa al usuario de que vais a reconfirmar los 'cuellos de botella' desde el punto de vista de la continuidad del negocio. Pide que piense en la máquina o instalación cuyo fallo causaría la mayor pérdida económica.",
+                    "normative_tips": "Este análisis es la base de un BIA (Business Impact Analysis), un componente esencial de la gestión de la continuidad del negocio.",
+                    "allow_add_remove_rows": true,
+                    "item_label_template": "Cuello de Botella {{index + 1}}",
+                    "item_schema": {
+                        "id": "pb_cuello_botella_item",
+                        "fields": [
+                            {"id": "item_nombre_equipo", "label": "Equipo/Instalación Crítica", "type": "text", "assistant_instructions": "Para cada cuello de botella, pregunta de qué equipo o instalación se trata."},
+                            {"id": "item_impacto_produccion", "label": "% Producción Afectada", "type": "number", "assistant_instructions": "Pregunta qué porcentaje de la producción total de la planta se vería afectado si ese equipo fallara."},
+                            {"id": "item_tiempo_recuperacion", "label": "Tiempo Estimado de Recuperación (Meses)", "type": "text", "assistant_instructions": "Pregunta por una estimación realista de cuántos meses tardarían en reparar o reemplazar el equipo y volver a la producción normal."},
+                            {"id": "item_alternativas", "label": "Alternativas (Otras líneas, plantas, etc.)", "type": "text", "assistant_instructions": "Pregunta si, en caso de fallo, podrían derivar la producción a otras líneas, a otra planta del grupo o subcontratar a un tercero."}
+                        ]
+                    }
+                },
+                {
+                    "id": "pb_plan_continuidad_negocio",
+                    "label": "Plan de Continuidad de Negocio (BCP)",
+                    "type": "textarea",
+                    "assistant_instructions": "Pregunta sobre la planificación formal de la continuidad. '¿Disponen de un Plan de Continuidad de Negocio (BCP) documentado? ¿Han analizado el impacto financiero que tendría un siniestro grave y han definido estrategias para recuperarse?'",
+                    "normative_tips": "Tip NFPA: NFPA 1600 es el estándar sobre Gestión de la Continuidad, Emergencias y Crisis. Disponer de un BCP probado y actualizado es la mejor práctica para minimizar el impacto de un siniestro en el negocio."
+                }
+            ]
+        }
+    ]
+}
+
