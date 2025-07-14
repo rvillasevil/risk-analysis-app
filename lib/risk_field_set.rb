@@ -9,7 +9,7 @@ require "pathname"
 class RiskFieldSet
   CONFIG_DIR = Rails.root.join("config", "risk_assistant")
   YAML_PATH  = CONFIG_DIR.join("fields.yml")
-  FIRST_JSON = Dir[CONFIG_DIR.join("*.json")].first
+  FIRST_JSON = Dir.glob(CONFIG_DIR.join("*.json"), File::FNM_CASEFOLD).first
   JSON_PATH  = FIRST_JSON && Pathname.new(FIRST_JSON)
 
   Field = Struct.new(
