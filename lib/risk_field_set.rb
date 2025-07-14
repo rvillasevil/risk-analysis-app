@@ -9,13 +9,12 @@ require "pathname"
 class RiskFieldSet
   CONFIG_DIR = Rails.root.join("config", "risk_assistant")
   YAML_PATH  = CONFIG_DIR.join("fields.yml")
-  FIRST_JSON = Dir.glob(CONFIG_DIR.join("*.json"), File::FNM_CASEFOLD).first
+  FIRST_JSON = Dir[CONFIG_DIR.join("*.json")].first
   JSON_PATH  = FIRST_JSON && Pathname.new(FIRST_JSON)
 
   Field = Struct.new(
     :id, :label, :prompt, :type, :options, :example,
-    :why, :context, :section, :validation,
-    :assistant_instructions, :normative_tips,
+    :why, :context, :section, :validation, :assistant_instructions,
     :parent, :array_of_objects, :item_label_template,
     :array_count_source_field_id, :row_index_path,
     keyword_init: true
@@ -97,7 +96,6 @@ class RiskFieldSet
       if f[:options]&.any?
         parts << "Opciones disponibles: #{f[:options].join(', ')}."
       end
-      parts << f[:assistant_instructions].to_s.strip if f[:assistant_instructions].present?      
       parts << "Contexto: #{f[:context]}." if f[:context].present?
       parts << "Ejemplo: #{f[:example]}."    if f[:example].present?
       parts << "Importancia: #{f[:why]}."    if f[:why].present?
@@ -214,28 +212,7 @@ class RiskFieldSet
 
         case node["type"]
         when "subsection"
-          subsection = Field.new(
-            id:          full_id,
-            label:       node["title"].to_s,
-            prompt:      node["title"].to_s,
-            type:        :subsection,
-            options:     [],
-            example:     nil,
-            why:         nil,
-            context:     nil,
-            section:     section,
-            validation:  {},
-            parent:      parent_array_id,
-            array_of_objects: false,
-            assistant_instructions: nil,
-            normative_tips:       nil,            
-            item_label_template: nil,
-            array_count_source_field_id: nil,
-            row_index_path: nil
-          ).to_h
-
-          [subsection] +
-            walk_fields_rec(node["fields"] || [], section, parent_array_id, id_prefix)
+          walk_fields_rec(node["fields"] || [], section, parent_array_id, id_prefix)
 
         when "array_of_objects"
           array_id   = node["id"]
@@ -294,8 +271,7 @@ class RiskFieldSet
         parent:      parent,            # id del array padre
         array_of_objects: in_array,     # true si es columna de tabla
         assistant_instructions: node["assistant_instructions"],
-        normative_tips:       node["normative_tips"],
-        item_label_template:  node["item_label_template"],
+        item_label_template: node["item_label_template"],
         array_count_source_field_id: node["array_count_source_field_id"],
         row_index_path: node["row_index_path"]
       ).to_h
