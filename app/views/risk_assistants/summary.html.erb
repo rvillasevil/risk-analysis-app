@@ -14,6 +14,14 @@
         <table class="table table-striped table-borderless mb-0">
           <tbody>
             <% fields.each do |f| %>
+
+              <% if f[:type].to_s == "subsection" %>
+                <tr class="table-secondary">
+                  <th colspan="2"><%= f[:label] %></th>
+                </tr>
+                <% next %>
+              <% end %>
+
               <% key    = f[:id].to_s %>
               <% label  = f[:label] %>
               <% value  = @risk_assistant.messages.where(key: key).order(:created_at).pluck(:value).first %>
@@ -36,6 +44,20 @@
                   <% when "number" %>
                     <%= number_with_delimiter(value.to_f, delimiter: ".") %>
 
+                  <% when "file", "file_multiple" %>
+                    <% if @risk_assistant.uploaded_files.attached? %>
+                      <ul class="list-unstyled mb-0">
+                        <% @risk_assistant.uploaded_files.each do |file| %>
+                          <li>
+                            <%= link_to file.filename.to_s, rails_blob_path(file, disposition: "attachment"), target: "_blank" %>
+                          </li>
+                        <% end %>
+                      </ul>
+                    <% else %>
+                      <span class="text-muted">Sin archivos</span>
+                    <% end %>
+
+
                   <% when "boolean_group" %>
                     <% values = value.is_a?(Array) ? value : value.to_s.split(/\s*,\s*/) %>
                     <% values.each do |val| %>
@@ -49,6 +71,13 @@
                     <table class="table table-sm table-borderless mb-0">
                       <tbody>
                         <% obj_fields.each do |sf| %>
+                          <% if sf[:type].to_s == "subsection" %>
+                            <tr class="table-secondary">
+                              <th colspan="2"><%= sf[:label] %></th>
+                            </tr>
+                            <% next %>
+                          <% end %>
+
                           <% sub_key   = sf[:id].to_s %>
                           <% sub_value = @risk_assistant.messages.where(key: sub_key).order(:created_at).pluck(:value).first %>
                           <% next if sub_value.blank? && sf[:type].to_s != "array_of_objects" %>
@@ -69,9 +98,25 @@
                               <% when "number" %>
                                 <%= number_with_delimiter(sub_value.to_f, delimiter: ".") %>
 
+                              <% when "file", "file_multiple" %>
+                                <% if @risk_assistant.uploaded_files.attached? %>
+                                  <ul class="list-unstyled mb-0">
+                                    <% @risk_assistant.uploaded_files.each do |file| %>
+                                      <li>
+                                        <%= link_to file.filename.to_s, rails_blob_path(file, disposition: "attachment"), target: "_blank" %>
+                                      </li>
+                                    <% end %>
+                                  </ul>
+                                <% else %>
+                                  <span class="text-muted">Sin archivos</span>
+                                <% end %>
+
+
                               <% when "array_of_objects" %>
                                 <% array_parent = sf[:id] %>
-                                <% subfields = RiskFieldSet.flat_fields.select { |ss| ss[:parent] == array_parent } %>
+                                <% subfields = RiskFieldSet.flat_fields
+                                               .select { |ss| ss[:parent] == array_parent }
+                                               .reject { |ss| ss[:type].to_s == "subsection" } %>
                                 <% rows = @risk_assistant.messages
                                               .where("key LIKE ?", "#{array_parent}.%")
                                               .order(:created_at) %>
@@ -103,7 +148,9 @@
                                           <% cell = data[:values][col_id] %>
                                           <% if ssf[:type].to_s == "array_of_objects" %>
                                             <% nested_parent = ssf[:id] %>
-                                            <% nested_subfields = RiskFieldSet.flat_fields.select { |nsf| nsf[:parent] == nested_parent } %>
+                                            <% nested_subfields = RiskFieldSet.flat_fields
+                                                                      .select { |nsf| nsf[:parent] == nested_parent }
+                                                                      .reject { |nsf| nsf[:type].to_s == "subsection" } %>
                                             <% nested_rows = @risk_assistant.messages
                                                               .where("key LIKE ?", "#{array_parent}.#{idx}.#{nested_parent}.%")
                                                               .order(:created_at) %>
@@ -159,7 +206,9 @@
 
                   <% when "array_of_objects" %>
                     <% array_parent = f[:id] %>
-                    <% subfields = RiskFieldSet.flat_fields.select { |sf| sf[:parent] == array_parent } %>
+                    <% subfields = RiskFieldSet.flat_fields
+                                   .select { |sf| sf[:parent] == array_parent }
+                                   .reject { |sf| sf[:type].to_s == "subsection" } %>
                     <% rows = @risk_assistant.messages
                               .where("key LIKE ?", "#{array_parent}.%")
                               .order(:created_at) %>
@@ -191,7 +240,9 @@
                               <% cell = data[:values][col_id] %>
                               <% if sf[:type].to_s == "array_of_objects" %>
                                 <% nested_parent = sf[:id] %>
-                                <% nested_subfields = RiskFieldSet.flat_fields.select { |nsf| nsf[:parent] == nested_parent } %>
+                                <% nested_subfields = RiskFieldSet.flat_fields
+                                                          .select { |nsf| nsf[:parent] == nested_parent }
+                                                          .reject { |nsf| nsf[:type].to_s == "subsection" } %>
                                 <% nested_rows = @risk_assistant.messages
                                                   .where("key LIKE ?", "#{array_parent}.#{idx}.#{nested_parent}.%")
                                                   .order(:created_at) %>

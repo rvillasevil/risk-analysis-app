@@ -155,13 +155,19 @@ class AssistantRunner
       return nil unless info
 
     count_field = info[:array_count_source_field_id]
-      return nil unless count_field
 
-    count_key = (prefix_parts + [count_field]).reject(&:blank?).join('.')
-    count_msg = @risk_assistant.messages.where(key: count_key).order(:created_at).last
-    return count_key.to_sym unless count_msg
+    if count_field
+      count_key = (prefix_parts + [count_field]).reject(&:blank?).join('.')
+      count_msg = @risk_assistant.messages.where(key: count_key).order(:created_at).last
+      return count_key.to_sym unless count_msg
+      count = count_msg.value.to_i
+    else
+      prefix = (prefix_parts + [array_id]).reject(&:blank?).join('.')
+      idx_re  = /^#{Regexp.escape(prefix)}\.(\d+)\./
+      existing = answered.map { |k| k[idx_re, 1] }.compact.map(&:to_i)
+      count = [existing.max.to_i + 1, 1].max
+    end
 
-    count = count_msg.value.to_i
     (0...count).each do |idx|
       item_prefix = prefix_parts + [array_id, idx]
       RiskFieldSet.children_of_array(array_id).each do |child|
@@ -173,6 +179,16 @@ class AssistantRunner
           key = (item_prefix + [suffix]).join('.')
           return key.to_sym unless answered.include?(key)
         end
+      end
+    end
+
+    if count_field.nil? && info[:allow_add_remove_rows]
+      idx = count
+      item_prefix = prefix_parts + [array_id, idx]
+      child = RiskFieldSet.children_of_array(array_id).first
+      if child
+        suffix = child[:id].sub(/^#{Regexp.escape(array_id)}\./, '')
+        return (item_prefix + [suffix]).join('.').to_sym
       end
     end
     nil

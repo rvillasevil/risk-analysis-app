@@ -212,7 +212,27 @@ class RiskFieldSet
 
         case node["type"]
         when "subsection"
-          walk_fields_rec(node["fields"] || [], section, parent_array_id, id_prefix)
+          subsection = Field.new(
+            id:          full_id,
+            label:       node["title"].to_s,
+            prompt:      node["title"].to_s,
+            type:        :subsection,
+            options:     [],
+            example:     nil,
+            why:         nil,
+            context:     nil,
+            section:     section,
+            validation:  {},
+            parent:      parent_array_id,
+            array_of_objects: false,
+            assistant_instructions: nil,
+            item_label_template: nil,
+            array_count_source_field_id: nil,
+            row_index_path: nil
+          ).to_h
+
+          [subsection] +
+            walk_fields_rec(node["fields"] || [], section, parent_array_id, id_prefix)
 
         when "array_of_objects"
           array_id   = node["id"]
