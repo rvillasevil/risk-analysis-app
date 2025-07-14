@@ -84,8 +84,11 @@ class AssistantRunner
       thread_id:   thread_id
     )
 
+    tip   = field[:normative_tips].to_s.strip
+
     extra = +""
     extra << "### Instrucciones de campo:\n#{instr}\n\n" if instr.present?
+    extra << "### Tip normativo:\n#{tip}\n\n" if tip.present?    
     extra << "### Pregunta EXACTA:\n#{question}\n\n"
     extra << "⚠️ Tras confirmar, responde SOLO \"OK\" y espera la siguiente instrucción."
 

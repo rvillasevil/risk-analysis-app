@@ -14,7 +14,8 @@ class RiskFieldSet
 
   Field = Struct.new(
     :id, :label, :prompt, :type, :options, :example,
-    :why, :context, :section, :validation, :assistant_instructions,
+    :why, :context, :section, :validation,
+    :assistant_instructions, :normative_tips,
     :parent, :array_of_objects, :item_label_template,
     :array_count_source_field_id, :row_index_path,
     keyword_init: true
@@ -96,6 +97,7 @@ class RiskFieldSet
       if f[:options]&.any?
         parts << "Opciones disponibles: #{f[:options].join(', ')}."
       end
+      parts << f[:assistant_instructions].to_s.strip if f[:assistant_instructions].present?      
       parts << "Contexto: #{f[:context]}." if f[:context].present?
       parts << "Ejemplo: #{f[:example]}."    if f[:example].present?
       parts << "Importancia: #{f[:why]}."    if f[:why].present?
@@ -226,6 +228,7 @@ class RiskFieldSet
             parent:      parent_array_id,
             array_of_objects: false,
             assistant_instructions: nil,
+            normative_tips:       nil,            
             item_label_template: nil,
             array_count_source_field_id: nil,
             row_index_path: nil
@@ -291,7 +294,8 @@ class RiskFieldSet
         parent:      parent,            # id del array padre
         array_of_objects: in_array,     # true si es columna de tabla
         assistant_instructions: node["assistant_instructions"],
-        item_label_template: node["item_label_template"],
+        normative_tips:       node["normative_tips"],
+        item_label_template:  node["item_label_template"],
         array_count_source_field_id: node["array_count_source_field_id"],
         row_index_path: node["row_index_path"]
       ).to_h
