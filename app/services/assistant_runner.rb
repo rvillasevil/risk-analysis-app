@@ -90,7 +90,7 @@ class AssistantRunner
     extra << "### Instrucciones de campo:\n#{instr}\n\n" if instr.present?
     extra << "### Tip normativo:\n#{tip}\n\n" if tip.present?    
     extra << "### Pregunta EXACTA:\n#{question}\n\n"
-    extra << "⚠️ Tras confirmar, responde SOLO \"OK\" y espera la siguiente instrucción."
+    extra << "⚠️ Tras confirmar, responde una sola vez usando el formato ✅ indicado y espera la siguiente instrucción, sin añadir 'OK'."
 
     post("#{BASE_URL}/threads/#{thread_id}/runs",
         assistant_id:            ENV['OPENAI_ASSISTANT_ID'],
@@ -130,7 +130,8 @@ class AssistantRunner
         options:     f[:options],
         context:     f[:context],
         validation:  f[:validation],
-        assistant_instructions: f[:assistant_instructions]
+        assistant_instructions: f[:assistant_instructions],
+        normative_tips: f[:normative_tips]
       }
     }.to_json
   end

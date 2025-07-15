@@ -15,6 +15,7 @@ class RiskFieldSet
   Field = Struct.new(
     :id, :label, :prompt, :type, :options, :example,
     :why, :context, :section, :validation, :assistant_instructions,
+    :normative_tips,    
     :parent, :array_of_objects, :item_label_template,
     :array_count_source_field_id, :row_index_path,
     keyword_init: true
@@ -268,6 +269,7 @@ class RiskFieldSet
         section:     section,
         validation:  node["validation"] || {},
         # ---- metadatos extra ----
+        normative_tips: node["normative_tips"],        
         parent:      parent,            # id del array padre
         array_of_objects: in_array,     # true si es columna de tabla
         assistant_instructions: node["assistant_instructions"],
