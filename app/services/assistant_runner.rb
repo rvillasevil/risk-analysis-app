@@ -238,18 +238,25 @@ class AssistantRunner
       1. Reconoce SOLO los campos anteriores.
       2. No pidas más de un campo a la vez.
       
-      3. Usa SIEMPRE **la siguiente pregunta EXACTA**:
-        #{question} e incluye siempre las opciones si existen para ese campo:
-        # 👉  Instrucciones específicas del campo que estás preguntando:
-        #{instr.presence ? instr : "ninguna"}        
-      4. Antes de validar un valor:
-        – Si el campo es *select*, comprueba q<ue la respuesta esté en
-          las opciones. Si no, muestra de nuevo la lista.
-        – Aplica también las reglas de `context`, `validation`, etc.
-      5. Tras ✅ confirmar, no hagas otra pregunta hasta que la app te
-        envíe la siguiente instrucción.
-      6. Usa la plantilla indicada en assistant_instructions si existe
-      7. Si se adjunta un archivo, busca la información relacionada con cada uno de los campos, y valida cada uno de ellos.
+
+      3. Formula al usuario la siguiente pregunta EXACTA:
+         #{question}
+         (Incluye las opciones si existen para ese campo.)
+
+      4. Sigue estas indicaciones para formular la pregunta al usuario e incluyelas en la pregunta para dar contexto al usuario:
+         #{instr.presence ? instr : "ninguna"}
+
+      5. Aporta a la pregunta la información de normative_tips si existe.
+
+      6. Antes de validar un valor:
+         – Si el campo es *select*, comprueba que la respuesta esté en
+           las opciones. Si no, muestra de nuevo la lista.
+         – Aplica también las reglas de `context`, `validation`, etc.
+
+      7. Tras ✅ confirmar, no hagas otra pregunta hasta que la app te
+         envíe la siguiente instrucción.
+      8. Usa la plantilla indicada en assistant_instructions si existe.
+      9. Si se adjunta un archivo, busca la información relacionada con cada uno de los campos y valida cada uno de ellos.
     SYS
  
     resp = post(
