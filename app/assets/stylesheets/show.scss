@@ -21,20 +21,29 @@ $z-chat     : 100;
 // Estructura principal
 // ──────────────────────────────────────────────────────────────────
 // MAIN / CHAT
-main.col-lg-8.col-md-7 {
+main.chat-main {
   display: flex;
   flex-direction: column;
-  max-height: 80%;      // llena el contenedor de la row
 }
 
 .chat-container {
-  padding-bottom: 0px !important;
+  padding-bottom: 0 !important;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 768px) {
+  .chat-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 
 @media (min-width: 992px) {
   .chat-container {
     max-width: 100%;
-    padding-left: 0;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
 
@@ -51,12 +60,20 @@ main.col-lg-8.col-md-7 {
   .chat-history {
     flex: 1;
     overflow-y: auto;
-    padding: $padding-base;
+    padding: 10%;
     display: flex;
     flex-direction: column-reverse; 
     gap: $padding-base;
     padding-bottom: 120px;
   }
+  @media (max-width: 992px) {
+  .chat-history {
+    max-width: 100%;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding: 1%;
+  }
+}
 
   .message-row {
     display: flex;
@@ -186,10 +203,10 @@ main.col-lg-8.col-md-7 {
     top: $header-h;
     left: 0;
     bottom: 0;
-    width: 260px;
+    width: 300px;
     padding: $sidebar-pad;
     overflow-y: auto;
-    background: #fff;
+    background: #f5f4f4;
     border-right: 1px solid #dee2e6;
   }
 
@@ -200,7 +217,7 @@ main.col-lg-8.col-md-7 {
   }
 
   .chat-main {
-    margin-left: 260px;
+    margin-left: 300px;
   }
 }
 

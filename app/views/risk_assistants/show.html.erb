@@ -1,7 +1,7 @@
 <%# -------------------------------------------------------------- %>
 <%# Chat Page – Bootstrap 5 Responsive con Sidebar intacto         %>
 <%# -------------------------------------------------------------- %>
-<div class="chat-container container-fluid py-3 px-0">
+<div class="chat-container container-fluid py-3">
   <!-- CABECERA + Botón hamburguesa -->
   <div class="d-flex justify-content-between align-items-center mb-0">
     <button class="btn btn-outline-secondary d-md-none"
@@ -12,9 +12,8 @@
     </button>
   </div>
 
-  <div class="row gx-lg-5">
-    <!-- SIDEBAR -->
-    <aside class="col-lg-4 col-md-5 fixed-sidebar">
+  <!-- SIDEBAR -->
+  <aside class="fixed-sidebar">
       <!-- Desktop -->
       <div class="d-none d-md-block">
         <div class="sidebar-box">
@@ -74,7 +73,7 @@
     </aside>
 
     <!-- MAIN / CHAT -->
-    <main class="col-lg-8 col-md-7 d-flex flex-column chat-page chat-main">
+    <main class="chat-page chat-main">
       <h1 class="h1 mb-0"><%= @risk_assistant.name %></h1>
         <% display_msgs = @risk_assistant.messages
                              .where.not(sender: ['assistant_guard'])
@@ -139,7 +138,6 @@
         <% end %>
 
     </main>
-  </div>
 </div>
 
 <script>

@@ -248,7 +248,7 @@ class AssistantRunner
       4. Sigue estas indicaciones para formular la pregunta al usuario e incluyelas en la pregunta para dar contexto al usuario:
          #{instr.presence ? instr : "ninguna"}
 
-      5. Eres un experto en normativa de riesgos e incendios, añade información a la pregunta para ayudar al usuario a responder:
+      5. Eres un experto en normativa de riesgos e incendios, añade contexto según los siguientes tips a la pregunta para ayudar al usuario a responder:
           #{tips.presence ? tips : "ninguna"}
 
       6. Antes de validar un valor:
