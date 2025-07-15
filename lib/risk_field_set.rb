@@ -100,6 +100,7 @@ class RiskFieldSet
       parts << "Contexto: #{f[:context]}." if f[:context].present?
       parts << "Ejemplo: #{f[:example]}."    if f[:example].present?
       parts << "Importancia: #{f[:why]}."    if f[:why].present?
+      parts << f[:normative_tips].to_s.strip if f[:normative_tips].present?      
       parts.join(' ')
     end
 

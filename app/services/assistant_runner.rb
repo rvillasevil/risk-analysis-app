@@ -90,8 +90,8 @@ class AssistantRunner
     extra << "### Instrucciones de campo:\n#{instr}\n\n" if instr.present?
     extra << "### Tip normativo:\n#{tip}\n\n" if tip.present?    
     extra << "### Pregunta EXACTA:\n#{question}\n\n"
-    extra << "⚠️ Tras confirmar, responde una sola vez usando el formato ✅ indicado y espera la siguiente instrucción, sin añadir 'OK'."
-
+    extra << "⚠️ Tras confirmar, responde SOLO \"OK\" y espera la siguiente instrucción."
+    
     post("#{BASE_URL}/threads/#{thread_id}/runs",
         assistant_id:            ENV['OPENAI_ASSISTANT_ID'],
         additional_instructions: extra,
@@ -217,6 +217,7 @@ class AssistantRunner
                  field.to_sym
     info  = RiskFieldSet.by_id[base_key]
     instr = info ? info[:assistant_instructions].to_s.strip : ""
+    tips = info ? info[:normative_tips].to_s.strip : ""
     # El asistente generará la pregunta exacta como parte de la respuesta,
     # por lo que aquí no la publicamos para evitar duplicidades en el chat.         
 
@@ -247,7 +248,8 @@ class AssistantRunner
       4. Sigue estas indicaciones para formular la pregunta al usuario e incluyelas en la pregunta para dar contexto al usuario:
          #{instr.presence ? instr : "ninguna"}
 
-      5. Aporta a la pregunta la información de normative_tips si existe.
+      5. Eres un experto en normativa de riesgos e incendios, añade información a la pregunta para ayudar al usuario a responder:
+          #{tips.presence ? tips : "ninguna"}
 
       6. Antes de validar un valor:
          – Si el campo es *select*, comprueba que la respuesta esté en

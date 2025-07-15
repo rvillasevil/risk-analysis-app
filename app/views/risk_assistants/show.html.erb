@@ -1,7 +1,7 @@
 <%# -------------------------------------------------------------- %>
 <%# Chat Page – Bootstrap 5 Responsive con Sidebar intacto         %>
 <%# -------------------------------------------------------------- %>
-<div class="container-xxl py-3">
+<div class="chat-container container-fluid py-3 px-0">
   <!-- CABECERA + Botón hamburguesa -->
   <div class="d-flex justify-content-between align-items-center mb-0">
     <button class="btn btn-outline-secondary d-md-none"
@@ -14,7 +14,7 @@
 
   <div class="row gx-lg-5">
     <!-- SIDEBAR -->
-    <aside class="col-lg-4 col-md-5">
+    <aside class="col-lg-4 col-md-5 fixed-sidebar">
       <!-- Desktop -->
       <div class="d-none d-md-block">
         <div class="sidebar-box">
@@ -74,10 +74,10 @@
     </aside>
 
     <!-- MAIN / CHAT -->
-    <main class="col-lg-8 col-md-7 d-flex flex-column chat-page">
+    <main class="col-lg-8 col-md-7 d-flex flex-column chat-page chat-main">
       <h1 class="h1 mb-0"><%= @risk_assistant.name %></h1>
         <% display_msgs = @risk_assistant.messages
-                             .where.not(role: 'assistant')
+                             .where.not(sender: ['assistant_guard'])
                              .order(created_at: :asc) %>
         <div class="chat-history">
           <% if display_msgs.empty? %>
@@ -95,7 +95,7 @@
                     <strong><%= m.sender.capitalize %></strong>
                     <small><%= l m.created_at, format: :short %></small>
                   </div>
-                  <div class="body"><%= simple_format m.content %></div>
+                  <div class="body"><%= simple_format m.content.sub(/\A✅ El campo [^\r\n]*[\r\n]*/, '') %></div>
                 </div>
               </div>
             <% end %>

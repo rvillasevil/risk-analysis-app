@@ -1,0 +1,770 @@
+# ---------------------------------------------------------------------------
+#  CONFIG  ·  Lista de campos del asistente de Riesgos
+# ---------------------------------------------------------------------------
+#  Claves por campo
+#    id          – identificador único (snake_case)
+#    label       – nombre “humano” que podríamos mostrar en UI
+#    prompt      – pregunta que el assistant hará al usuario
+#    type        – string | number | boolean | select | multiselect
+#    options     – array (solo para select / multiselect)
+#    visible_if  – condición "otro_campo operador valor"
+#    validate    – regla sencilla de validación
+#    critical    – true ⇒ añade ⚠️[CRÍTICO]⚠️ en el prompt
+# ---------------------------------------------------------------------------
+
+
+identificacion:
+  title: "DATOS IDENTIFICATIVOS"
+  fields:
+    - id: nombre_empresa
+      label: "Nombre de la empresa o instalación"
+      prompt: "Nombre de la empresa o instalación"
+      type: select
+      example: "Karme Nature S.L."
+      why: "Nos ayuda a identificar correctamente la entidad de riesgo."
+      context: ""
+      section: identificacion
+      position: 1
+      visible_if: null
+      validations: []
+      critical: false
+      options: 
+        - Roberto Villasevil
+        - Howden
+        - Cliente
+
+    - id: direccion_riesgo
+      label: "Dirección de riesgo"
+      prompt: "Dirección de riesgo"
+      type: select
+      example: "Calle Olias del Rey, Bargas, 45550, Toledo"
+      why: "Permite ubicar geográficamente la instalación y valorar riesgos locales."
+      context: ""
+      section: identificacion
+      position: 2
+      visible_if: null
+      validations: []
+      critical: false
+
+    - id: realizado_por
+      label: "Realizado por"
+      prompt: "Realizado por"
+      type: string
+      example: "Juan Pérez"
+      why: "Saber quién recabó la información facilita seguimiento y validación."
+      context: "Es la persona que realiza la toma de datos de la empresa."
+      section: identificacion
+      position: 3
+      visible_if: null
+      validations: []
+      critical: false
+
+    - id: configuracion
+      label: Configuración del emplazamiento
+      prompt: "Configuración respecto a otras construcciones"
+      type: string
+      example: "Como por ejemplo edificios aislados a más de 20m de distancia."
+      why: ""
+      context: "Hay que identificar si la instalación se encuentra adosada a otras instalaciones próximas que puedan verse afectadas por un siniestro en alguna de las instalaciones. Se considera suficientemente aislado si la separación es de más de 20m."
+      section: identificacion
+      options: 
+        - Colindante
+        - Distancia < 3 m
+        - Distancia 3-10 m
+        - Distancia 10-20 m
+        - Aislado > 20 m      
+      position: 5
+      visible_if: ""
+      validations: ""
+      critical: false
+
+
+    - id: ubicacion
+      label: "Ubicación"
+      prompt: "¿Dónde se encuentra la instalación?"
+      type: select
+      example: ""
+      why: ""
+      context: "Se trata de la ubicación del entorno de la empresa, no es lo mismo un entorno urbano, con viviendas a los alrededores que puedan estar afectadas por ejemplo por humos a un entorno insutrial o un edificio aislado."
+      section:
+      visible if:
+      validations: 
+      critial:
+      options: 
+        - "Núcleo urbano"
+        - "Polígono Industrial"
+        - Despoblado"
+      follow_ups:
+        if_yes:
+          - id: ubicacion_detalle
+            label: "Detalle de ubicación"
+            prompt: "Proporciona más detalles sobre la ubicación"
+            type: string
+            example: "Junto a naves adyacentes sin actividad peligrosa"
+            why: ""
+            context: ""
+        if_no:
+
+    - id: actividades_colindantes
+      label: "Actividades colindantes"
+      prompt: "Describe las actividades o tipos de negocio colindantes"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      visible_if: "configuracion =~ /3 m/"
+
+    - id: modificaciones_recientes
+      label: "Modificaciones recientes"
+      prompt: "¿Ha habido modificaciones recientes o proyectos futuros?"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: comentarios_iniciales
+      label: "Comentarios iniciales"
+      prompt: "Comentarios generales adicionales"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      critical: true
+
+construccion:
+  title: "EDIFICIOS – CONSTRUCCIÓN"
+  fields:
+    - id: superficie_construida
+      label: "Superficie construida (m²)"
+      prompt: "Superficie total construida (m²)"
+      type: number
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      validate: "<= superficie_parcela"
+
+    - id: superficie_parcela
+      label: "Superficie de la parcela (m²)"
+      prompt: "Superficie total de la parcela (m²)"
+      type: number
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: anio_construccion
+      label: "Año de construcción"
+      prompt: "Año de construcción del edificio principal"
+      type: number
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: regimen_propiedad
+      label: "Régimen de propiedad"
+      prompt: "Régimen de propiedad del inmueble"
+      type: select
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      options: ["Propiedad","Alquilado"]
+
+    - id: tipo_edificacion
+      label: "Tipo de edificación"
+      prompt: "Tipo de ocupación del edificio"
+      type: select
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      options:
+        - "Ocupación parcial del edificio"
+        - "Ocupación 100% de un edificio"
+        - "Ocupación en varios edificios separados >3 m"
+
+    - id: numero_edificios
+      label: "Número de edificios"
+      prompt: "¿Cuántos edificios componen la instalación?"
+      type: number
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: distancias_seguridad
+      label: "Distancias de seguridad entre edificios"
+      prompt: "Describe las distancias libres entre edificios"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: descripcion_edificio
+      label: "Descripción por edificio"
+      prompt: "Para cada edificio describe superficie, altura y usos"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      visible_if: "numero_edificios > 1"
+
+    # ----- Sub-campos repetibles por edificio (ejemplo para uno) ------------
+    - id: comportamiento_fuego_edificio
+      label: "Comportamiento al fuego del edificio"
+      prompt: "Comportamiento de estructura y cerramientos frente al fuego"
+      type: select
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      options: ["Resistente al fuego","No combustible","Parcialmente combustible","Combustible"]
+
+    - id: combustibles_cubierta
+      label: "Combustibles en cubierta"
+      prompt: "¿Existen elementos combustibles en la cubierta?"
+      type: boolean
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: combustibles_cerramientos
+      label: "Combustibles en cerramientos exteriores"
+      prompt: "¿Hay elementos combustibles en cerramientos laterales?"
+      type: boolean
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: combustibles_paredes_interior
+      label: "Combustibles en paredes interiores"
+      prompt: "¿Hay combustibles en tabiques o falsos techos interiores?"
+      type: boolean
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: salas_tecnicas
+      label: "Salas técnicas"
+      prompt: "¿Existen salas técnicas en este edificio? Descríbelas"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: lucernarios_plasticos
+      label: "Lucernarios plásticos"
+      prompt: "¿Existen lucernarios plásticos en la cubierta?"
+      type: select
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      options: ["No hay","Discontinuos","Continuos"]
+
+    - id: falsos_techos
+      label: "Falsos techos"
+      prompt: "¿Existen falsos techos y de qué tipo?"
+      type: select
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      options: ["No hay","No combustibles","Combustibles"]
+
+    - id: revestimientos_combustibles
+      label: "Revestimientos combustibles"
+      prompt: "¿Existen revestimientos combustibles en suelos o paredes?"
+      type: select
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      options:
+        - "No hay"
+        - "En zonas muy localizadas"
+        - "En la mayor parte de la superficie"
+
+    # ------ Cámaras frigoríficas -------------------------------------------
+    - id: hay_camaras
+      label: "¿Hay cámaras frigoríficas?"
+      prompt: "Indica la presencia de cámaras frigoríficas"
+      type: select
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      options: ["No hay","Ocupan zonas puntuales","Ocupan gran parte de la superficie"]
+
+    - id: numero_camaras
+      label: "Número de cámaras"
+      prompt: "Número de cámaras frigoríficas existentes"
+      type: number
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      visible_if: "hay_camaras != 'No hay'"
+
+    - id: superficie_camaras
+      label: "Superficie de cámaras"
+      prompt: "Superficie de cada cámara (o total) en m²"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      visible_if: "hay_camaras != 'No hay'"
+
+    - id: aislamiento_camaras
+      label: "Tipo de aislamiento de cámaras"
+      prompt: "Tipo de aislamiento de los paneles (PUR, lana de roca, etc.)"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      visible_if: "hay_camaras != 'No hay'"
+
+    - id: sectorizacion_camaras
+      label: "Sectorización de cámaras"
+      prompt: "¿Forman un sector independiente o están colindantes?"
+      type: select
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      options: ["Sector independiente","Colindantes"]
+      visible_if: "hay_camaras != 'No hay'"
+
+    - id: almacenamiento_camaras
+      label: "Almacenamiento en cámaras"
+      prompt: "Tipo de producto, embalaje y forma de almacenamiento"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      visible_if: "hay_camaras != 'No hay'"
+
+    # ------ Galerías subterráneas ------------------------------------------
+    - id: galerias_subterraneas
+      label: "Galerías subterráneas"
+      prompt: "¿Existen galerías subterráneas?"
+      type: boolean
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: galerias_sectorizadas
+      label: "Galerías sectorizadas"
+      prompt: "¿Están sectorizadas contra incendios?"
+      type: boolean
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      visible_if: "galerias_subterraneas == true"
+
+    - id: deteccion_galerias
+      label: "Detección en galerías"
+      prompt: "¿Tienen detección automática de incendios?"
+      type: boolean
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      visible_if: "galerias_subterraneas == true"
+
+    - id: limpieza_galerias
+      label: "Orden y limpieza en galerías"
+      prompt: "¿Presentan orden y limpieza adecuados?"
+      type: boolean
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      visible_if: "galerias_subterraneas == true"
+
+    # ------ Espacios confinados --------------------------------------------
+    - id: espacios_confinados
+      label: "Espacios confinados"
+      prompt: "¿Hay espacios confinados (entre plantas, bajo cubierta…)?"
+      type: boolean
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: confinados_sectorizados
+      label: "Confinados sectorizados"
+      prompt: "¿Están sectorizados contra incendios esos espacios?"
+      type: boolean
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      visible_if: "espacios_confinados == true"
+
+    - id: deteccion_confinados
+      label: "Detección en confinados"
+      prompt: "¿Cuentan con detección de incendios?"
+      type: boolean
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      visible_if: "espacios_confinados == true"
+
+    - id: limpieza_confinados
+      label: "Limpieza en confinados"
+      prompt: "¿Tienen orden y limpieza adecuados?"
+      type: boolean
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+      visible_if: "espacios_confinados == true"
+
+    - id: comentarios_construccion
+      label: "Comentarios construcción"
+      prompt: "Comentarios adicionales sobre construcción y materiales"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+actividad_proceso:
+  title: "ACTIVIDAD – PROCESO"
+  fields:
+    - id: actividad_principal
+      label: "Actividad principal"
+      prompt: "Actividad principal (sector) de la empresa"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: actividad_secundaria
+      label: "Actividad secundaria"
+      prompt: "Otras actividades secundarias relevantes"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: anio_inicio
+      label: "Año de inicio"
+      prompt: "Año de inicio de la actividad"
+      type: number
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: licencia_actividad
+      label: "Licencia de actividad"
+      prompt: "¿Dispone la instalación de licencia de actividad vigente?"
+      type: boolean
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: horario_trabajo
+      label: "Horario de trabajo"
+      prompt: "Turnos y horarios por departamento"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: periodos_sin_personal
+      label: "Periodos sin personal"
+      prompt: "Periodos sin personal en planta (noches, fines de semana…)"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: numero_trabajadores
+      label: "Número de trabajadores"
+      prompt: "Número total de trabajadores en la planta"
+      type: number
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: porcentaje_temporales
+      label: "Porcentaje de temporales"
+      prompt: "Porcentaje de trabajadores temporales"
+      type: number
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: produccion_anual
+      label: "Producción anual"
+      prompt: "Producción anual (indicar cantidad y unidad)"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: facturacion_anual
+      label: "Facturación anual (€)"
+      prompt: "Facturación anual en euros"
+      type: number
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: certificaciones
+      label: "Certificaciones"
+      prompt: "Certificaciones de la empresa (calidad, medio ambiente, etc.)"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: descripcion_proceso
+      label: "Descripción del proceso"
+      prompt: "Describe el proceso de fabricación (etapas principales)"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: materias_primas
+      label: "Materias primas"
+      prompt: "Principales materias primas y cantidades"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+
+    - id: equipos_principales
+      label: "Equipos principales"
+      prompt: "Lista de principales equipos de producción"
+      type: string
+      example: ""
+      why: ""
+      context: ""
+      section:
+      visible if:
+      validations: []
+      critial:
+       
+

@@ -24,12 +24,21 @@
     box-sizing: border-box;
   }
   
-  body {
-    font-family: "Inter", sans-serif;
-    background-color:rgb(255, 255, 255);
-    color: #1c1e21;
-    line-height: 1.6;
-  }
+body {
+  font-family: "Inter", sans-serif;
+  background-color:rgb(255, 255, 255);
+  color: #1c1e21;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  /*font-family: 'Fkromanstandard', 'Times New Roman', sans-serif;*/
+  font-size: 1.1em;
+}
+
+.navbar-brand {
+ /* font-family: 'Fkromanstandard', 'Times New Roman', sans-serif;*/
+}
 
 header, footer {
   background: #0f172a;

@@ -27,8 +27,15 @@ main.col-lg-8.col-md-7 {
   max-height: 80%;      // llena el contenedor de la row
 }
 
-.container-xxl.py-3 {
+.chat-container {
   padding-bottom: 0px !important;
+}
+
+@media (min-width: 992px) {
+  .chat-container {
+    max-width: 100%;
+    padding-left: 0;
+  }
 }
 
 .chat-page {
@@ -170,15 +177,30 @@ main.col-lg-8.col-md-7 {
   max-height: none;
   overflow-y: visible;
   overflow-x: visible;
+  font-size: 1.1rem;  
 }
 
 @media (min-width: 992px) { // Bootstrap lg breakpoint
-  .sidebar-box {
-    position: sticky;              /* se “pega” al viewport solo en desktop */
-    top: calc(#{$header-h} + #{$sidebar-pad});
-    max-height: calc(100vh - #{$header-h} - 2 * #{$sidebar-pad});
-    overflow-y: auto;              /* sólo el sidebar scrollea dentro */
-  overflow-x: hidden;
+  .fixed-sidebar {
+    position: fixed;
+    top: $header-h;
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    padding: $sidebar-pad;
+    overflow-y: auto;
+    background: #fff;
+    border-right: 1px solid #dee2e6;
+  }
+
+  .fixed-sidebar .sidebar-box {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .chat-main {
+    margin-left: 260px;
   }
 }
 
