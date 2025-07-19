@@ -51,7 +51,7 @@ class RiskFieldSet
     end
 
     # Construye el prompt enriquecido, incluyendo siempre las opciones
-    def question_for(id_sym)
+    def question_for(id_sym, include_tips: true)
       id_str    = id_sym.to_s
       segments  = id_str.split('.')
       base_segs = []             # id sin índices numéricos
@@ -97,12 +97,17 @@ class RiskFieldSet
       if f[:options]&.any?
         parts << "Opciones disponibles: #{f[:options].join(', ')}."
       end
-      parts << "Contexto: #{f[:context]}." if f[:context].present?
-      parts << "Ejemplo: #{f[:example]}."    if f[:example].present?
-      parts << "Importancia: #{f[:why]}."    if f[:why].present?
-      parts << f[:normative_tips].to_s.strip if f[:normative_tips].present?      
+      parts << "Contexto: #{f[:assistant_instructions]}." if f[:assistant_instructions].present?
+      parts << f[:normative_tips].to_s.strip if include_tips && f[:normative_tips].present?
       parts.join(' ')
     end
+
+    # Devuelve solo los tips normativos para un campo
+    def normative_tips_for(id_sym)
+      f = by_id[id_sym.to_sym]
+      f && f[:normative_tips].to_s.strip.presence.to_s
+    end
+
 
     # --------------------------------------------------------------------------
     # Devuelve la lista de hashes (structs) de todos los subcampos (hijos)

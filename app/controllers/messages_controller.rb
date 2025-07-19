@@ -41,10 +41,10 @@ class MessagesController < ApplicationController
           thread_id: current_thread
         )
 
-        answered = @risk_assistant.messages.where.not(key: nil).pluck(:key)
-        next_field = RiskFieldSet.next_field_hash(answered)
-        if next_field
-          display_text = RiskFieldSet.question_for(next_field[:id])
+          answered = @risk_assistant.messages.where.not(key: nil).pluck(:key)
+          next_field = RiskFieldSet.next_field_hash(answered)
+          if next_field
+            display_text = RiskFieldSet.question_for(next_field[:id], include_tips: true)
           @risk_assistant.messages.create!(
             sender:      "assistant",
             role:        "assistant",
@@ -211,11 +211,11 @@ class MessagesController < ApplicationController
 
     next_id    = next_field_hash[:id]
     next_label = next_field_hash[:label]
-    display_text = RiskFieldSet.question_for(next_id)     
+    display_text = RiskFieldSet.question_for(next_id, include_tips: true)    
 
     @risk_assistant.messages.create!(
       sender:    "assistant2",
-      role:      "developer",
+      role:      "assistant",
       content:   assistant_text,
       field_asked: next_label,
       thread_id: runner.thread_id
@@ -223,10 +223,12 @@ class MessagesController < ApplicationController
 
     # 6) Procesar la respuesta del asistente (igual que antes)
     pairs = assistant_text.scan(/##(?<field_id>[^#()]+?)(?:\s*\((?<item_label>[^)]+)\))?##.*?&&\s*(?<value>.*?)\s*&&/m)    
-    flags = assistant_text.scan(/⚠️\s*(.*?)\s*⚠️/m).flatten
+    flags = assistant_text.scan(/⚠️\s*(.*?)\s*⚠️/m).flatten    
 
     # 6.A) Guardar confirmaciones crudas
     # 6.A) Guardar confirmaciones crudas con validación
+    confirmations = []
+
     if pairs.any?
       pairs.each do |field_id, item_label, value|
         clean_id = field_id.to_s.strip
@@ -246,6 +248,9 @@ class MessagesController < ApplicationController
           field_asked: nil,
           thread_id:   runner.thread_id
         )
+
+
+        confirmations << "✅ #{RiskFieldSet.label_for(clean_id)}: #{value}"        
       end
     end
   
@@ -264,15 +269,20 @@ class MessagesController < ApplicationController
     answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
     next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
     if next_field_hash
-      next_id    = next_field_hash[:id]
-      next_label = next_field_hash[:label]
-      display_text = RiskFieldSet.question_for(next_id)
+      next_id = next_field_hash[:id]
+      question_text = RiskFieldSet.question_for(next_id, include_tips: false)
+      tips = RiskFieldSet.normative_tips_for(next_id)
+
+      combined = "Confirmación:\n#{confirmations.join("\n")}\n\n" \
+                 "Siguiente pregunta: #{question_text}\n\n" \
+                 "**Normative tips**: #{tips}"
+
       @risk_assistant.messages.create!(
-        sender:      "assistant_dnk",
-        role:        "assistant",
-        content:     display_text,
+        sender: "assistant",
+        role: "assistant",
+        content: combined,
         field_asked: next_id,
-        thread_id:   runner.thread_id
+        thread_id: runner.thread_id
       )      
     end
     redirect_to @risk_assistant

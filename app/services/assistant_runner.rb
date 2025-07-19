@@ -70,7 +70,7 @@ class AssistantRunner
     return unless field                                 # ya no quedan
 
     field_id = field[:id].to_s
-    question = RiskFieldSet.question_for(field_id.to_sym)
+    question = RiskFieldSet.question_for(field_id.to_sym, include_tips: true)
     instr    = field[:assistant_instructions].to_s.strip
 
     # guarda la PREGUNTA para que el guardia pueda validarla
@@ -89,7 +89,7 @@ class AssistantRunner
     extra = +""
     extra << "### Instrucciones de campo:\n#{instr}\n\n" if instr.present?
     extra << "### Tip normativo:\n#{tip}\n\n" if tip.present?    
-    extra << "### Pregunta EXACTA:\n#{question}\n\n"
+    extra << "### Pregunta:\n#{question}\n\n"
     extra << "⚠️ Tras confirmar, responde SOLO \"OK\" y espera la siguiente instrucción."
     
     post("#{BASE_URL}/threads/#{thread_id}/runs",
@@ -205,7 +205,7 @@ class AssistantRunner
     
     field    = next_pending_field
     return unless field
-    question = RiskFieldSet.question_for(field)   # ← YA incluye opciones
+    question = RiskFieldSet.question_for(field, include_tips: true)   # ← YA incluye opciones
 
     # ↓ Recupera las instrucciones privadas que el JSON trae para ese campo
 
@@ -241,7 +241,7 @@ class AssistantRunner
       2. No pidas más de un campo a la vez.
       
 
-      3. Formula al usuario la siguiente pregunta EXACTA:
+      3. Formula al usuario la siguiente pregunta vinculada a este campo, inluye en la pregunta los puntos 4 y 5:
          #{question}
          (Incluye las opciones si existen para ese campo.)
 
