@@ -73,7 +73,7 @@ class AssistantRunner
       field_id = field[:id].to_s
       question = RiskFieldSet.question_for(field_id.to_sym, include_tips: true)
       instr    = field[:assistant_instructions].to_s.strip
-      tips = RiskFieldSet.normative_tips_for(next_id)
+      tips = RiskFieldSet.normative_tips_for(field_id)
     # guarda la PREGUNTA para que el guardia pueda validarla
 
       risk_assistant.messages.create!(

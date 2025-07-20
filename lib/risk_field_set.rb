@@ -105,7 +105,26 @@ class RiskFieldSet
 
     # Devuelve solo los tips normativos para un campo
     def normative_tips_for(id_sym)
-      f = by_id[id_sym.to_sym]
+      id_str    = id_sym.to_s
+      segments  = id_str.split('.')
+      base_segs = []
+
+      i = 0
+      while i < segments.length
+        seg = segments[i]
+        nxt = segments[i + 1]
+
+        if nxt&.match?(/\A\d+\z/)
+          base_segs << seg
+          i += 2
+        else
+          base_segs << seg
+          i += 1
+        end
+      end
+
+      base_id = base_segs.join('.')
+      f = by_id[base_id.to_sym]      
       f && f[:normative_tips].to_s.strip.presence.to_s
     end
 
