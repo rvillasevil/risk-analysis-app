@@ -9,8 +9,9 @@ require "pathname"
 class RiskFieldSet
   CONFIG_DIR = Rails.root.join("config", "risk_assistant")
   YAML_PATH  = CONFIG_DIR.join("fields.yml")
-  FIRST_JSON = Dir[CONFIG_DIR.join("*.json")].first
-  JSON_PATH  = FIRST_JSON && Pathname.new(FIRST_JSON)
+  # JSON schema describing all fields in Gemini format
+  FIRST_JSON = CONFIG_DIR.join("fields_gemini.json")
+  JSON_PATH  = Pathname.new(FIRST_JSON)
 
   Field = Struct.new(
     :id, :label, :prompt, :type, :options, :example,

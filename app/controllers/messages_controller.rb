@@ -269,8 +269,8 @@ class MessagesController < ApplicationController
     answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
     next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
     if next_field_hash
-      next_id = next_field_hash[:id]
-      question_text = RiskFieldSet.question_for(next_id, include_tips: false)
+      next_id = next_field_hash[:id].to_s
+      question_text = RiskFieldSet.question_for(next_id.to_sym, include_tips: true)
       tips = RiskFieldSet.normative_tips_for(next_id)
 
       combined = "Confirmación:\n#{confirmations.join("\n")}\n\n" \

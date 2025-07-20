@@ -69,29 +69,31 @@ class AssistantRunner
     field    = RiskFieldSet.next_field_hash(answered)   # helper de RiskFieldSet
     return unless field                                 # ya no quedan
 
-    field_id = field[:id].to_s
-    question = RiskFieldSet.question_for(field_id.to_sym, include_tips: true)
-    instr    = field[:assistant_instructions].to_s.strip
-
+    if field
+      field_id = field[:id].to_s
+      question = RiskFieldSet.question_for(field_id.to_sym, include_tips: true)
+      instr    = field[:assistant_instructions].to_s.strip
+      tips = RiskFieldSet.normative_tips_for(next_id)
     # guarda la PREGUNTA para que el guardia pueda validarla
 
-    risk_assistant.messages.create!(
-      sender:      "assistant_guard",
-      role:        "assistant",
-      field_asked: field_id,
-      key:         nil,
-      content:     question,
-      thread_id:   thread_id
-    )
+      risk_assistant.messages.create!(
+        sender:      "assistant_guard",
+        role:        "assistant",
+        field_asked: field_id,
+        key:         nil,
+        content:     question,
+        thread_id:   thread_id
+      )
 
-    tip   = field[:normative_tips].to_s.strip
+      tip   = field[:normative_tips].to_s.strip
 
-    extra = +""
-    extra << "### Instrucciones de campo:\n#{instr}\n\n" if instr.present?
-    extra << "### Tip normativo:\n#{tip}\n\n" if tip.present?    
-    extra << "### Pregunta:\n#{question}\n\n"
-    extra << "⚠️ Tras confirmar, responde SOLO \"OK\" y espera la siguiente instrucción."
-    
+      extra = +""
+      extra << "### Instrucciones de campo:\n#{instr}\n\n" if instr.present?
+      extra << "### Tip normativo:\n#{tips}\n\n" if tips.present?    
+      extra << "### Pregunta:\n#{question}\n\n"
+      extra << "⚠️ Tras confirmar, responde SOLO \"OK\" y espera la siguiente instrucción."
+      
+    end
     post("#{BASE_URL}/threads/#{thread_id}/runs",
         assistant_id:            ENV['OPENAI_ASSISTANT_ID'],
         additional_instructions: extra,
@@ -211,13 +213,13 @@ class AssistantRunner
 
     # 3) Recuperamos las instrucciones privadas para este campo (sin índice si lo hubiera)
     #    Ej.: si field == :"constr_edificios_detalles_array.0.edif_nombre_uso",
-    #    queremos buscar en JSON por :"constr_edificios_detalles_array.edif_nombre_uso"
+    #    querem<os buscar en JSON por :"constr_edificios_detalles_array.edif_nombre_uso"
     base_key = field.to_s.include?(".") ?
                  field.to_s.sub(/\.\d+\.(.+)$/, '.\1').to_sym :
                  field.to_sym
     info  = RiskFieldSet.by_id[base_key]
     instr = info ? info[:assistant_instructions].to_s.strip : ""
-    tips = info ? info[:normative_tips].to_s.strip : ""
+    tips = RiskFieldSet.normative_tips_for(field)
     # El asistente generará la pregunta exacta como parte de la respuesta,
     # por lo que aquí no la publicamos para evitar duplicidades en el chat.         
 
@@ -241,15 +243,15 @@ class AssistantRunner
       2. No pidas más de un campo a la vez.
       
 
-      3. Formula al usuario la siguiente pregunta vinculada a este campo, inluye en la pregunta los puntos 4 y 5:
+      3. Formula al usuario la siguiente pregunta:
          #{question}
          (Incluye las opciones si existen para ese campo.)
 
-      4. Sigue estas indicaciones para formular la pregunta al usuario e incluyelas en la pregunta para dar contexto al usuario:
+      4. Añade a la pregunta las siguientes indicaciones al usuario:
          #{instr.presence ? instr : "ninguna"}
 
-      5. Eres un experto en normativa de riesgos e incendios, añade contexto según los siguientes tips a la pregunta para ayudar al usuario a responder:
-          #{tips.presence ? tips : "ninguna"}
+      5. Incluye siempre en un párrafo independiente el desarrollo de la normativa relacionada con la pregunta del punto 3:
+          Normativa: #{tips.presence ? tips : "ninguna"}
 
       6. Antes de validar un valor:
          – Si el campo es *select*, comprueba que la respuesta esté en
