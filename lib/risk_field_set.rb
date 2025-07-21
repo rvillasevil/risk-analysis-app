@@ -94,13 +94,16 @@ class RiskFieldSet
       question = f[:prompt].to_s.strip
       question = "#{prefix}: #{question}" unless prefix.empty?
 
-      parts = [question]
+      base_parts = [question]
       if f[:options]&.any?
-        parts << "Opciones disponibles: #{f[:options].join(', ')}."
+        base_parts << "Opciones disponibles: #{f[:options].join(', ')}."
       end
-      parts << "Contexto: #{f[:assistant_instructions]}." if f[:assistant_instructions].present?
-      parts << f[:normative_tips].to_s.strip if include_tips && f[:normative_tips].present?
-      parts.join(' ')
+
+      tips = []
+      tips << "Contexto: #{f[:assistant_instructions]}." if f[:assistant_instructions].present?
+      tips << f[:normative_tips].to_s.strip if include_tips && f[:normative_tips].present?
+
+      [base_parts.join(' '), tips.join("\n")].reject(&:blank?).join("\n")
     end
 
     # Devuelve solo los tips normativos para un campo

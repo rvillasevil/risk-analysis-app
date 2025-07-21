@@ -160,12 +160,13 @@
 
     # POST /risk_assistants/:id/create_message
     def create_message
-      msg = @risk_assistant.messages.create(
-        sender:  params[:sender]  || 'user',
-        role:    params[:role]   || 'user',
-        key:     params[:key],
-        value:   params[:value],
-        content: params[:content] || params[:value]
+      msg = Message.save_unique!(
+        risk_assistant: @risk_assistant,
+        key:           params[:key],
+        value:         params[:value],
+        sender:        params[:sender] || 'user',
+        role:          params[:role]  || 'user',
+        content:       params[:content] || params[:value]
       )
       if msg.persisted?
         redirect_to resume_risk_assistant_path(@risk_assistant), notice: "Mensaje ##{msg.id} añadido."

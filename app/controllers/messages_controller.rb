@@ -81,15 +81,15 @@ class MessagesController < ApplicationController
         summary_lines = []
         doc_pairs.each do |campo_id, valor|
           label = RiskFieldSet.label_for(campo_id)
-          # Guardar cada confirmación en la BD
-          @risk_assistant.messages.create!(
-            content:     "✅ Perfecto, #{label} es &&#{valor}&&.",
-            sender:      "assistant",
-            role:        "developer",
-            key:         campo_id,
-            value:       valor,
-            field_asked: label,
-            thread_id:   current_thread
+          Message.save_unique!(
+            risk_assistant: @risk_assistant,
+            key:           campo_id,
+            value:         valor,
+            content:       "✅ Perfecto, #{label} es &&#{valor}&&.",
+            sender:        "assistant",
+            role:          "developer",
+            field_asked:   label,
+            thread_id:     current_thread
           )
           summary_lines << "✅ #{label}: #{valor}"
         end
@@ -238,15 +238,16 @@ class MessagesController < ApplicationController
           clean_id = expected if expected.gsub(/\.\d+/, '') == clean_id
         end
 
-        @risk_assistant.messages.create!(
-          content:     "✅ Perfecto, #{RiskFieldSet.label_for(clean_id)} es &&#{value}&&.",
-          sender:      "assistant_confirmation",
-          role:        "developer",
-          key:         clean_id,
-          item_label:  item_label,
-          value:       value,
-          field_asked: nil,
-          thread_id:   runner.thread_id
+        Message.save_unique!(
+          risk_assistant: @risk_assistant,
+          key:           clean_id,
+          value:         value,
+          item_label:    item_label,
+          content:       "✅ Perfecto, #{RiskFieldSet.label_for(clean_id)} es &&#{value}&&.",
+          sender:        "assistant_confirmation",
+          role:          "developer",
+          field_asked:   nil,
+          thread_id:     runner.thread_id
         )
 
 

@@ -250,6 +250,8 @@ class AssistantRunner
       4. Añade a la pregunta las siguientes indicaciones al usuario:
          #{instr.presence ? instr : "ninguna"}
 
+      4.1 Añade justo después de la pregunta, una explicación de la pregunta.
+
       5. Incluye siempre en un párrafo independiente el desarrollo de la normativa relacionada con la pregunta del punto 3:
           Normativa: #{tips.presence ? tips : "ninguna"}
 
