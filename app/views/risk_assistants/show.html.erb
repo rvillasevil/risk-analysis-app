@@ -76,8 +76,8 @@
     <main class="chat-page chat-main">
       <h1 class="h1 mb-0"><%= @risk_assistant.name %></h1>
         <% display_msgs = @risk_assistant.messages
-                             .where.not(sender: ['assistant_guard'])
-                             .order(created_at: :asc) %>
+                             .where.not(role: 'developer')
+                             .where.not(sender: %w[assistant_guard assistant2 assistant_confirmation]) %>
         <div class="chat-history">
           <% if display_msgs.empty? %>
             <div class="d-flex flex-column justify-content-center align-items-center text-muted empty-chat">
@@ -94,8 +94,9 @@
                     <strong><%= m.sender.capitalize %></strong>
                     <small><%= l m.created_at, format: :short %></small>
                   </div>
-                  <div class="body"><%= simple_format m.content.sub(/\A✅ El campo [^\r\n]*[\r\n]*/, '') %></div>
-                </div>
+                  <div class="body">
+                    <%= simple_format sanitized_content(m).sub(/\A✅ El campo [^\r\n]*[\r\n]*/, '') %>
+                  </div>                </div>
               </div>
             <% end %>
           <% end %>

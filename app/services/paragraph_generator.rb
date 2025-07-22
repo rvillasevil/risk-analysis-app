@@ -8,7 +8,7 @@ class ParagraphGenerator
 
   def self.generate(question:, instructions:, normative_tips:)
     prompt = <<~PROMPT
-      Genera la siguiente consulta desarrollando al menos cuatro párrafos.
+      Genera la siguiente consulta desarrollando como máximo en cuatro párrafos. Usa Instrucciones para formular la pregunta e incluye los tipos normativos en el desarrollo:
       Pregunta: #{question}
       Instrucciones: #{instructions}
       Tipos normativos: #{normative_tips}
