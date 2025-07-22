@@ -92,7 +92,18 @@ class AssistantRunner
       extra << "### Tip normativo:\n#{tips}\n\n" if tips.present?    
       extra << "### Pregunta:\n#{question}\n\n"
       extra << "⚠️ Tras confirmar, responde SOLO \"OK\" y espera la siguiente instrucción."
+
       
+      expanded = ParagraphGenerator.generate(question: question,
+                                             instructions: instr,
+                                             normative_tips: tips)
+      risk_assistant.messages.create!(
+        sender:    "paragraph_generator",
+        role:      "assistant",
+        content:   expanded,
+        field_asked: field_id,
+        thread_id: thread_id
+      )
     end
     post("#{BASE_URL}/threads/#{thread_id}/runs",
         assistant_id:            ENV['OPENAI_ASSISTANT_ID'],

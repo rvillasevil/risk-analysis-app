@@ -273,6 +273,19 @@ class MessagesController < ApplicationController
       next_id = next_field_hash[:id].to_s
       question_text = RiskFieldSet.question_for(next_id.to_sym, include_tips: true)
       tips = RiskFieldSet.normative_tips_for(next_id)
+      instr = next_field_hash[:assistant_instructions].to_s
+
+      expanded = ParagraphGenerator.generate(question: question_text,
+                                             instructions: instr,
+                                             normative_tips: tips)
+
+      @risk_assistant.messages.create!(
+        sender: "assistant",
+        role: "assistant",
+        content: expanded,
+        field_asked: next_id,
+        thread_id: runner.thread_id
+      )      
 
       combined = "Confirmación:\n#{confirmations.join("\n")}\n\n" \
                  "Siguiente pregunta: #{question_text}\n\n" \
