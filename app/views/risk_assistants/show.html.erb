@@ -116,10 +116,10 @@
           <div class="input-group">
             <%= f.text_area :content,
                            name: 'message[content]',
-                           rows: 1,
+                           rows: 2,
                            required: true,
                            class: 'form-control',
-                           placeholder: 'Escribe tu mensaje…' %>
+                           placeholder: 'Escribe tu mensaje…', style:"border-round:20px;" %>
 
             <%#— Campo de subida de archivo oculto —%>
             <%= file_field_tag :file,

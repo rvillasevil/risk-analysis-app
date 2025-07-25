@@ -275,9 +275,16 @@ class MessagesController < ApplicationController
       tips = RiskFieldSet.normative_tips_for(next_id)
       instr = next_field_hash[:assistant_instructions].to_s
 
+      all_confirms = @risk_assistant.messages
+                       .where(sender: "assistant_confirmation")
+                       .order(:created_at)
+                       .map { |m| "✅ Perfecto, #{RiskFieldSet.label_for(m.key)} es #{m.value}" }
+
+
       expanded = ParagraphGenerator.generate(question: question_text,
                                              instructions: instr,
-                                             normative_tips: tips)
+                                             normative_tips: tips,
+                                             confirmations: confirmations)
 
       @risk_assistant.messages.create!(
         sender: "assistant",

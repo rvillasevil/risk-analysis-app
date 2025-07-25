@@ -6,14 +6,19 @@ class ParagraphGenerator
     "Content-Type"  => "application/json"
   }.freeze
 
-  def self.generate(question:, instructions:, normative_tips:)
+  def self.generate(question:, instructions:, normative_tips:, confirmations: [])
+    confirm_block = confirmations.any? ? "Confirmaciones previas:\n#{confirmations.join("\n")}\n\n" : ""
+
     prompt = <<~PROMPT
-      Genera la siguiente consulta desarrollando como máximo en cuatro párrafos. Usa Instrucciones para formular la pregunta e incluye los tipos normativos en el desarrollo:
-      Pregunta: #{question}
-      Instrucciones: #{instructions}
-      Tipos normativos: #{normative_tips}
-      Especifica de forma clara las preguntas.
-    PROMPT
+      #{confirm_block}
+    Eres un asistente para la toma de datos de riesgos de una forma conversaciona: 
+    Genera la siguiente consulta desarrollando como máximo en cuatro párrafos. Usa Instrucciones para formular la pregunta e incluye los tipos normativos en el desarrollo:
+        Confirmación del anterrior campo:#{confirm_block}   
+        Pregunta: #{question}
+        Instrucciones: #{instructions}
+        Tipos normativos: #{normative_tips}
+        Especifica de forma clara las preguntas.
+      PROMPT
 
     body = {
       model: MODEL,

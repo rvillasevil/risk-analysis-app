@@ -93,10 +93,16 @@ class AssistantRunner
       extra << "### Pregunta:\n#{question}\n\n"
       extra << "⚠️ Tras confirmar, responde SOLO \"OK\" y espera la siguiente instrucción."
 
+      confirmations = risk_assistant.messages
+                                    .where.not(key: nil)
+                                    .order(:created_at)
+                                    .map { |m| "✅ #{RiskFieldSet.label_for(m.key)}: #{m.value}" }
+
       
       expanded = ParagraphGenerator.generate(question: question,
                                              instructions: instr,
-                                             normative_tips: tips)
+                                             normative_tips: tips,
+                                             confirmations: confirmations)    
       risk_assistant.messages.create!(
         sender:    "paragraph_generator",
         role:      "assistant",
