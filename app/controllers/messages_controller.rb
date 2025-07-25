@@ -222,8 +222,8 @@ class MessagesController < ApplicationController
     )
 
     # 6) Procesar la respuesta del asistente (igual que antes)
-    pairs = assistant_text.scan(/##(?<field_id>[^#()]+?)(?:\s*\((?<item_label>[^)]+)\))?##.*?&&\s*(?<value>.*?)\s*&&/m)    
-    flags = assistant_text.scan(/⚠️\s*(.*?)\s*⚠️/m).flatten    
+    pairs = assistant_text.scan(/##(?<field_id>[^#()]+?)(?:\s*\((?<item_label>[^)]+)\))?##.*?&&\s*(?<value>.*?)\s*&&/m)
+    flags = assistant_text.scan(/⚠️\s*(.*?)\s*⚠️/m).flatten  
 
     # 6.A) Guardar confirmaciones crudas
     # 6.A) Guardar confirmaciones crudas con validación
@@ -271,40 +271,51 @@ class MessagesController < ApplicationController
     next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
     if next_field_hash
       next_id = next_field_hash[:id].to_s
-      question_text = RiskFieldSet.question_for(next_id.to_sym, include_tips: true)
-      tips = RiskFieldSet.normative_tips_for(next_id)
+      tips  = RiskFieldSet.normative_tips_for(next_id)
       instr = next_field_hash[:assistant_instructions].to_s
 
-      all_confirms = @risk_assistant.messages
-                       .where(sender: "assistant_confirmation")
-                       .order(:created_at)
-                       .map { |m| "✅ Perfecto, #{RiskFieldSet.label_for(m.key)} es #{m.value}" }
+      if pairs.empty?
+        sanitized = assistant_text.gsub(/(?:\u2705[^#]*?)?##[^#]+##.*?&&.*?&&\s*[.,]?/m, "").strip
 
+        expanded = ParagraphGenerator.generate(question: sanitized,
+                                        instructions: instr,
+                                        normative_tips: tips,
+                                        confirmations: [])
+        @risk_assistant.messages.create!(
+          sender: "assistant",
+          role: "assistant",
+          content: expanded,
+          field_asked: next_id,
+          thread_id: runner.thread_id
+        )
+      else
+        question_text = RiskFieldSet.question_for(next_id.to_sym, include_tips: true)
+        
+        expanded = ParagraphGenerator.generate(question: question_text,
+                                               instructions: instr,
+                                               normative_tips: tips,
+                                               confirmations: confirmations)
 
-      expanded = ParagraphGenerator.generate(question: question_text,
-                                             instructions: instr,
-                                             normative_tips: tips,
-                                             confirmations: confirmations)
+        @risk_assistant.messages.create!(
+          sender: "assistant",
+          role: "assistant",
+          content: expanded,
+          field_asked: next_id,
+          thread_id: runner.thread_id
+        )
 
-      @risk_assistant.messages.create!(
-        sender: "assistant",
-        role: "assistant",
-        content: expanded,
-        field_asked: next_id,
-        thread_id: runner.thread_id
-      )      
+        combined = "Confirmación:\n#{confirmations.join("\n")}\n\n" \
+                   "Siguiente pregunta: #{question_text}\n\n" \
+                   "**Normative tips**: #{tips}"        
 
-      combined = "Confirmación:\n#{confirmations.join("\n")}\n\n" \
-                 "Siguiente pregunta: #{question_text}\n\n" \
-                 "**Normative tips**: #{tips}"
-
-      @risk_assistant.messages.create!(
-        sender: "assistant",
-        role: "assistant",
-        content: combined,
-        field_asked: next_id,
-        thread_id: runner.thread_id
-      )      
+        @risk_assistant.messages.create!(
+          sender: "assistant",
+          role: "assistant",
+          content: combined,
+          field_asked: next_id,
+          thread_id: runner.thread_id
+        )
+      end 
     end
     redirect_to @risk_assistant
 
