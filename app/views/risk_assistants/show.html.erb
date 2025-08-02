@@ -75,9 +75,8 @@
     <!-- MAIN / CHAT -->
     <main class="chat-page chat-main">
       <h1 class="h1 mb-0"><%= @risk_assistant.name %></h1>
-        <% display_msgs = @risk_assistant.messages
-                             .where.not(role: 'developer')
-                             .where.not(sender: %w[assistant_guard assistant2 assistant_confirmation]) %>
+        <% display_msgs = @risk_assistant.messages.visible_to_user %>
+
         <div class="chat-history">
           <% if display_msgs.empty? %>
             <div class="d-flex flex-column justify-content-center align-items-center text-muted empty-chat">

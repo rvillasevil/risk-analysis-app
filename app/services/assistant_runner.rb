@@ -158,20 +158,20 @@ class AssistantRunner
     # ------------------------------------------------------------
     # Encuentra el siguiente campo que NO tenga valor en BD
     # ------------------------------------------------------------
-    def next_pending_field
-      answered = @risk_assistant.messages.where.not(key: nil).pluck(:key).to_set
-      root_fields = RiskFieldSet.flat_fields.select { |f| f[:parent].nil? }
+  def next_pending_field
+    answered = @risk_assistant.messages.where.not(key: nil).pluck(:key).to_set
+    root_fields = RiskFieldSet.flat_fields.select { |f| f[:parent].nil? }
 
-      root_fields.each do |field|
-        if field[:type] == :array_of_objects
-          pending = next_from_array(field[:id], [], answered)
-          return pending if pending
-        else
-          return field[:id].to_sym unless answered.include?(field[:id])
-        end
+    root_fields.each do |field|
+      if field[:type] == :array_of_objects
+        pending = next_from_array(field[:id], [], answered)
+        return pending if pending
+      else
+        return field[:id].to_sym unless answered.include?(field[:id])
       end
-      nil
     end
+    nil
+  end
 
   def next_from_array(array_id, prefix_parts, answered)
     info = RiskFieldSet.by_id[array_id.to_sym]
@@ -260,7 +260,7 @@ class AssistantRunner
       2. No pidas más de un campo a la vez.
       
 
-      3. Formula al usuario la siguiente pregunta:
+      3. Genera la siguiente consulta desarrollando como máximo en cuatro párrafos. Usa Instrucciones para formular la pregunta e incluye los tipos normativos en el desarrollo:
          #{question}
          (Incluye las opciones si existen para ese campo.)
 

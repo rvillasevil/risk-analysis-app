@@ -7,9 +7,16 @@ class Message < ApplicationRecord
     user:       "user",
     assistant:  "assistant",
     developer:  "developer"
-  }, _suffix: true  
+  }, _suffix: true
   validates :role, inclusion: { in: %w[user assistant developer] }
   validates :key, uniqueness: { scope: :risk_assistant_id }, allow_blank: true
+
+  # Senders used internally by the system and hidden from users
+  INTERNAL_SENDERS = %w[assistant_guard assistant2 assistant_confirmation].freeze
+
+  # Messages that should be displayed to the end user
+  scope :visible_to_user, -> { where.not(role: "developer").where.not(sender: INTERNAL_SENDERS) }
+
 
   # Saves or updates a message identified by key for the given risk assistant.
   # Existing records with the same key will be overwritten to keep keys unique.

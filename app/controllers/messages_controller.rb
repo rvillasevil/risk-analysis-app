@@ -124,7 +124,7 @@ class MessagesController < ApplicationController
         role:      "assistant",
         content:   "He extraído el texto del documento, pero no encontré datos para los campos solicitados.\n" \
                    "Por favor, indícame directamente el campo “#{next_label}”.",
-        field_asked: next_label,
+        field_asked: next_field_id,
         thread_id: current_thread
       )
 
@@ -136,7 +136,7 @@ class MessagesController < ApplicationController
 
       # 4) SEMANTIC GUARD: solo comprueba incompatibilidades de contenido/categoría
       last_q = @risk_assistant.messages
-                              .where(sender:    "assistant",
+                              .where(sender:    ["assistant", "assistant_guard"],
                                       role:      "assistant",
                                       thread_id: current_thread)
                               .where.not(field_asked: nil)
@@ -172,6 +172,34 @@ class MessagesController < ApplicationController
             thread_id:   current_thread
           )
         end
+
+        result = AnswerValidator.validate(
+                  question: last_q.content,
+                  answer:   @message.content,
+                  context:  confirmed_context
+                )
+
+        if result[:status] != :valid
+          @risk_assistant.messages.create!(
+            sender:      "assistant",
+            role:        "assistant",
+            content:     result[:message].to_s,
+            field_asked: last_q.field_asked,
+            thread_id:   current_thread
+          )
+
+          follow_up = RiskFieldSet.question_for(last_q.field_asked.to_sym, include_tips: true)
+
+          @risk_assistant.messages.create!(
+            sender:      "assistant",
+            role:        "assistant",
+            content:     follow_up,
+            field_asked: last_q.field_asked,
+            thread_id:   current_thread
+          )
+
+          return redirect_to risk_assistant_path(@risk_assistant)
+        end        
       end
     end
 
@@ -194,7 +222,7 @@ class MessagesController < ApplicationController
     assistant_text = runner.run_and_wait
 
     last_q = @risk_assistant.messages
-            .where(sender:    "assistant",
+            .where(sender:    ["assistant", "assistant_guard"],
                   role:      "assistant",
                   thread_id: runner.thread_id)
             .where.not(field_asked: nil)
@@ -209,22 +237,20 @@ class MessagesController < ApplicationController
     answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
     next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
 
-    next_id    = next_field_hash[:id]
-    next_label = next_field_hash[:label]
-    display_text = RiskFieldSet.question_for(next_id, include_tips: true)    
+    next_id = next_field_hash[:id]   
 
     @risk_assistant.messages.create!(
       sender:    "assistant2",
       role:      "assistant",
       content:   assistant_text,
-      field_asked: next_label,
+      field_asked: next_id,
       thread_id: runner.thread_id
     )
 
     # 6) Procesar la respuesta del asistente (igual que antes)
     pairs = assistant_text.scan(/##(?<field_id>[^#()]+?)(?:\s*\((?<item_label>[^)]+)\))?##.*?&&\s*(?<value>.*?)\s*&&/m)
-    flags = assistant_text.scan(/⚠️\s*(.*?)\s*⚠️/m).flatten  
-
+    flags = assistant_text.scan(/⚠️\s*(.*?)\s*⚠️/m).flatten
+    sanitized_text = assistant_text.gsub(/(?:\u2705[^#]*?)?##[^#]+##.*?&&.*?&&\s*[.,]?/m, "").strip
     # 6.A) Guardar confirmaciones crudas
     # 6.A) Guardar confirmaciones crudas con validación
     confirmations = []
@@ -274,48 +300,40 @@ class MessagesController < ApplicationController
       tips  = RiskFieldSet.normative_tips_for(next_id)
       instr = next_field_hash[:assistant_instructions].to_s
 
-      if pairs.empty?
-        sanitized = assistant_text.gsub(/(?:\u2705[^#]*?)?##[^#]+##.*?&&.*?&&\s*[.,]?/m, "").strip
+      question_text = sanitized_text.presence ||
+                      RiskFieldSet.question_for(next_id.to_sym, include_tips: true)
 
-        expanded = ParagraphGenerator.generate(question: sanitized,
-                                        instructions: instr,
-                                        normative_tips: tips,
-                                        confirmations: [])
-        @risk_assistant.messages.create!(
-          sender: "assistant",
-          role: "assistant",
-          content: expanded,
-          field_asked: next_id,
-          thread_id: runner.thread_id
-        )
-      else
-        question_text = RiskFieldSet.question_for(next_id.to_sym, include_tips: true)
-        
-        expanded = ParagraphGenerator.generate(question: question_text,
-                                               instructions: instr,
-                                               normative_tips: tips,
-                                               confirmations: confirmations)
+      expanded = ParagraphGenerator.generate(question: question_text,
+                                             instructions: instr,
+                                             normative_tips: tips,
+                                             confirmations: confirmations)
+      combined = "Confirmación:\n#{confirmations.join("\n")}\n\n" \
+                  "Siguiente pregunta: #{question_text}\n\n" \
+                  "**Normative tips**: #{tips}"
 
-        @risk_assistant.messages.create!(
-          sender: "assistant",
-          role: "assistant",
-          content: expanded,
-          field_asked: next_id,
-          thread_id: runner.thread_id
-        )
+      final_content = "#{combined}\n\n#{expanded}".strip
 
+      @risk_assistant.messages.create!(
+        sender: "assistant",
+        role: "assistant",
+        content: final_content,
+        field_asked: next_id,
+        thread_id: runner.thread_id
+      )
+
+      if confirmations.any?
         combined = "Confirmación:\n#{confirmations.join("\n")}\n\n" \
                    "Siguiente pregunta: #{question_text}\n\n" \
-                   "**Normative tips**: #{tips}"        
+                   "**Normative tips**: #{tips}"    
 
         @risk_assistant.messages.create!(
           sender: "assistant",
-          role: "assistant",
+          role: "developer",
           content: combined,
           field_asked: next_id,
           thread_id: runner.thread_id
         )
-      end 
+      end
     end
     redirect_to @risk_assistant
 
