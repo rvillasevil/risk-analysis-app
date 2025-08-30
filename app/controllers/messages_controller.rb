@@ -145,53 +145,61 @@ class MessagesController < ApplicationController
                               .last
 
       if last_q
-        # 4.1) Construir contexto con pares confirmados “campo: valor”
-        confirmed_context = @risk_assistant.messages
+        # 4.1) Construir contexto solo con pares confirmados relevantes al field_asked
+        confirmed_messages = @risk_assistant.messages
                                             .where(thread_id: current_thread)
                                             .where.not(key: nil)
                                             .order(:created_at)
-                                            .map { |m| "#{RiskFieldSet.label_for(m.key)}: #{m.value}" }
-                                            .join("\n")
 
-        # 4.2) Llamar a SemanticGuard para detectar contradicciones
-        err = SemanticGuard.validate(
-                question:       last_q.content,
-                answer:         @message.content,
-                context:        confirmed_context,
-                risk_assistant: @risk_assistant,
-                thread_id:      current_thread
-              )
+        relevant_confirmations = confirmed_messages.select do |m|
+          m.key.to_s == last_q.field_asked.to_s
+        end
 
-        if err
-          follow_up = RiskFieldSet
-                        .question_for(last_q.field_asked.to_sym, include_tips: false)
-                        .gsub(/^Contexto:.*\n/, "")
-          content   = "⚠️ #{err} La respuesta no concuerda con los datos previos…\n\n#{follow_up}"
+        confirmed_context = relevant_confirmations
+                              .map { |m| "#{RiskFieldSet.label_for(m.key)}: #{m.value}" }
+                              .join("\n")
 
-          already_warned = @risk_assistant.messages
-                                          .where(sender: "assistant_guard",
-                                                 field_asked: last_q.field_asked,
-                                                 thread_id: current_thread)
-                                          .exists?
+        if confirmed_context.present?
+          # 4.2) Llamar a SemanticGuard solo si hay contexto relevante
+          err = SemanticGuard.validate(
+                  question:       last_q.content,
+                  answer:         @message.content,
+                  context:        confirmed_context,
+                  risk_assistant: @risk_assistant,
+                  thread_id:      current_thread
+                )
 
-          if already_warned
-            answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
-            next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
+          if err
+            follow_up = RiskFieldSet
+                          .question_for(last_q.field_asked.to_sym, include_tips: false)
+                          .gsub(/^Contexto:.*\n/, "")
+            content   = "⚠️ #{err} La respuesta no concuerda con los datos previos…\n\n#{follow_up}"
 
-            if next_field_hash
-              display_text = RiskFieldSet.question_for(next_field_hash[:id], include_tips: true)
-              @risk_assistant.messages.create!(sender: "assistant", role: "assistant",
-                                              content: display_text,
-                                              field_asked: next_field_hash[:id],
+            already_warned = @risk_assistant.messages
+                                            .where(sender: "assistant_guard",
+                                                   field_asked: last_q.field_asked,
+                                                   thread_id: current_thread)
+                                            .exists?
+
+            if already_warned
+              answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
+              next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
+
+              if next_field_hash
+                display_text = RiskFieldSet.question_for(next_field_hash[:id], include_tips: true)
+                @risk_assistant.messages.create!(sender: "assistant", role: "assistant",
+                                                content: display_text,
+                                                field_asked: next_field_hash[:id],
+                                                thread_id: current_thread)
+              end
+            else
+              @risk_assistant.messages.create!(sender: "assistant_guard", role: "assistant",
+                                              content:, field_asked: last_q.field_asked,
                                               thread_id: current_thread)
             end
-          else
-            @risk_assistant.messages.create!(sender: "assistant_guard", role: "assistant",
-                                            content:, field_asked: last_q.field_asked,
-                                            thread_id: current_thread)
-          end
 
-          redirect_to risk_assistant_path(@risk_assistant) and return
+            redirect_to risk_assistant_path(@risk_assistant) and return
+          end
         end
 
         result = AnswerValidator.validate(
