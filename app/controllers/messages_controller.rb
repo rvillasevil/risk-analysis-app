@@ -153,8 +153,6 @@ class MessagesController < ApplicationController
                                             .map { |m| "#{RiskFieldSet.label_for(m.key)}: #{m.value}" }
                                             .join("\n")
 
-        errors = []
-
         # 4.2) Llamar a SemanticGuard para detectar contradicciones
         err = SemanticGuard.validate(
                 question:       last_q.content,
@@ -164,7 +162,37 @@ class MessagesController < ApplicationController
                 thread_id:      current_thread
               )
 
-        errors << err if err
+        if err
+          follow_up = RiskFieldSet
+                        .question_for(last_q.field_asked.to_sym, include_tips: false)
+                        .gsub(/^Contexto:.*\n/, "")
+          content   = "⚠️ #{err} La respuesta no concuerda con los datos previos…\n\n#{follow_up}"
+
+          already_warned = @risk_assistant.messages
+                                          .where(sender: "assistant_guard",
+                                                 field_asked: last_q.field_asked,
+                                                 thread_id: current_thread)
+                                          .exists?
+
+          if already_warned
+            answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
+            next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
+
+            if next_field_hash
+              display_text = RiskFieldSet.question_for(next_field_hash[:id], include_tips: true)
+              @risk_assistant.messages.create!(sender: "assistant", role: "assistant",
+                                              content: display_text,
+                                              field_asked: next_field_hash[:id],
+                                              thread_id: current_thread)
+            end
+          else
+            @risk_assistant.messages.create!(sender: "assistant_guard", role: "assistant",
+                                            content:, field_asked: last_q.field_asked,
+                                            thread_id: current_thread)
+          end
+
+          redirect_to risk_assistant_path(@risk_assistant) and return
+        end
 
         result = AnswerValidator.validate(
                   question: last_q.content,
@@ -174,10 +202,11 @@ class MessagesController < ApplicationController
 
         errors << result[:message].to_s if result[:status] != :valid
 
-        if errors.any?
-
-          follow_up = RiskFieldSet.question_for(last_q.field_asked.to_sym, include_tips: true)
-          content    = "⚠️ #{errors.join(' ')}\n\n#{follow_up}"
+        if result[:status] != :valid
+          follow_up = RiskFieldSet
+                        .question_for(last_q.field_asked.to_sym, include_tips: false)
+                        .gsub(/^Contexto:.*\n/, "")
+          content   = "⚠️ #{result[:message]}\n\n#{follow_up}"
           @risk_assistant.messages.create!(sender: 'assistant', role: 'assistant',
                                           content:, field_asked: last_q.field_asked,
                                           thread_id: current_thread)
