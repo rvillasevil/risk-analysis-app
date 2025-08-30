@@ -134,7 +134,7 @@ class MessagesController < ApplicationController
       sender:    "assistant",
       role:      "assistant",
       content:   "He extraído el texto del documento, pero no encontré datos para los campos solicitados.\n" \
-                 "Por favor, indícame directamente el campo “#{next_label}”.",
+                 "Por favor, indícame directamente el campo \"#{next_label}\".",
       field_asked: next_field_id,
       thread_id: current_thread
     )
