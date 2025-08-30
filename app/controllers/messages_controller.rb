@@ -153,6 +153,8 @@ class MessagesController < ApplicationController
                                             .map { |m| "#{RiskFieldSet.label_for(m.key)}: #{m.value}" }
                                             .join("\n")
 
+        errors = []
+
         # 4.2) Llamar a SemanticGuard para detectar contradicciones
         err = SemanticGuard.validate(
                 question:       last_q.content,
@@ -162,16 +164,7 @@ class MessagesController < ApplicationController
                 thread_id:      current_thread
               )
 
-        if err
-          # Si hay contradicción de contenido, avisamos y detenemos el flujo
-          @risk_assistant.messages.create!(
-            sender:      "assistant",
-            role:        "assistant",
-            content:     "⚠️ #{err} Por favor, revisa el campo ##{last_q.field_asked}##.",
-            field_asked: last_q.field_asked,
-            thread_id:   current_thread
-          )
-        end
+        errors << err if err
 
         result = AnswerValidator.validate(
                   question: last_q.content,
@@ -179,27 +172,17 @@ class MessagesController < ApplicationController
                   context:  confirmed_context
                 )
 
-        if result[:status] != :valid
-          @risk_assistant.messages.create!(
-            sender:      "assistant",
-            role:        "assistant",
-            content:     result[:message].to_s,
-            field_asked: last_q.field_asked,
-            thread_id:   current_thread
-          )
+        errors << result[:message].to_s if result[:status] != :valid
+
+        if errors.any?
 
           follow_up = RiskFieldSet.question_for(last_q.field_asked.to_sym, include_tips: true)
-
-          @risk_assistant.messages.create!(
-            sender:      "assistant",
-            role:        "assistant",
-            content:     follow_up,
-            field_asked: last_q.field_asked,
-            thread_id:   current_thread
-          )
-
-          return redirect_to risk_assistant_path(@risk_assistant)
-        end        
+          content    = "⚠️ #{errors.join(' ')}\n\n#{follow_up}"
+          @risk_assistant.messages.create!(sender: 'assistant', role: 'assistant',
+                                          content:, field_asked: last_q.field_asked,
+                                          thread_id: current_thread)
+          redirect_to risk_assistant_path(@risk_assistant) and return
+        end     
       end
     end
 
@@ -426,16 +409,17 @@ class MessagesController < ApplicationController
     prompt_messages = format_previous_messages(previous_messages)
 
     # Construir el context
-    context = 
-      "
-        Con toda la información recabada en esta conversación, por favor:
-        1. Haz un **resumen ejecutivo de cada aparatado desde un punto de vista de un informe descriptivo de ingeniería de riesgos**.
-        2. Extrae las **métricas clave** (campos del formulario).
-        3. Identifica **lagunas de información** si las hubiera.
-        4. Ofrece **conclusiones y recomendaciones**.
-        Devuélvelo como un informe estructurado en Markdown.
-      PROMPT
-      Preguntas realizadas por ti y las respuestas del usuario: #{prompt_messages}"
+    context = <<~PROMPT
+      Con toda la información recabada en esta conversación, por favor:
+      1. Haz un **resumen ejecutivo de cada apartado desde un punto de vista de un informe descriptivo de ingeniería de riesgos**.
+      2. Extrae las **métricas clave** (campos del formulario).
+      3. Identifica **lagunas de información** si las hubiera.
+      4. Ofrece **conclusiones y recomendaciones**.
+      Devuélvelo como un informe estructurado en Markdown.
+      Preguntas realizadas por ti y las respuestas del usuario: #{prompt_messages}
+    PROMPT
+
+    Rails.logger.debug { "context built: #{context.inspect}" }
 
     # Construir el prompt completo
     prompt = @message.content

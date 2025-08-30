@@ -15,8 +15,9 @@ class AssistantRunner
   def initialize(risk_assistant)
     @risk_assistant = risk_assistant
     @thread_id      = risk_assistant.thread_id.presence || create_thread
-    inject_instructions_once if !risk_assistant.initialised?
     @fields_json    = build_fields_json
+    inject_instructions_once if !risk_assistant.initialised?
+
   end
 
   def inject_instructions_once
