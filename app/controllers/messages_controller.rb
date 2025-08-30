@@ -248,7 +248,7 @@ class MessagesController < ApplicationController
     next_id = next_field_hash[:id]
 
     @risk_assistant.messages.create!(
-      sender:    "assistant",
+      sender:    "assistant_raw",
       role:      "developer",
       content:   assistant_text,
       field_asked: next_id,
@@ -294,7 +294,7 @@ class MessagesController < ApplicationController
 
     flags.each do |msg|
       @risk_assistant.messages.create!(
-        sender:    "assistant",
+        sender:    "assistant_flag",
         role:      "developer",
         content:   "⚠️ #{msg} ⚠️",
         thread_id: runner.thread_id
@@ -312,12 +312,16 @@ class MessagesController < ApplicationController
       question_text = sanitized_text.presence ||
                       RiskFieldSet.question_for(next_id.to_sym, include_tips: true)
 
-      final_content = ParagraphGenerator.generate(
-                        question: question_text,
-                        instructions: instr,
-                        normative_tips: tips,
-                        confirmations: confirmations
-                      ).presence || question_text
+      final_content = if sanitized_text.present?
+                        sanitized_text
+                      else
+                        ParagraphGenerator.generate(
+                          question: question_text,
+                          instructions: instr,
+                          normative_tips: tips,
+                          confirmations: confirmations
+                        ).presence || question_text
+                      end
 
       @risk_assistant.messages.create!(
         sender: "assistant",
@@ -329,7 +333,7 @@ class MessagesController < ApplicationController
 
       if confirmations.any?
         @risk_assistant.messages.create!(
-          sender: "assistant",
+          sender: "assistant_summary",
           role: "developer",
           content: confirmations.join("\n"),
           field_asked: field_for_question,
