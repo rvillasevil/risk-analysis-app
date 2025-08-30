@@ -106,7 +106,7 @@ class MessagesController < ApplicationController
           content:       "✅ Perfecto, #{label} es &&#{valor}&&.",
           sender:        "assistant",
           role:          "developer",
-          field_asked:   label,
+          field_asked:   campo_id,
           thread_id:     current_thread
         )
         summary_lines << "✅ #{label}: #{valor}"
@@ -117,7 +117,6 @@ class MessagesController < ApplicationController
         sender:    "assistant",
         role:      "assistant",
         content:   "He extraído y confirmado automáticamente los siguientes campos del documento:\n\n#{todos_confirmaciones}",
-        field_asked: "",
         thread_id: current_thread
       )
 
@@ -332,11 +331,11 @@ class MessagesController < ApplicationController
         @risk_assistant.messages.create!(
           sender: "assistant",
           role: "developer",
-          content: combined,
-          field_asked: next_id,
+          content: confirmations.join("\n"),
           field_asked: field_for_question,
           thread_id: runner.thread_id
         )
+      end
     end
   end
 
