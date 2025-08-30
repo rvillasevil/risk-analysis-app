@@ -142,6 +142,7 @@ class MessagesController < ApplicationController
     redirect_to risk_assistant_path(@risk_assistant)
     true
   end
+  end
 
   # Returns true if a redirect happened
   def semantic_guard_validation(current_thread)
@@ -243,12 +244,13 @@ class MessagesController < ApplicationController
 
     answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
     next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
+    return unless next_field_hash
 
-    next_id = next_field_hash[:id]   
+    next_id = next_field_hash[:id]
 
     @risk_assistant.messages.create!(
       sender:    "assistant",
-      role:      "assistant",
+      role:      "developer",
       content:   assistant_text,
       field_asked: next_id,
       thread_id: runner.thread_id
@@ -257,6 +259,10 @@ class MessagesController < ApplicationController
     pairs = assistant_text.scan(/##(?<field_id>[^#()]+?)(?:\s*\((?<item_label>[^)]+)\))?##.*?&&\s*(?<value>.*?)\s*&&/m)
     flags = assistant_text.scan(/⚠️\s*(.*?)\s*⚠️/m).flatten
     sanitized_text = assistant_text.gsub(/(?:\u2705[^#]*?)?##[^#]+##.*?&&.*?&&\s*[.,]?/m, "").strip
+
+    question_field_id = sanitized_text[/##([^#]+)##/, 1]&.strip
+    sanitized_text = sanitized_text.sub(/##[^#]+##/, '').strip if question_field_id
+
 
     confirmations = []
 
@@ -300,27 +306,25 @@ class MessagesController < ApplicationController
     next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
     if next_field_hash
       next_id = next_field_hash[:id].to_s
-      tips  = RiskFieldSet.normative_tips_for(next_id)
+      field_for_question = question_field_id.presence || next_id
+      tips  = RiskFieldSet.normative_tips_for(field_for_question)      
       instr = next_field_hash[:assistant_instructions].to_s
 
       question_text = sanitized_text.presence ||
                       RiskFieldSet.question_for(next_id.to_sym, include_tips: true)
 
-      expanded = ParagraphGenerator.generate(question: question_text,
-                                             instructions: instr,
-                                             normative_tips: tips,
-                                             confirmations: confirmations)
-      combined = "Confirmación:\n#{confirmations.join("\n")}\n\n" \
-                 "Siguiente pregunta: #{question_text}\n\n" \
-                 "**Normative tips**: #{tips}"
-
-      final_content = "#{combined}\n\n#{expanded}".strip
+      final_content = ParagraphGenerator.generate(
+                        question: question_text,
+                        instructions: instr,
+                        normative_tips: tips,
+                        confirmations: confirmations
+                      ).presence || question_text
 
       @risk_assistant.messages.create!(
         sender: "assistant",
         role: "assistant",
         content: final_content,
-        field_asked: next_id,
+        field_asked: field_for_question,
         thread_id: runner.thread_id
       )
 
@@ -330,9 +334,9 @@ class MessagesController < ApplicationController
           role: "developer",
           content: combined,
           field_asked: next_id,
+          field_asked: field_for_question,
           thread_id: runner.thread_id
         )
-      end
     end
   end
 
