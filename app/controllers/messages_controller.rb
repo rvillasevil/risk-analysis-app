@@ -3,276 +3,261 @@ class MessagesController < ApplicationController
   before_action :set_risk_assistant
 
   require "fileutils"
-  require "semantic_guard" # ← 1) carga el guardia
-  require "risk_field_set"          
+  require "semantic_guard"
+  require "risk_field_set"        
 
   # ------------------------------------------------------------------
   # POST /risk_assistants/:risk_assistant_id/messages
   # ------------------------------------------------------------------
 
   def create
-    # 1) Validación rápida: no aceptar contenido vacío (texto o fichero)
-    if params.dig(:message, :content).blank? && params[:file].blank?
-      flash[:error] = "El mensaje no puede estar vacío (o adjunte un archivo)."
-      return redirect_to risk_assistant_path(@risk_assistant)
+      return redirect_blank_message if message_blank?
+
+      @message = save_user_message
+      current_thread = @risk_assistant.thread_id
+
+      return if handle_file_upload(params[:file], current_thread)
+      return if semantic_guard_validation(current_thread)
+
+      assistant_interaction(current_thread)
+      redirect_to @risk_assistant
+
+    rescue => e
+      Rails.logger.error "💥 Error en MessagesController#create: #{e.class} – #{e.message}"
+      flash[:error] = "Se produjo un error\n     al procesar tu mensaje."
+      redirect_to risk_assistant_path(@risk_assistant)
     end
 
-    # 2) Guardamos el mensaje del usuario (texto)
-    @message = @risk_assistant.messages.create!(
+      private
+
+  def message_blank?
+    params.dig(:message, :content).blank? && params[:file].blank?
+  end
+
+  def redirect_blank_message
+    flash[:error] = "El mensaje no puede estar vacío (o adjunte un archivo)."
+    redirect_to risk_assistant_path(@risk_assistant)
+  end
+
+  def save_user_message
+    @risk_assistant.messages.create!(
       message_params.merge(
         sender:    "user",
         role:      "user",
         thread_id: @risk_assistant.thread_id
       )
     )
-
-    current_thread = @risk_assistant.thread_id
+  end
+  # Returns true if a redirect happened
+  def handle_file_upload(file, current_thread)
+    return false unless file.present?
 
     # 3) Si el usuario sube un archivo, extraer el texto y buscar campos automáticamente
-    if params[:file].present?
-      if image_file?(params[:file])
-        params[:file].rewind
-        @risk_assistant.uploaded_files.attach(params[:file])
-
-        @risk_assistant.messages.create!(
-          sender:    "assistant",
-          role:      "assistant",
-          content:   "Imagen subida correctamente.",
-          thread_id: current_thread
-        )
-
-          answered = @risk_assistant.messages.where.not(key: nil).pluck(:key)
-          next_field = RiskFieldSet.next_field_hash(answered)
-          if next_field
-            display_text = RiskFieldSet.question_for(next_field[:id], include_tips: true)
-          @risk_assistant.messages.create!(
-            sender:      "assistant",
-            role:        "assistant",
-            content:     display_text,
-            field_asked: next_field[:id],
-            thread_id:   current_thread
-          )
-        end
-        return redirect_to risk_assistant_path(@risk_assistant)
-      end
-
-      # A partir de aquí, el fichero queda disponible localmente para descargarlo.
-      # Luego extraer texto, subir a OpenA<I, etc. (tal como ya tenías).
-      extracted_text = TextExtractor.call(params[:file])
-      params[:file].rewind
-      @risk_assistant.uploaded_files.attach(params[:file])    
-
-      # 3.2) Guardamos en histórico (opcional) un mensaje tipo “system” con el texto crudo
-      unless extracted_text.blank?
-        @risk_assistant.messages.create!(
-          sender:    "assistant",
-          role:      "developer",
-          content:   "[EXTRAÍDO]\n#{extracted_text}",
-          thread_id: current_thread
-        )
-      end
-
-      # 3.3) Llamar a DocumentFieldExtractor para obtener { campo_id => valor } 
-      doc_pairs = DocumentFieldExtractor.call(extracted_text)
-
-      # 3.4) Si encontramos algún campo dentro del documento, confirmamos todos
-      if doc_pairs.any?
-        # Construir un bloque de texto que consolide todas las confirmaciones
-        summary_lines = []
-        doc_pairs.each do |campo_id, valor|
-          label = RiskFieldSet.label_for(campo_id)
-          Message.save_unique!(
-            risk_assistant: @risk_assistant,
-            key:           campo_id,
-            value:         valor,
-            content:       "✅ Perfecto, #{label} es &&#{valor}&&.",
-            sender:        "assistant",
-            role:          "developer",
-            field_asked:   label,
-            thread_id:     current_thread
-          )
-          summary_lines << "✅ #{label}: #{valor}"
-        end
-
-        # 3.5) Enviar un único mensaje al usuario que contenga TODAS las confirmaciones
-        todos_confirmaciones = summary_lines.join("\n")
-        @risk_assistant.messages.create!(
-          sender:    "assistant",
-          role:      "assistant",
-          content:   "He extraído y confirmado automáticamente los siguientes campos del documento:\n\n#{todos_confirmaciones}",
-          field_asked: "",           # ya no hay “pregunta abierta” relacionada
-          thread_id: current_thread
-        )
-        # A partir de ahora, esos campo_id quedan marcados como respondidos en la BD,
-        # de modo que el flujo **no** volverá a preguntarlos individualmente.
-
-        # 3.6) Una vez procesado el contenido del fichero, podemos redirigir para
-        #      que el usuario vea esas confirmaciones antes de continuar.
-        return redirect_to risk_assistant_path(@risk_assistant)
-      end
-      # Si doc_pairs está vacío, no había ningún campo reconocible en el documento:
-
-      # 3.3) Si llegamos aquí, había PDF, extrajimos texto, ¡pero no hallamos campos!
-      #       Entonces le avisamos al usuario y pedimos que escriba manualmente el siguiente campo.
-      next_field_id = RiskFieldSet.next_field_hash(
-                        @risk_assistant.messages.where.not(key: nil).pluck(:key)
-                      )&.dig(:id)
-      next_label = next_field_id ? RiskFieldSet.label_for(next_field_id) : "campo pendiente"
+    if image_file?(file)
+      file.rewind
+      @risk_assistant.uploaded_files.attach(file)
 
       @risk_assistant.messages.create!(
         sender:    "assistant",
         role:      "assistant",
-        content:   "He extraído el texto del documento, pero no encontré datos para los campos solicitados.\n" \
-                   "Por favor, indícame directamente el campo “#{next_label}”.",
-        field_asked: next_field_id,
+        content:   "Imagen subida correctamente.",
         thread_id: current_thread
       )
 
-      return redirect_to risk_assistant_path(@risk_assistant)      
+      answered   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
+      next_field = RiskFieldSet.next_field_hash(answered)
+      if next_field
+        display_text = RiskFieldSet.question_for(next_field[:id], include_tips: true)
+
+        @risk_assistant.messages.create!(
+          sender:      "assistant",
+          role:        "assistant",
+          content:     display_text,
+          field_asked: next_field[:id],
+          thread_id:   current_thread
+        )
+
+          redirect_to risk_assistant_path(@risk_assistant)
+          return true
+        end
+
+    extracted_text = TextExtractor.call(file)
+    file.rewind
+    @risk_assistant.uploaded_files.attach(file)  
+
+    unless extracted_text.blank?
+      @risk_assistant.messages.create!(
+        sender:    "assistant",
+        role:      "developer",
+        content:   "[EXTRAÍDO]\n#{extracted_text}",
+        thread_id: current_thread
+      )
     end
 
-    # 4) Solo llamar a SemanticGuard si NO hay archivo adjunto (o si el usuario escribió texto)
-    unless params[:file].present?
-
-      # 4) SEMANTIC GUARD: solo comprueba incompatibilidades de contenido/categoría
-      last_q = @risk_assistant.messages
-                              .where(sender:    ["assistant", "assistant_guard"],
-                                      role:      "assistant",
-                                      thread_id: current_thread)
-                              .where.not(field_asked: nil)
-                              .where(key: nil)
-                              .order(:created_at)
-                              .last
-
-      if last_q
-        # 4.1) Construir contexto solo con pares confirmados relevantes al field_asked
-        confirmed_messages = @risk_assistant.messages
-                                            .where(thread_id: current_thread)
-                                            .where.not(key: nil)
-                                            .order(:created_at)
-
-        relevant_confirmations = confirmed_messages.select do |m|
-          m.key.to_s == last_q.field_asked.to_s
-        end
-
-        confirmed_context = relevant_confirmations
-                              .map { |m| "#{RiskFieldSet.label_for(m.key)}: #{m.value}" }
-                              .join("\n")
-
-        if confirmed_context.present?
-          # 4.2) Llamar a SemanticGuard solo si hay contexto relevante
-          err = SemanticGuard.validate(
-                  question:       last_q.content,
-                  answer:         @message.content,
-                  context:        confirmed_context,
-                  risk_assistant: @risk_assistant,
-                  thread_id:      current_thread
-                )
-
-          if err
-            follow_up = RiskFieldSet
-                          .question_for(last_q.field_asked.to_sym, include_tips: false)
-                          .gsub(/^Contexto:.*\n/, "")
-            content   = "⚠️ #{err} La respuesta no concuerda con los datos previos…\n\n#{follow_up}"
-
-            already_warned = @risk_assistant.messages
-                                            .where(sender: "assistant_guard",
-                                                   field_asked: last_q.field_asked,
-                                                   thread_id: current_thread)
-                                            .exists?
-
-            if already_warned
-              answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
-              next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
-
-              if next_field_hash
-                display_text = RiskFieldSet.question_for(next_field_hash[:id], include_tips: true)
-                @risk_assistant.messages.create!(sender: "assistant", role: "assistant",
-                                                content: display_text,
-                                                field_asked: next_field_hash[:id],
-                                                thread_id: current_thread)
-              end
-            else
-              @risk_assistant.messages.create!(sender: "assistant_guard", role: "assistant",
-                                              content:, field_asked: last_q.field_asked,
-                                              thread_id: current_thread)
-            end
-
-            redirect_to risk_assistant_path(@risk_assistant) and return
-          end
-        end
-
-        result = AnswerValidator.validate(
-                  question: last_q.content,
-                  answer:   @message.content,
-                  context:  confirmed_context
-                )
-
-        errors << result[:message].to_s if result[:status] != :valid
-
-        if result[:status] != :valid
-          follow_up = RiskFieldSet
-                        .question_for(last_q.field_asked.to_sym, include_tips: false)
-                        .gsub(/^Contexto:.*\n/, "")
-          content   = "⚠️ #{result[:message]}\n\n#{follow_up}"
-          @risk_assistant.messages.create!(sender: 'assistant', role: 'assistant',
-                                          content:, field_asked: last_q.field_asked,
-                                          thread_id: current_thread)
-          redirect_to risk_assistant_path(@risk_assistant) and return
-        end     
+    doc_pairs = DocumentFieldExtractor.call(extracted_text)
+    if doc_pairs.any?
+      summary_lines = []
+      doc_pairs.each do |campo_id, valor|
+        label = RiskFieldSet.label_for(campo_id)
+        Message.save_unique!(
+          risk_assistant: @risk_assistant,
+          key:           campo_id,
+          value:         valor,
+          content:       "✅ Perfecto, #{label} es &&#{valor}&&.",
+          sender:        "assistant",
+          role:          "developer",
+          field_asked:   label,
+          thread_id:     current_thread
+        )
+        summary_lines << "✅ #{label}: #{valor}"
       end
+
+      todos_confirmaciones = summary_lines.join("\n")
+      @risk_assistant.messages.create!(
+        sender:    "assistant",
+        role:      "assistant",
+        content:   "He extraído y confirmado automáticamente los siguientes campos del documento:\n\n#{todos_confirmaciones}",
+        field_asked: "",
+        thread_id: current_thread
+      )
+
+      redirect_to risk_assistant_path(@risk_assistant)
+      return true  
     end
 
-    # 5) Si no hubo contradicción, seguimos con el flujo habitual:
+    next_field_id = RiskFieldSet.next_field_hash(
+                      @risk_assistant.messages.where.not(key: nil).pluck(:key)
+                    )&.dig(:id)
+    next_label = next_field_id ? RiskFieldSet.label_for(next_field_id) : "campo pendiente"
 
-    # 5.1) Preparamos el runner (crea thread si aún no existe)
+    @risk_assistant.messages.create!(
+      sender:    "assistant",
+      role:      "assistant",
+      content:   "He extraído el texto del documento, pero no encontré datos para los campos solicitados.\n" \
+                 "Por favor, indícame directamente el campo “#{next_label}”.",
+      field_asked: next_field_id,
+      thread_id: current_thread
+    )
+
+    redirect_to risk_assistant_path(@risk_assistant)
+    true
+  end
+
+  # Returns true if a redirect happened
+  def semantic_guard_validation(current_thread)
+    last_q = @risk_assistant.messages
+                            .where(sender: ["assistant", "assistant_guard"], role: "assistant", thread_id: current_thread)
+                            .where.not(field_asked: nil)
+                            .where(key: nil)
+                            .order(:created_at)
+                            .last
+    return false unless last_q
+
+    confirmed_messages = @risk_assistant.messages
+                                        .where(thread_id: current_thread)
+                                        .where.not(key: nil)
+                                        .order(:created_at)
+
+    relevant_confirmations = confirmed_messages.select do |m|
+      m.key.to_s == last_q.field_asked.to_s
+  end
+
+    confirmed_context = relevant_confirmations
+                        .map { |m| "#{RiskFieldSet.label_for(m.key)}: #{m.value}" }
+                        .join("\n")
+
+    return false if confirmed_context.blank?
+
+    err = SemanticGuard.validate(
+      question:       last_q.content,
+      answer:         @message.content,
+      context:        confirmed_context,
+      risk_assistant: @risk_assistant,
+      thread_id:      current_thread
+    )
+
+    if err
+      follow_up = RiskFieldSet
+                    .question_for(last_q.field_asked.to_sym, include_tips: false)
+                    .gsub(/^Contexto:.*\n/, "")
+      content   = "⚠️ #{err} La respuesta no concuerda con los datos previos…\n\n#{follow_up}"
+
+      already_warned = @risk_assistant.messages
+                                      .where(sender: "assistant_guard",
+                                             field_asked: last_q.field_asked,
+                                             thread_id: current_thread)
+                                      .exists?
+
+      if already_warned
+        answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
+        next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
+
+        if next_field_hash
+          display_text = RiskFieldSet.question_for(next_field_hash[:id], include_tips: true)
+          @risk_assistant.messages.create!(sender: "assistant", role: "assistant",
+                                           content: display_text,
+                                           field_asked: next_field_hash[:id],
+                                           thread_id: current_thread)
+        end
+      else
+        @risk_assistant.messages.create!(sender: "assistant_guard", role: "assistant",
+                                         content: content, field_asked: last_q.field_asked,
+                                         thread_id: current_thread)
+      end
+
+      redirect_to risk_assistant_path(@risk_assistant)
+      return true
+    end
+
+    result = AnswerValidator.validate(
+      question: last_q.content,
+      answer:   @message.content,
+      context:  confirmed_context
+    )
+
+    if result[:status] != :valid
+      follow_up = RiskFieldSet
+                    .question_for(last_q.field_asked.to_sym, include_tips: false)
+                    .gsub(/^Contexto:.*\n/, "")
+      content   = "⚠️ #{result[:message]}\n\n#{follow_up}"
+      @risk_assistant.messages.create!(sender: 'assistant', role: 'assistant',
+                                      content: content, field_asked: last_q.field_asked,
+                                      thread_id: current_thread)
+      redirect_to risk_assistant_path(@risk_assistant)
+      return true
+    end
+    false
+  end
+
+  def assistant_interaction(current_thread)
     runner = AssistantRunner.new(@risk_assistant)
-
-    # 5.2) Subir el archivo (nuevamente) para que el LLM principal lo analice, si se desea
-    file_id = nil
-    if params[:file].present?
-      file_id = uploader_to_openai(params[:file])
-      attach_to_thread(runner.thread_id, file_id) if file_id.present?
-    end
-
-    # 5.3) Enviamos el turno del usuario (texto + file_id si hay)
-    runner.submit_user_message(content: @message.content, file_id: file_id)
-
-    # 5.4) Ejecutar la run principal y esperamos su respuesta
+    runner.submit_user_message(content: @message.content, file_id: nil)
     assistant_text = runner.run_and_wait
 
     last_q = @risk_assistant.messages
-            .where(sender:    ["assistant", "assistant_guard"],
-                  role:      "assistant",
-                  thread_id: runner.thread_id)
-            .where.not(field_asked: nil)
-            .where(key: nil)
-            .order(:created_at)
-            .last
+                            .where(sender: ["assistant", "assistant_guard"], role: "assistant", thread_id: runner.thread_id)
+                            .where.not(field_asked: nil)
+                            .where(key: nil)
+                            .order(:created_at)
+                            .last
 
-
-     # Opcional: guardar la respuesta completa del asistente para auditoría
-
-         # 6.C) Publicar la nueva pregunta “limpia” para el cliente
     answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
     next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
 
     next_id = next_field_hash[:id]   
 
     @risk_assistant.messages.create!(
-      sender:    "assistant2",
+      sender:    "assistant",
       role:      "assistant",
       content:   assistant_text,
       field_asked: next_id,
       thread_id: runner.thread_id
     )
 
-    # 6) Procesar la respuesta del asistente (igual que antes)
     pairs = assistant_text.scan(/##(?<field_id>[^#()]+?)(?:\s*\((?<item_label>[^)]+)\))?##.*?&&\s*(?<value>.*?)\s*&&/m)
     flags = assistant_text.scan(/⚠️\s*(.*?)\s*⚠️/m).flatten
     sanitized_text = assistant_text.gsub(/(?:\u2705[^#]*?)?##[^#]+##.*?&&.*?&&\s*[.,]?/m, "").strip
-    # 6.A) Guardar confirmaciones crudas
-    # 6.A) Guardar confirmaciones crudas con validación
+
     confirmations = []
 
     if pairs.any?
@@ -297,12 +282,11 @@ class MessagesController < ApplicationController
         )
 
 
-        confirmations << "✅ #{RiskFieldSet.label_for(clean_id)}: #{value}"        
+        confirmations << "✅ #{RiskFieldSet.label_for(clean_id)}: #{value}"    
       end
     end
   
 
-    # 6.B) Guardar flags
     flags.each do |msg|
       @risk_assistant.messages.create!(
         sender:    "assistant",
@@ -312,7 +296,6 @@ class MessagesController < ApplicationController
       )
     end
 
-    # 6.C) Publicar la nueva pregunta “limpia” para el cliente
     answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
     next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
     if next_field_hash
@@ -328,8 +311,8 @@ class MessagesController < ApplicationController
                                              normative_tips: tips,
                                              confirmations: confirmations)
       combined = "Confirmación:\n#{confirmations.join("\n")}\n\n" \
-                  "Siguiente pregunta: #{question_text}\n\n" \
-                  "**Normative tips**: #{tips}"
+                 "Siguiente pregunta: #{question_text}\n\n" \
+                 "**Normative tips**: #{tips}"
 
       final_content = "#{combined}\n\n#{expanded}".strip
 
@@ -342,10 +325,6 @@ class MessagesController < ApplicationController
       )
 
       if confirmations.any?
-        combined = "Confirmación:\n#{confirmations.join("\n")}\n\n" \
-                   "Siguiente pregunta: #{question_text}\n\n" \
-                   "**Normative tips**: #{tips}"    
-
         @risk_assistant.messages.create!(
           sender: "assistant",
           role: "developer",
@@ -355,17 +334,7 @@ class MessagesController < ApplicationController
         )
       end
     end
-    redirect_to @risk_assistant
-
-  rescue => e
-    Rails.logger.error "💥 Error en MessagesController#create: #{e.class} – #{e.message}"
-    flash[:error] = "Se produjo un error
-     al procesar tu mensaje."
-    redirect_to risk_assistant_path(@risk_assistant)
   end
-
-
-  private
 
   def message_params
     params.require(:message).permit(:content, :thread_id, :section, :field_asked)
@@ -399,7 +368,7 @@ class MessagesController < ApplicationController
             "#{AssistantRunner::BASE_URL}/files",
             form: {
               file: HTTP::FormData::File.new(tmp.path),  # ya está cerrado
-              purpose: "assistants"
+              purpose: "assistants",
             }
           )
 
