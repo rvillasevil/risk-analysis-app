@@ -39,10 +39,10 @@ class AssistantRunner
         – “Habría que indicar también el código postal, ¿me lo puedes dar?”            
       4. No pidas dos campos a la vez.
       5. Valida tipos; si no encaja, pide aclaración.
-      6. **Al preguntar**, usa `RiskFieldSet.question_for(id)`:
+      6. **Al preguntar**, usa `RiskFieldSet.question_for(id)` y 'assistant_instructions' para formular la pregunta.
         - Incluye “Opciones disponibles” si `options` está definido.
         - Incluye “Ejemplo: …” si `example` está definido.
-        - Incluye “Importancia: …” si `why` está definido.
+        - Incluye normative_tips si está definido.
       7. Si la respuesta es ambigua, reitera el ejemplo u opciones.
       8. Se adjuntarán documentos, para cada uno de ellos, analiza todo el documento y localiza el contenido de campos de la lista de campos:  ```json#{@fields_json} ``` dentro del documento, de la mayor parte de campos posibles. La respuesta debe contener cada uno de los campos encontrado con su valor, con el siguiente formato de salida: ✅ Perfecto, el campo ##Campo## es &&Valor&&. Importante los ## y && para capturar el valor. Y pregunta por el siguiente campo.      
     SYS
@@ -85,8 +85,6 @@ class AssistantRunner
         content:     question,
         thread_id:   thread_id
       )
-
-      tip   = field[:normative_tips].to_s.strip
 
       extra = +""
       extra << "### Instrucciones de campo:\n#{instr}\n\n" if instr.present?

@@ -306,18 +306,18 @@ class MessagesController < ApplicationController
     if next_field_hash
       next_id = next_field_hash[:id].to_s
       field_for_question = question_field_id.presence || next_id
-      tips  = RiskFieldSet.normative_tips_for(field_for_question)      
-      instr = next_field_hash[:assistant_instructions].to_s
+      assistant_instructions = RiskFieldSet.by_id[field_for_question.to_sym][:assistant_instructions]
+      tips  = RiskFieldSet.normative_tips_for(field_for_question)
 
       question_text = sanitized_text.presence ||
                       RiskFieldSet.question_for(next_id.to_sym, include_tips: true)
 
       final_content = if sanitized_text.present?
-                        sanitized_text
+                        sanitized_text + (tips.present? ? "\nTip normativo: #{tips}" : "")
                       else
                         ParagraphGenerator.generate(
                           question: question_text,
-                          instructions: instr,
+                          instructions: assistant_instructions.to_s,
                           normative_tips: tips,
                           confirmations: confirmations
                         ).presence || question_text
