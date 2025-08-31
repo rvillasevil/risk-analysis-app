@@ -61,12 +61,11 @@ module SemanticGuard
 
       Si la respuesta no se relaciona bien con el contexto o es incoherente,
       devuelve **exactamente**:
-        Aviso: <motivo en máximo 20 palabras>.
+        Aviso: <desarrolla el motivo en un mínimo de 100 palabras y un máximo de 2 párrafos>.
       Si todo se correlaciona correctamente, devuelve **exactamente**:
         OK
       Si el usuario confirma la incoherencia, devuelve **exactamente**:
         OK
-
       Si el usuario indica siguiente pregunta, expresa desconocimiento a la respuesta, contestar: OK
     PROMPT
 

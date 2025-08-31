@@ -13,7 +13,9 @@ class MessagesController < ApplicationController
     msg      = "⚠️ Falta el dato #{field[:label]}."
     msg += " #{reason}" unless reason.empty?
     "#{msg}\n\n#{question}"
-  end.freeze    
+  end.freeze
+
+  CONFIRMED_CONTEXT_LIMIT = 100   
 
   # ------------------------------------------------------------------
   # POST /risk_assistants/:risk_assistant_id/messages
@@ -91,14 +93,7 @@ class MessagesController < ApplicationController
       thread_id: current_thread
     )
 
-    @message = @risk_assistant.messages.create!(
-      sender:    "user",
-      role:      "user",
-      content:   "Siguiente campo",
-      thread_id: current_thread
-    )
-
-    assistant_interaction(current_thread)    
+    AssistantRunner.new(@risk_assistant).ask_next!
   end
 
   # Returns true if a redirect happened
@@ -221,21 +216,19 @@ class MessagesController < ApplicationController
                             .last
     return false unless last_q
 
-    confirmed_messages = @risk_assistant.messages
-                                        .where(thread_id: current_thread)
-                                        .where.not(key: nil)
-                                        .order(:created_at)
-
-    relevant_confirmations = confirmed_messages.select do |m|
-      m.key.to_s == last_q.field_asked.to_s
-  end
-
-    confirmed_context = relevant_confirmations
-                        .map { |m| "#{RiskFieldSet.label_for(m.key)}: #{m.value}" }
-                        .join("\n")
+    confirmed_context = @risk_assistant.messages
+                                       .where(thread_id: current_thread)
+                                       .where.not(key: nil)
+                                       .order(:created_at)
+                                       .select { |m| m.key.to_s == last_q.field_asked.to_s }
+                                       .map { |m| "#{RiskFieldSet.label_for(m.key)}: #{m.value}" }
+                                       .join("\n")
 
     err = nil
     if confirmed_context.present?
+      Rails.logger.debug do
+        "semanticGuard: question=#{last_q.content.inspect} answer=#{@message.content.inspect} context=#{confirmed_context}"
+      end      
       err = SemanticGuard.validate(
         question:       last_q.content,
         answer:         @message.content,
@@ -286,10 +279,7 @@ class MessagesController < ApplicationController
       follow_up = RiskFieldSet
                     .question_for(last_q.field_asked.to_sym, include_tips: false)
       follow_up = follow_up.lines.reject { |l| l.start_with?("Contexto:") }.join
-      base_field = last_q.field_asked.to_s.gsub(/\.\d+/, '').to_sym
-      template   = result[:status] == :incomplete ? MISSING_FIELD_TEMPLATES[base_field] : nil
-      content    = template || "⚠️ #{result[:message]}\n\n#{follow_up}"
-
+      content   = "⚠️ #{result[:message]}\n\n#{follow_up}"
       @risk_assistant.messages.create!(sender: 'assistant', role: 'assistant',
                                       content: content, field_asked: last_q.field_asked,
                                       thread_id: current_thread)
