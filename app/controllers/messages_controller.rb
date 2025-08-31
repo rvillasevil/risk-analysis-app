@@ -91,7 +91,14 @@ class MessagesController < ApplicationController
       thread_id: current_thread
     )
 
-    AssistantRunner.new(@risk_assistant).ask_next!
+    @message = @risk_assistant.messages.create!(
+      sender:    "user",
+      role:      "user",
+      content:   "Siguiente campo",
+      thread_id: current_thread
+    )
+
+    assistant_interaction(current_thread)    
   end
 
   # Returns true if a redirect happened

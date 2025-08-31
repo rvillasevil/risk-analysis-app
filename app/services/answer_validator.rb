@@ -6,7 +6,20 @@ class AnswerValidator
     "Content-Type"  => "application/json"
   }.freeze
 
+  # Frases que indican que el usuario no dispone de la información.
+  # Mantener sincronizadas con las instrucciones del LLM.
+  SKIPPABLE_RESPONSES = [
+    "no lo sé",
+    "no lo se",
+    "desconozco",
+    "no aplica",
+    "siguiente pregunta"
+  ].freeze
+
+
   def self.validate(question:, answer:, context:)
+    normalized = answer.to_s.downcase.strip
+    return { status: :valid } if SKIPPABLE_RESPONSES.include?(normalized)    
     prompt = <<~PROMPT
       Eres un validador que decide si la respuesta de un usuario resuelve la pregunta solicitada.
 
