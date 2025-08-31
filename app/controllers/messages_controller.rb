@@ -241,20 +241,6 @@ class MessagesController < ApplicationController
                             .order(:created_at)
                             .last
 
-    answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
-    next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
-    return unless next_field_hash
-
-    next_id = next_field_hash[:id]
-
-    @risk_assistant.messages.create!(
-      sender:    "assistant_raw",
-      role:      "developer",
-      content:   assistant_text,
-      field_asked: next_id,
-      thread_id: runner.thread_id
-    )
-
     pairs = assistant_text.scan(/##(?<field_id>[^#()]+?)(?:\s*\((?<item_label>[^)]+)\))?##.*?&&\s*(?<value>.*?)\s*&&/m)
     flags = assistant_text.scan(/⚠️\s*(.*?)\s*⚠️/m).flatten
     sanitized_text = assistant_text.gsub(/(?:\u2705[^#]*?)?##[^#]+##.*?&&.*?&&\s*[.,]?/m, "").strip
@@ -265,30 +251,27 @@ class MessagesController < ApplicationController
 
     confirmations = []
 
-    if pairs.any?
       pairs.each do |field_id, item_label, value|
-        clean_id = field_id.to_s.strip
-        
-        if last_q && clean_id !~ /\.\d+\./
-          expected = last_q.field_asked.to_s
-          clean_id = expected if expected.gsub(/\.\d+/, '') == clean_id
-        end
+      clean_id = field_id.to_s.strip
 
-        Message.save_unique!(
-          risk_assistant: @risk_assistant,
-          key:           clean_id,
-          value:         value,
-          item_label:    item_label,
-          content:       "✅ Perfecto, #{RiskFieldSet.label_for(clean_id)} es &&#{value}&&.",
-          sender:        "assistant_confirmation",
-          role:          "developer",
-          field_asked:   nil,
-          thread_id:     runner.thread_id
-        )
-
-
-        confirmations << "✅ #{RiskFieldSet.label_for(clean_id)}: #{value}"    
+      if last_q && clean_id !~ /\.\d+\./
+        expected = last_q.field_asked.to_s
+        clean_id = expected if expected.gsub(/\.\d+/, '') == clean_id
       end
+
+      Message.save_unique!(
+        risk_assistant: @risk_assistant,
+        key:           clean_id,
+        value:         value,
+        item_label:    item_label,
+        content:       "✅ Perfecto, #{RiskFieldSet.label_for(clean_id)} es &&#{value}&&.",
+        sender:        "assistant_confirmation",
+        role:          "developer",
+        field_asked:   nil,
+        thread_id:     runner.thread_id
+      )
+
+      confirmations << "✅ #{RiskFieldSet.label_for(clean_id)}: #{value}
     end
   
 
@@ -303,30 +286,49 @@ class MessagesController < ApplicationController
 
     answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
     next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
-    if next_field_hash
-      next_id = next_field_hash[:id].to_s
-      field_for_question = question_field_id.presence || next_id
-      assistant_instructions = RiskFieldSet.by_id[field_for_question.to_sym][:assistant_instructions]
-      tips  = RiskFieldSet.normative_tips_for(field_for_question)
+    field_for_question = question_field_id.presence || next_field_hash&.dig(:id)
+    return unless field_for_question
+    field_for_question = field_for_question.to_s
 
-      question_text = sanitized_text.presence ||
-                      RiskFieldSet.question_for(next_id.to_sym, include_tips: true)
+    @risk_assistant.messages.create!(
+      sender:    "assistant_raw",
+      role:      "developer",
+      content:   assistant_text,
+      field_asked: field_for_question,
+      thread_id: runner.thread_id
+    )
 
-      final_content = if sanitized_text.present?
-                        sanitized_text + (tips.present? ? "\nTip normativo: #{tips}" : "")
-                      else
-                        ParagraphGenerator.generate(
-                          question: question_text,
-                          instructions: assistant_instructions.to_s,
-                          normative_tips: tips,
-                          confirmations: confirmations
-                        ).presence || question_text
-                      end
+    assistant_instructions = RiskFieldSet.by_id[field_for_question.to_sym][:assistant_instructions]
+    tips  = RiskFieldSet.normative_tips_for(field_for_question)
+
+    question_text = sanitized_text.presence ||
+                    RiskFieldSet.question_for(field_for_question.to_sym, include_tips: true)
+
+    final_content = if sanitized_text.present?
+                      sanitized_text + (tips.present? ? "\nTip normativo: #{tips}" : "")
+                    else
+                      ParagraphGenerator.generate(
+                        question: question_text,
+                        instructions: assistant_instructions.to_s,
+                        normative_tips: tips,
+                        confirmations: confirmations
+                      ).presence || question_text
+                    end
+
+    @risk_assistant.messages.create!(
+      sender: "assistant",
+      role: "assistant",
+      content: final_content,
+      field_asked: field_for_question,
+      thread_id: runner.thread_id
+    )
+
+    if confirmations.any?
 
       @risk_assistant.messages.create!(
-        sender: "assistant",
-        role: "assistant",
-        content: final_content,
+        sender: "assistant_summary",
+        role: "developer",
+        content: confirmations.join("\n"),
         field_asked: field_for_question,
         thread_id: runner.thread_id
       )

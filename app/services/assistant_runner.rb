@@ -239,8 +239,6 @@ class AssistantRunner
     # El asistente generará la pregunta exacta como parte de la respuesta,
     # por lo que aquí no la publicamos para evitar duplicidades en el chat.         
 
-    field_asked = field.to_s.strip
-
     # Acceso seguro al label del siguiente campo pendiente
     npf = next_pending_field
     label = ""
