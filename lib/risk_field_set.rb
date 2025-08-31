@@ -167,7 +167,14 @@ class RiskFieldSet
       @label_to_id =
       @id_to_label = nil
     end
-    public :reset_cache!
+
+    # Recarga la definición de campos desde el fichero de configuración
+    def reload!
+      reset_cache!
+      all
+    end
+
+    public :reset_cache!, :reload!
 
         # ------- NUEVO: helpers para el siguiente campo -----------------
     def next_field_hash(answered_keys = [])

@@ -218,15 +218,16 @@ class MessagesController < ApplicationController
                         .map { |m| "#{RiskFieldSet.label_for(m.key)}: #{m.value}" }
                         .join("\n")
 
-    return false if confirmed_context.blank?
-
-    err = SemanticGuard.validate(
-      question:       last_q.content,
-      answer:         @message.content,
-      context:        confirmed_context,
-      risk_assistant: @risk_assistant,
-      thread_id:      current_thread
-    )
+    err = nil
+    if confirmed_context.present?
+      err = SemanticGuard.validate(
+        question:       last_q.content,
+        answer:         @message.content,
+        context:        confirmed_context,
+        risk_assistant: @risk_assistant,
+        thread_id:      current_thread
+      )
+    end
 
     if err
       follow_up = RiskFieldSet

@@ -44,7 +44,10 @@ class AssistantRunner
         - Incluye “Ejemplo: …” si `example` está definido.
         - Incluye normative_tips si está definido.
       7. Si la respuesta es ambigua, reitera el ejemplo u opciones.
-      8. Se adjuntarán documentos, para cada uno de ellos, analiza todo el documento y localiza el contenido de campos de la lista de campos:  ```json#{@fields_json} ``` dentro del documento, de la mayor parte de campos posibles. La respuesta debe contener cada uno de los campos encontrado con su valor, con el siguiente formato de salida: ✅ Perfecto, el campo ##Campo## es &&Valor&&. Importante los ## y && para capturar el valor. Y pregunta por el siguiente campo.      
+      8. Si la respuesta no guarda relación con el campo preguntado, repite la misma pregunta indicando que la respuesta no es válida.
+        - Ejemplos de respuestas no válidas: "no lo sé", "ninguna", "¿qué es esto?", "otro tema".
+      9. Si el usuario responde "no aplica", "siguiente pregunta", o desconoce el dato, valida el campo como "desconocido"."
+      10. Se adjuntarán documentos, para cada uno de ellos, analiza todo el documento y localiza el contenido de campos de la lista de campos:  ```json#{@fields_json} ``` dentro del documento, de la mayor parte de campos posibles. La respuesta debe contener cada uno de los campos encontrado con su valor, con el siguiente formato de salida: ✅ Perfecto, el campo ##Campo## es &&Valor&&. Importante los ## y && para capturar el valor. Y pregunta por el siguiente campo.    
     SYS
 
     HTTP.headers(HEADERS)
@@ -139,6 +142,10 @@ class AssistantRunner
 
   def build_fields_json
     Rails.logger.info "AssistantRunner: generando lista de campos…"
+
+    # Aseguramos que la configuración de campos esté actualizada
+    RiskFieldSet.reload!
+
     # Enviamos TODO lo que el modelo necesita:
     RiskFieldSet.flat_fields.map { |f|
       {
