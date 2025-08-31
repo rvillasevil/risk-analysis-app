@@ -57,11 +57,15 @@ class MessagesController < ApplicationController
       file.rewind
       @risk_assistant.uploaded_files.attach(file)
 
-      @risk_assistant.messages.create!(
-        sender:    "assistant",
-        role:      "assistant",
-        content:   "Imagen subida correctamente.",
-        thread_id: current_thread
+      Message.save_unique!(
+        risk_assistant: @risk_assistant,
+        key:           @message.field_asked,
+        value:         file.original_filename,
+        content:       "Archivo subido correctamente.",
+        sender:        "assistant",
+        role:          "assistant",
+        field_asked:   @message.field_asked,
+        thread_id:     current_thread
       )
 
       answered   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
@@ -83,7 +87,18 @@ class MessagesController < ApplicationController
 
     extracted_text = TextExtractor.call(file)
     file.rewind
-    @risk_assistant.uploaded_files.attach(file)  
+    @risk_assistant.uploaded_files.attach(file)
+
+    Message.save_unique!(
+      risk_assistant: @risk_assistant,
+      key:           @message.field_asked,
+      value:         file.original_filename,
+      content:       "Archivo subido correctamente.",
+      sender:        "assistant",
+      role:          "assistant",
+      field_asked:   @message.field_asked,
+      thread_id:     current_thread
+    ) 
 
     unless extracted_text.blank?
       @risk_assistant.messages.create!(
@@ -271,7 +286,7 @@ class MessagesController < ApplicationController
         thread_id:     runner.thread_id
       )
 
-      confirmations << "✅ #{RiskFieldSet.label_for(clean_id)}: #{value}
+      confirmations << "✅ #{RiskFieldSet.label_for(clean_id)}: #{value}"
     end
   
 
@@ -338,7 +353,7 @@ class MessagesController < ApplicationController
           sender: "assistant_summary",
           role: "developer",
           content: confirmations.join("\n"),
-          field_asked: field_for_question,
+          field_asked: field_for_question,  
           thread_id: runner.thread_id
         )
       end
