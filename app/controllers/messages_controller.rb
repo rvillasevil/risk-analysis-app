@@ -4,7 +4,16 @@ class MessagesController < ApplicationController
 
   require "fileutils"
   require "semantic_guard"
-  require "risk_field_set"        
+  require "risk_field_set"
+
+  MISSING_FIELD_TEMPLATES = RiskFieldSet.by_id.transform_values do |field|
+    question = RiskFieldSet.question_for(field[:id], include_tips: false)
+    question = question.lines.reject { |l| l.start_with?("Contexto:") }.join
+    reason   = field[:why].to_s.strip
+    msg      = "⚠️ Falta el dato #{field[:label]}."
+    msg += " #{reason}" unless reason.empty?
+    "#{msg}\n\n#{question}"
+  end.freeze    
 
   # ------------------------------------------------------------------
   # POST /risk_assistants/:risk_assistant_id/messages
@@ -270,7 +279,10 @@ class MessagesController < ApplicationController
       follow_up = RiskFieldSet
                     .question_for(last_q.field_asked.to_sym, include_tips: false)
       follow_up = follow_up.lines.reject { |l| l.start_with?("Contexto:") }.join
-      content   = "⚠️ #{result[:message]}\n\n#{follow_up}"
+      base_field = last_q.field_asked.to_s.gsub(/\.\d+/, '').to_sym
+      template   = result[:status] == :incomplete ? MISSING_FIELD_TEMPLATES[base_field] : nil
+      content    = template || "⚠️ #{result[:message]}\n\n#{follow_up}"
+
       @risk_assistant.messages.create!(sender: 'assistant', role: 'assistant',
                                       content: content, field_asked: last_q.field_asked,
                                       thread_id: current_thread)
