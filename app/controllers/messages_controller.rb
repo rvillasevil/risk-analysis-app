@@ -16,6 +16,12 @@ class MessagesController < ApplicationController
       @message = save_user_message
       current_thread = @risk_assistant.thread_id
 
+      if skip_message?(@message.content)
+        handle_skip(current_thread)
+        redirect_to @risk_assistant
+        return
+      end
+
       return if handle_file_upload(params[:file], current_thread)
       return if semantic_guard_validation(current_thread)
 
@@ -48,6 +54,37 @@ class MessagesController < ApplicationController
       )
     )
   end
+
+
+  def skip_message?(content)
+    content.to_s.strip.downcase.in?(%w[saltar skip])
+  end
+
+  def handle_skip(current_thread)
+    @message.update!(role: "developer")
+
+    Message.save_unique!(
+      risk_assistant: @risk_assistant,
+      key:           @message.field_asked,
+      value:         "SALTADO",
+      content:       "Campo omitido.",
+      sender:        "assistant",
+      role:          "developer",
+      field_asked:   @message.field_asked,
+      thread_id:     current_thread
+    )
+
+    label = RiskFieldSet.label_for(@message.field_asked)
+    @risk_assistant.messages.create!(
+      sender: "assistant",
+      role:   "assistant",
+      content: "Se omitió el campo #{label}.",
+      thread_id: current_thread
+    )
+
+    AssistantRunner.new(@risk_assistant).ask_next!
+  end
+
   # Returns true if a redirect happened
   def handle_file_upload(file, current_thread)
     return false unless file.present?
@@ -347,16 +384,6 @@ class MessagesController < ApplicationController
         field_asked: field_for_question,
         thread_id: runner.thread_id
       )
-
-      if confirmations.any?
-        @risk_assistant.messages.create!(
-          sender: "assistant_summary",
-          role: "developer",
-          content: confirmations.join("\n"),
-          field_asked: field_for_question,  
-          thread_id: runner.thread_id
-        )
-      end
     end
   end
 
