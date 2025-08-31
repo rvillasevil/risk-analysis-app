@@ -89,16 +89,20 @@ class AssistantRunner
         thread_id:   thread_id
       )
 
-      extra = +""
-      extra << "### Instrucciones de campo:\n#{instr}\n\n" if instr.present?
-      extra << "### Tip normativo:\n#{tips}\n\n" if tips.present?    
-      extra << "### Pregunta:\n#{question}\n\n"
-      extra << "⚠️ Tras confirmar, responde SOLO \"OK\" y espera la siguiente instrucción."
-
       confirmations = risk_assistant.messages
                                     .where.not(key: nil)
                                     .order(:created_at)
                                     .map { |m| "✅ #{RiskFieldSet.label_for(m.key)}: #{m.value}" }
+
+      history_block = confirmations.any? ? "### Historial de respuestas confirmadas:\n#{confirmations.join("\n")}\n\n" : ""
+
+      extra = +""
+      extra << history_block
+      extra << "### Instrucciones de campo:\n#{instr}\n\n" if instr.present?
+      extra << "### Tip normativo:\n#{tips}\n\n" if tips.present?
+      extra << "### Pregunta:\n#{question}\n\n"
+      extra << "⚠️ Tras confirmar, responde SOLO \"OK\" y espera la siguiente instrucción."
+      extra << "\nAntes de formular la siguiente pregunta, revisa este historial y señala cualquier contradicción detectada."
 
       
       expanded = ParagraphGenerator.generate(question: question,
@@ -250,8 +254,16 @@ class AssistantRunner
       label = byid[:label].to_s.strip if byid
     end
 
+    confirmations = risk_assistant.messages
+                                  .where.not(key: nil)
+                                  .order(:created_at)
+                                  .map { |m| "✅ #{RiskFieldSet.label_for(m.key)}: #{m.value}" }
+
+    history_block = confirmations.any? ? "Historial de respuestas confirmadas:\n#{confirmations.join("\n")}\n\n" : ""
+
+
     extra = <<~SYS
-      Lista interna de campos (no mostrar al usuario):
+      #{history_block}Lista interna de campos (no mostrar al usuario):
       ```json
       #{@fields_json}
       ```
@@ -281,6 +293,8 @@ class AssistantRunner
          envíe la siguiente instrucción.
       8. Usa la plantilla indicada en assistant_instructions si existe.
       9. Si se adjunta un archivo, busca la información relacionada con cada uno de los campos y valida cada uno de ellos.
+      10. Revisa el historial y señala cualquier contradicción antes de formular la siguiente pregunta.
+
     SYS
  
     resp = post(

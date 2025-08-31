@@ -3,7 +3,6 @@ class MessagesController < ApplicationController
   before_action :set_risk_assistant
 
   require "fileutils"
-  require "semantic_guard"
   require "risk_field_set"
 
   MISSING_FIELD_TEMPLATES = RiskFieldSet.by_id.transform_values do |field|
@@ -34,7 +33,6 @@ class MessagesController < ApplicationController
       end
 
       return if handle_file_upload(params[:file], current_thread)
-      return if semantic_guard_validation(current_thread)
 
       assistant_interaction(current_thread)
       redirect_to @risk_assistant
@@ -206,97 +204,13 @@ class MessagesController < ApplicationController
   end
   end
 
-  # Returns true if a redirect happened
-  def semantic_guard_validation(current_thread)
-    last_q = @risk_assistant.messages
-                            .where(sender: ["assistant", "assistant_guard", "semantic_guard"], role: "assistant", thread_id: current_thread)
-                            .where.not(field_asked: nil)
-                            .where(key: nil)
-                            .order(:created_at)
-                            .last
-    return false unless last_q
-
-    confirmed_context = @risk_assistant.messages
-                                       .where(thread_id: current_thread)
-                                       .where.not(key: nil)
-                                       .order(:created_at)
-                                       .select { |m| m.key.to_s == last_q.field_asked.to_s }
-                                       .map { |m| "#{RiskFieldSet.label_for(m.key)}: #{m.value}" }
-                                       .join("\n")
-
-    err = nil
-    if confirmed_context.present?
-      Rails.logger.debug do
-        "semanticGuard: question=#{last_q.content.inspect} answer=#{@message.content.inspect} context=#{confirmed_context}"
-      end      
-      err = SemanticGuard.validate(
-        question:       last_q.content,
-        answer:         @message.content,
-        context:        confirmed_context,
-        risk_assistant: @risk_assistant,
-        thread_id:      current_thread
-      )
-    end
-
-    if err
-      missing = err.sub(/^Aviso:\s*/, "")
-      content = "⚠️ #{missing}\n¿Podrías facilitar únicamente estos datos?"
-
-      already_warned = @risk_assistant.messages
-                                      .where(sender: "semantic_guard",
-                                             field_asked: last_q.field_asked,
-                                             thread_id: current_thread)
-                                      .exists?
-
-      if already_warned
-        answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
-        next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
-
-        if next_field_hash
-          display_text = RiskFieldSet.question_for(next_field_hash[:id], include_tips: true)
-          @risk_assistant.messages.create!(sender: "assistant", role: "assistant",
-                                           content: display_text,
-                                           field_asked: next_field_hash[:id],
-                                           thread_id: current_thread)
-        end
-      else
-        @risk_assistant.messages.create!(sender: "semantic_guard", role: "assistant",
-                                         content: content, field_asked: last_q.field_asked,
-                                         thread_id: current_thread)
-      end
-
-      redirect_to risk_assistant_path(@risk_assistant)
-      return true
-    end
-
-    result = AnswerValidator.validate(
-      question: last_q.content,
-      answer:   @message.content,
-      context:  confirmed_context
-    )
-
-    if result[:status] != :valid
-      follow_up = RiskFieldSet
-                    .question_for(last_q.field_asked.to_sym, include_tips: false)
-      follow_up = follow_up.lines.reject { |l| l.start_with?("Contexto:") }.join
-      content   = "⚠️ #{result[:message]}\n\n#{follow_up}"
-      @risk_assistant.messages.create!(sender: 'assistant', role: 'assistant',
-                                      content: content, field_asked: last_q.field_asked,
-                                      thread_id: current_thread)
-      redirect_to risk_assistant_path(@risk_assistant)
-      return true
-    end
-    false
-  end
-
   def assistant_interaction(current_thread)
     runner = AssistantRunner.new(@risk_assistant)
     runner.submit_user_message(content: @message.content, file_id: nil)
     assistant_text = runner.run_and_wait
 
     last_q = @risk_assistant.messages
-                            .where(sender: ["assistant", "assistant_guard", "semantic_guard"], role: "assistant", thread_id: runner.thread_id)
-                            .where.not(field_asked: nil)
+                            .where(sender: ["assistant", "assistant_guard"], role: "assistant", thread_id: runner.thread_id)                            .where.not(field_asked: nil)
                             .where(key: nil)
                             .order(:created_at)
                             .last
