@@ -198,7 +198,7 @@ class MessagesController < ApplicationController
   # Returns true if a redirect happened
   def semantic_guard_validation(current_thread)
     last_q = @risk_assistant.messages
-                            .where(sender: ["assistant", "assistant_guard"], role: "assistant", thread_id: current_thread)
+                            .where(sender: ["assistant", "assistant_guard", "semantic_guard"], role: "assistant", thread_id: current_thread)
                             .where.not(field_asked: nil)
                             .where(key: nil)
                             .order(:created_at)
@@ -230,13 +230,11 @@ class MessagesController < ApplicationController
     end
 
     if err
-      follow_up = RiskFieldSet
-                    .question_for(last_q.field_asked.to_sym, include_tips: false)
-                    .gsub(/^Contexto:.*\n/, "")
-      content   = "⚠️ #{err} La respuesta no concuerda con los datos previos…\n\n#{follow_up}"
+      missing = err.sub(/^Aviso:\s*/, "")
+      content = "⚠️ #{missing}\n¿Podrías facilitar únicamente estos datos?"
 
       already_warned = @risk_assistant.messages
-                                      .where(sender: "assistant_guard",
+                                      .where(sender: "semantic_guard",
                                              field_asked: last_q.field_asked,
                                              thread_id: current_thread)
                                       .exists?
@@ -253,7 +251,7 @@ class MessagesController < ApplicationController
                                            thread_id: current_thread)
         end
       else
-        @risk_assistant.messages.create!(sender: "assistant_guard", role: "assistant",
+        @risk_assistant.messages.create!(sender: "semantic_guard", role: "assistant",
                                          content: content, field_asked: last_q.field_asked,
                                          thread_id: current_thread)
       end
@@ -271,7 +269,7 @@ class MessagesController < ApplicationController
     if result[:status] != :valid
       follow_up = RiskFieldSet
                     .question_for(last_q.field_asked.to_sym, include_tips: false)
-                    .gsub(/^Contexto:.*\n/, "")
+      follow_up = follow_up.lines.reject { |l| l.start_with?("Contexto:") }.join
       content   = "⚠️ #{result[:message]}\n\n#{follow_up}"
       @risk_assistant.messages.create!(sender: 'assistant', role: 'assistant',
                                       content: content, field_asked: last_q.field_asked,
@@ -288,7 +286,7 @@ class MessagesController < ApplicationController
     assistant_text = runner.run_and_wait
 
     last_q = @risk_assistant.messages
-                            .where(sender: ["assistant", "assistant_guard"], role: "assistant", thread_id: runner.thread_id)
+                            .where(sender: ["assistant", "assistant_guard", "semantic_guard"], role: "assistant", thread_id: runner.thread_id)
                             .where.not(field_asked: nil)
                             .where(key: nil)
                             .order(:created_at)
