@@ -23,7 +23,23 @@ class MessagesController < ApplicationController
   def create
       return redirect_blank_message if message_blank?
 
-      @message = save_user_message
+      last_question   = @risk_assistant.messages
+                                    .where(sender: "assistant", key: nil)
+                                    .order(:created_at)
+                                    .last
+      requested_field = params.dig(:message, :field_asked)
+      expected_field  = requested_field.presence || last_question&.field_asked
+
+      if requested_field.present? && !RiskFieldSet.by_id.key?(requested_field.to_sym)
+        Rails.logger.warn("MessagesController#create: invalid field_asked '#{requested_field}'")
+        expected_field = last_question&.field_asked
+        unless expected_field
+          head :unprocessable_entity
+          return
+        end
+      end
+
+      @message = save_user_message(expected_field)      
       current_thread = @risk_assistant.thread_id
 
       if skip_message?(@message.content)
@@ -54,13 +70,7 @@ class MessagesController < ApplicationController
     redirect_to risk_assistant_path(@risk_assistant)
   end
 
-  def save_user_message
-    last_question = @risk_assistant.messages
-                                  .where(sender: "assistant", key: nil)
-                                  .order(:created_at)
-                                  .last
-    expected_field = last_question&.field_asked
-
+  def save_user_message(expected_field)
     @risk_assistant.messages.create!(
       message_params.merge(
         sender:      "user",
@@ -357,7 +367,7 @@ class MessagesController < ApplicationController
   end
 
   def message_params
-    params.require(:message).permit(:content, :thread_id, :section)  
+    params.require(:message).permit(:content, :thread_id, :section, :field_asked)
   end
 
   def set_risk_assistant
