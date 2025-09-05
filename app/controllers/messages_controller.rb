@@ -55,11 +55,18 @@ class MessagesController < ApplicationController
   end
 
   def save_user_message
+    last_question = @risk_assistant.messages
+                                  .where(sender: "assistant", key: nil)
+                                  .order(:created_at)
+                                  .last
+    expected_field = last_question&.field_asked
+
     @risk_assistant.messages.create!(
       message_params.merge(
-        sender:    "user",
-        role:      "user",
-        thread_id: @risk_assistant.thread_id
+        sender:      "user",
+        role:        "user",
+        thread_id:   @risk_assistant.thread_id,
+        field_asked: expected_field
       )
     )
   end
@@ -260,7 +267,8 @@ class MessagesController < ApplicationController
 
     field_for_question = question_field_id.presence ||
                          @message.field_asked.presence ||
-                         last_q&.field_asked
+                         last_q&.field_asked.presence
+    field_for_question ||= runner.send(:next_pending_field)
     return unless field_for_question
     field_for_question = field_for_question.to_s
 
@@ -290,13 +298,12 @@ class MessagesController < ApplicationController
                     end
 
     norm_explanation = NormativeExplanationGenerator.generate(field_for_question, question: question_text)
-    parts = [question_text]
-    parts << "Tip normativo: #{tips}" if tips.present?
-    parts << "Explicación normativa: #{norm_explanation}" if norm_explanation.present?
-    final_content = parts.join("\n")
-
-    final_content = [base_content, "Explicación normativa: #{norm_explanation}"].join("\n")
-    Rails.logger.warn("Explicación normativa ausente para #{field_for_question}") if norm_explanation.blank?    
+    final_content = question_text
+    if norm_explanation.present?
+      final_content = "#{question_text}\nExplicación normativa: #{norm_explanation}"
+    else
+      Rails.logger.warn("Explicación normativa ausente para #{field_for_question}")
+    end  
 
     @risk_assistant.messages.create!(
       sender: "assistant",
@@ -319,7 +326,7 @@ class MessagesController < ApplicationController
   end
 
   def message_params
-    params.require(:message).permit(:content, :thread_id, :section, :field_asked)
+    params.require(:message).permit(:content, :thread_id, :section)  
   end
 
   def set_risk_assistant

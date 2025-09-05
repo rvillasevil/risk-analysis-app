@@ -145,12 +145,16 @@ class AssistantRunner
   def run_and_wait(timeout: 40)
     run_id = start_run_with_instructions
 
+    status = nil
     timeout.times do
       sleep 1
-      break if %w[completed failed expired].include?(run_status(run_id))
+      status = run_status(run_id)
+      break if %w[completed failed expired].include?(status)
     end
 
-    extract_text(last_message)
+    return "" unless %w[completed failed expired].include?(status)
+
+    extract_text(last_message(run_id: run_id))
   end
 
   private
@@ -332,8 +336,14 @@ class AssistantRunner
     get("#{BASE_URL}/threads/#{thread_id}/runs/#{run_id}")["status"]
   end
 
-  def last_message
-    get("#{BASE_URL}/threads/#{thread_id}/messages")["data"].first
+  def last_message(run_id: nil)
+    url = "#{BASE_URL}/threads/#{thread_id}/messages"
+    if run_id
+      url += "?run_id=#{run_id}"
+    else
+      url += "?order=desc"
+    end
+    get(url)["data"].first
   end
 
   def extract_text(msg)
@@ -353,7 +363,13 @@ class AssistantRunner
   end
 
   def get(url)
-    JSON.parse HTTP.headers(HEADERS).get(url).body.to_s
+    Rails.logger.debug "→ HTTP GET to #{url}"
+    resp = HTTP.headers(HEADERS).get(url).body.to_s
+    Rails.logger.debug "← Response: #{resp.truncate(200).gsub("\n", " ")}"
+    JSON.parse(resp)
+  rescue StandardError => e
+    Rails.logger.debug "← Error fetching #{url}: #{e.class}: #{e.message}"
+    raise
   end
 end
 
