@@ -278,16 +278,21 @@ class MessagesController < ApplicationController
     question_text = sanitized_text.presence ||
                     RiskFieldSet.question_for(field_for_question.to_sym, include_tips: true)
 
-    final_content = if sanitized_text.present?
-                      sanitized_text + (tips.present? ? "\nTip normativo: #{tips}" : "")
-                    else
-                      ParagraphGenerator.generate(
+    if sanitized_text.present?
+      norm_explanation = NormativeExplanationGenerator.generate(field_for_question)
+      parts = [sanitized_text]
+      parts << "Tip normativo: #{tips}" if tips.present?
+      parts << "Explicación normativa: #{norm_explanation}" if norm_explanation.present?
+      final_content = parts.join("\n")
+    else
+      final_content = ParagraphGenerator.generate(
                         question: question_text,
                         instructions: assistant_instructions.to_s,
                         normative_tips: tips,
-                        confirmations: confirmations
+                        confirmations: confirmations,
+                        field_id: field_for_question
                       ).presence || question_text
-                    end
+    end
 
     @risk_assistant.messages.create!(
       sender: "assistant",

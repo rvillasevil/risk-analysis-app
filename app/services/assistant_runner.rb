@@ -71,7 +71,19 @@ class AssistantRunner
   def ask_next!
     answered = risk_assistant.messages.where.not(key: nil).pluck(:key)
     field    = RiskFieldSet.next_field_hash(answered)   # helper de RiskFieldSet
-    return unless field                                 # ya no quedan
+
+    unless field
+      summary = ConversationSummarizer.summarize(risk_assistant)
+      if summary.present?
+        risk_assistant.messages.create!(
+          sender:    "assistant",
+          role:      "assistant",
+          content:   summary,
+          thread_id: thread_id
+        )
+      end
+      return
+    end                               # ya no quedan
 
     if field
       field_id = field[:id].to_s
@@ -108,7 +120,8 @@ class AssistantRunner
       expanded = ParagraphGenerator.generate(question: question,
                                              instructions: instr,
                                              normative_tips: tips,
-                                             confirmations: confirmations)    
+                                             confirmations: confirmations,
+                                             field_id: field_id)  
       risk_assistant.messages.create!(
         sender:    "paragraph_generator",
         role:      "assistant",
@@ -263,7 +276,8 @@ class AssistantRunner
 
 
     extra = <<~SYS
-      #{history_block}Lista interna de campos (no mostrar al usuario):
+      #{history_block}
+      Lista interna de campos (no mostrar al usuario):
       ```json
       #{@fields_json}
       ```

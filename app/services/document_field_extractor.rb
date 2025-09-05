@@ -12,8 +12,10 @@ class DocumentFieldExtractor
 
    MAX_TOKENS = ENV.fetch('DOCUMENT_FIELD_EXTRACTOR_MAX_TOKENS', 2000).to_i
 
-  # Dado un texto extraído de uno o varios ficheros, devuelve un hash { campo_id => valor } 
-  # para todos los campos del JSON que aparezcan en dicho texto.
+  # Dado un texto extraído de uno o varios ficheros, devuelve un hash con dos claves:
+  #   :values    => { campo_id => valor }
+  #   :warnings  => { campo_id => mensaje_de_advertencia }
+  # Para todos los campos del JSON que aparezcan en dicho texto.
   def self.call(extracted_text)
     return {} if extracted_text.blank?
 
@@ -72,10 +74,65 @@ class DocumentFieldExtractor
 
     # 4) Parsear líneas con el patrón ##campo_id## &&valor&&
     pairs = raw.scan(/##(.*?)##\s*&&\s*(.*?)\s*&&/m)
-    # Convertimos a hash: { "campo_id" => "valor", … }
-    pairs.to_h
+    return {} if pairs.empty?
+    values = pairs.to_h
+
+    # 5) Verificación de formato mediante LLM
+    warnings = verify_with_llm(values)
+
+    { values: values, warnings: warnings }
   rescue => e
     Rails.logger.error "DocumentFieldExtractor error: #{e.message}"
     {}
   end
+
+  # Verifica con un LLM que cada valor coincida con el formato esperado.
+  # Devuelve un hash { campo_id => advertencia } para los campos problemáticos.
+  def self.verify_with_llm(values)
+    return {} if values.empty?
+
+    info = values.map do |id, val|
+      f = RiskFieldSet.by_id[id.to_sym] || {}
+      {
+        id: id,
+        label: f[:label].to_s,
+        type: f[:type].to_s,
+        options: f[:options],
+        validation: f[:validation],
+        value: val
+      }
+    end
+
+    prompt = <<~PROMPT
+      A continuación tienes información de campos con su valor extraído:
+      #{info.to_json}
+
+      Tu tarea es verificar si "value" cumple con el tipo/validación descritos.
+      Para cada campo devuelve una línea EXACTA con:
+      ##<id>## &&<ok o descripción del problema>&&
+      Usa "ok" si el valor es válido.
+    PROMPT
+
+    body = {
+      model: OPENAI_MODEL,
+      temperature: 0,
+      max_tokens: 500,
+      messages: [
+        { role: "user", content: prompt }
+      ]
+    }
+
+    response = HTTP.headers(OPENAI_HEADERS).post(OPENAI_URL, json: body)
+    Rails.logger.debug "[DocumentFieldExtractor] ← Verification body: #{response.body.to_s.truncate(500)}"
+    content = response.parse.dig("choices", 0, "message", "content") || ""
+    raw = content.to_s.strip
+
+    pairs = raw.scan(/##(.*?)##\s*&&\s*(.*?)\s*&&/m)
+    pairs.each_with_object({}) do |(id, msg), h|
+      h[id] = msg unless msg.strip.downcase == "ok"
+    end
+  rescue => e
+    Rails.logger.error "DocumentFieldExtractor verification error: #{e.message}"
+    {}
+  end  
 end
