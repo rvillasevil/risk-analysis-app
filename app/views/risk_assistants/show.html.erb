@@ -86,17 +86,7 @@
             </div>
           <% else %>
             <% display_msgs.each do |m| %>
-              <% row_cls = m.sender == 'user' ? 'user' : 'assistant' %>
-              <div class="message-row <%= row_cls %>">
-                <div class="message-box <%= row_cls %>">
-                  <div class="header">
-                    <strong><%= m.sender.capitalize %></strong>
-                    <small><%= l m.created_at, format: :short %></small>
-                  </div>
-                  <div class="body">
-                    <%= simple_format sanitized_content(m).sub(/\A✅ El campo [^\r\n]*[\r\n]*/, '') %>
-                  </div>                </div>
-              </div>
+              <%= render partial: "messages/message", locals: { message: m } %>
             <% end %>
           <% end %>
         </div>

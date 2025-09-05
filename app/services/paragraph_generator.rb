@@ -6,7 +6,7 @@ class ParagraphGenerator
     "Content-Type"  => "application/json"
   }.freeze
 
-  def self.generate(question:, instructions:, normative_tips:, confirmations: [], field_id: nil)
+  def self.generate(question:, instructions:, normative_tips:, confirmations: [])
     confirm_block = confirmations.any? ? "Confirmaciones previas:\n#{confirmations.join("\n")}\n\n" : ""
 
     prompt = <<~PROMPT
@@ -18,7 +18,7 @@ class ParagraphGenerator
       Instrucciones: #{instructions}
       Tipos normativos: #{normative_tips}
       Especifica de forma clara las preguntas.
-      PROMPT
+    PROMPT
 
     body = {
       model: MODEL,
@@ -27,10 +27,7 @@ class ParagraphGenerator
     }
 
     response = HTTP.headers(HEADERS).post(OPENAI_URL, json: body)
-    main_text = response.parse.dig("choices", 0, "message", "content").to_s.strip
-
-    explanation = field_id ? NormativeExplanationGenerator.generate(field_id) : ""
-    [main_text, (explanation.present? ? "Ex. Normativa: #{explanation}" : nil)].compact.join("\n\n")
+    response.parse.dig("choices", 0, "message", "content").to_s.strip
   rescue => e
     Rails.logger.error "ParagraphGenerator error: #{e.class} – #{e.message}"
     ""

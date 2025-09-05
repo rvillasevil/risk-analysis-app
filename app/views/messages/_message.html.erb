@@ -1,0 +1,29 @@
+<% row_cls = message.sender == 'user' ? 'user' : 'assistant' %>
+<div class="message-row <%= row_cls %>">
+  <div class="message-box <%= row_cls %>">
+    <div class="header">
+      <strong><%= message.sender.capitalize %></strong>
+      <small><%= l message.created_at, format: :short %></small>
+    </div>
+    <div class="body">
+      <% content = sanitized_content(message).sub(/\A✅ El campo [^\r\n]*[\r\n]*/, '') %>
+      <% lines = content.split(/\r?\n/) %>
+      <% question_lines = lines.reject { |l| l.start_with?('Tip normativo:', 'Explicación normativa:') } %>
+      <% tip_line = lines.find { |l| l.start_with?('Tip normativo:') } %>
+      <% norm_line = lines.find { |l| l.start_with?('Explicación normativa:') } %>
+
+      <%= simple_format(question_lines.join("\n")) if question_lines.any? %>
+      <% if tip_line.present? %>
+        <% tip_text = tip_line.sub('Tip normativo:', '').strip %>
+        <p><strong>Tip normativo:</strong> <%= tip_text %></p>
+      <% end %>
+      <% if norm_line.present? %>
+        <% norm_text = norm_line.sub('Explicación normativa:', '').strip %>
+        <div class="normative-explanation alert alert-warning mt-2">
+          <p class="mb-1"><strong>Explicación normativa</strong></p>
+          <p class="mb-0"><%= norm_text %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

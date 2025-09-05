@@ -6,16 +6,19 @@ class NormativeExplanationGenerator
     "Content-Type" => "application/json"
   }.freeze
 
-  def self.generate(field_id)
+  def self.generate(field_id, question: nil)
     tips = RiskFieldSet.normative_tips_for(field_id)
     return "" if tips.blank?
 
-    label = RiskFieldSet.label_for(field_id)
+    label         = RiskFieldSet.label_for(field_id)
+    question_text = question.presence || RiskFieldSet.question_for(field_id.to_sym, include_tips: false)
     prompt = <<~PROMPT
-      Eres un asistente experto en normativa. Explica brevemente la normativa relacionada con el siguiente campo de un formulario de análisis de riesgos.
+      Eres un asistente experto en normativa.
+      A partir de la siguiente pregunta de un formulario de análisis de riesgos, proporciona un resumen breve y único de la normativa relacionada.
+      Pregunta: #{question_text}
       Campo: #{label}
       Normativa: #{tips}
-      Responde en un párrafo conciso sobre su relevancia.
+      Responde en un único párrafo conciso sobre su relevancia.
     PROMPT
 
     body = {

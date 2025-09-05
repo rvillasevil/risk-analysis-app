@@ -120,12 +120,17 @@ class AssistantRunner
       expanded = ParagraphGenerator.generate(question: question,
                                              instructions: instr,
                                              normative_tips: tips,
-                                             confirmations: confirmations,
-                                             field_id: field_id)  
+                                             confirmations: confirmations)
+
+      norm_explanation = NormativeExplanationGenerator.generate(field_id, question: expanded)
+      parts = [expanded]
+      parts << "Tip normativo: #{tips}" if tips.present?
+      parts << "Explicación normativa: #{norm_explanation}" if norm_explanation.present?
+
       risk_assistant.messages.create!(
         sender:    "paragraph_generator",
         role:      "assistant",
-        content:   expanded,
+        content:   parts.join("\n"),
         field_asked: field_id,
         thread_id: thread_id
       )

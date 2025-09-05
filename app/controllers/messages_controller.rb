@@ -258,9 +258,9 @@ class MessagesController < ApplicationController
       )
     end
 
-    answered_keys   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
-    next_field_hash = RiskFieldSet.next_field_hash(answered_keys)
-    field_for_question = question_field_id.presence || next_field_hash&.dig(:id)
+    field_for_question = question_field_id.presence ||
+                         @message.field_asked.presence ||
+                         last_q&.field_asked
     return unless field_for_question
     field_for_question = field_for_question.to_s
 
@@ -275,24 +275,28 @@ class MessagesController < ApplicationController
     assistant_instructions = RiskFieldSet.by_id[field_for_question.to_sym][:assistant_instructions]
     tips  = RiskFieldSet.normative_tips_for(field_for_question)
 
-    question_text = sanitized_text.presence ||
-                    RiskFieldSet.question_for(field_for_question.to_sym, include_tips: true)
+    base_question = sanitized_text.presence ||
+                    RiskFieldSet.question_for(field_for_question.to_sym, include_tips: false)
 
-    if sanitized_text.present?
-      norm_explanation = NormativeExplanationGenerator.generate(field_for_question)
-      parts = [sanitized_text]
-      parts << "Tip normativo: #{tips}" if tips.present?
-      parts << "Explicación normativa: #{norm_explanation}" if norm_explanation.present?
-      final_content = parts.join("\n")
-    else
-      final_content = ParagraphGenerator.generate(
-                        question: question_text,
+    question_text = if sanitized_text.present?
+                      sanitized_text
+                    else
+                      ParagraphGenerator.generate(
+                        question: base_question,
                         instructions: assistant_instructions.to_s,
                         normative_tips: tips,
-                        confirmations: confirmations,
-                        field_id: field_for_question
-                      ).presence || question_text
-    end
+                        confirmations: confirmations
+                      ).presence || base_question
+                    end
+
+    norm_explanation = NormativeExplanationGenerator.generate(field_for_question, question: question_text)
+    parts = [question_text]
+    parts << "Tip normativo: #{tips}" if tips.present?
+    parts << "Explicación normativa: #{norm_explanation}" if norm_explanation.present?
+    final_content = parts.join("\n")
+
+    final_content = [base_content, "Explicación normativa: #{norm_explanation}"].join("\n")
+    Rails.logger.warn("Explicación normativa ausente para #{field_for_question}") if norm_explanation.blank?    
 
     @risk_assistant.messages.create!(
       sender: "assistant",

@@ -230,4 +230,12 @@ main.chat-main {
     color: $color-primary;  }
 }
 
+// Highlight for normative explanations within messages
+.normative-explanation {
+  background-color: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding: $padding-base;
+  border-radius: $border-radius;
+}
+
 
