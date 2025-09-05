@@ -123,6 +123,13 @@ class AssistantRunner
                                              confirmations: confirmations)
 
       norm_explanation = NormativeExplanationGenerator.generate(field_id, question: expanded)
+      risk_assistant.messages.create!(
+        sender:    "assistant_normative_explanation",
+        role:      "developer",
+        content:   norm_explanation,
+        field_asked: field_id,
+        thread_id: thread_id
+      )      
       parts = [expanded]
       parts << "Tip normativo: #{tips}" if tips.present?
       parts << "Explicación normativa: #{norm_explanation}" if norm_explanation.present?

@@ -229,6 +229,21 @@ class MessagesController < ApplicationController
     question_field_id = sanitized_text[/##([^#]+)##/, 1]&.strip
     sanitized_text = sanitized_text.sub(/##[^#]+##/, '').strip if question_field_id
 
+    expected_field = @message.field_asked.presence || last_q&.field_asked
+    field_verified = true
+
+    if question_field_id.present?
+      field_verified = RiskFieldSet.by_id.key?(question_field_id.to_sym) &&
+                      (expected_field.blank? || question_field_id.to_s == expected_field.to_s)
+
+      unless field_verified
+        Rails.logger.warn("assistant_interaction: unexpected field '#{question_field_id}' (expected '#{expected_field}')")
+        question_field_id = expected_field
+      end
+    else
+      field_verified = expected_field.present? && RiskFieldSet.by_id.key?(expected_field.to_sym)
+      question_field_id = expected_field
+    end
 
     confirmations = []
 
@@ -272,19 +287,23 @@ class MessagesController < ApplicationController
     return unless field_for_question
     field_for_question = field_for_question.to_s
 
+    return unless RiskFieldSet.by_id.key?(field_for_question.to_sym)
+    field_asked = field_for_question
+
+
     @risk_assistant.messages.create!(
       sender:    "assistant_raw",
       role:      "developer",
       content:   assistant_text,
-      field_asked: field_for_question,
+      field_asked: field_asked,
       thread_id: runner.thread_id
     )
 
-    assistant_instructions = RiskFieldSet.by_id[field_for_question.to_sym][:assistant_instructions]
-    tips  = RiskFieldSet.normative_tips_for(field_for_question)
+    assistant_instructions = RiskFieldSet.by_id[field_asked.to_sym][:assistant_instructions]
+    tips  = RiskFieldSet.normative_tips_for(field_asked)
 
     base_question = sanitized_text.presence ||
-                    RiskFieldSet.question_for(field_for_question.to_sym, include_tips: false)
+                    RiskFieldSet.question_for(field_asked.to_sym, include_tips: false)
 
     question_text = if sanitized_text.present?
                       sanitized_text
@@ -297,19 +316,31 @@ class MessagesController < ApplicationController
                       ).presence || base_question
                     end
 
-    norm_explanation = NormativeExplanationGenerator.generate(field_for_question, question: question_text)
-    final_content = question_text
-    if norm_explanation.present?
-      final_content = "#{question_text}\nExplicación normativa: #{norm_explanation}"
-    else
-      Rails.logger.warn("Explicación normativa ausente para #{field_for_question}")
-    end  
+    parts = [question_text]
+    if field_verified
+      norm_explanation = NormativeExplanationGenerator.generate(field_asked, question: question_text)
+
+      @risk_assistant.messages.create!(
+        sender: "assistant_normative_explanation",
+        role: "developer",
+        content: norm_explanation,
+        field_asked: field_asked,
+        thread_id: runner.thread_id
+      )
+
+      if norm_explanation.present?
+        parts << "Explicación normativa: #{norm_explanation}"
+      else
+        Rails.logger.warn("Explicación normativa ausente para #{field_for_question}")
+      end
+    end
+    final_content = parts.join("\n")
 
     @risk_assistant.messages.create!(
       sender: "assistant",
       role: "assistant",
       content: final_content,
-      field_asked: field_for_question,
+      field_asked: field_asked,
       thread_id: runner.thread_id
     )
 
@@ -319,7 +350,7 @@ class MessagesController < ApplicationController
         sender: "assistant_summary",
         role: "developer",
         content: confirmations.join("\n"),
-        field_asked: field_for_question,
+        field_asked: field_asked,
         thread_id: runner.thread_id
       )
     end
