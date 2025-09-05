@@ -10,8 +10,7 @@ class AssistantRunner
     "OpenAI-Beta"   => "assistants=v2"
   }.freeze
 
-  attr_reader :risk_assistant, :thread_id
-
+  attr_reader :risk_assistant, :thread_id, :last_field_id
   def initialize(risk_assistant)
     @risk_assistant = risk_assistant
     @thread_id      = risk_assistant.thread_id.presence || create_thread
@@ -74,6 +73,7 @@ class AssistantRunner
 
     unless field
       summary = ConversationSummarizer.summarize(risk_assistant)
+      @last_field_id = nil      
       if summary.present?
         risk_assistant.messages.create!(
           sender:    "assistant",
@@ -88,6 +88,7 @@ class AssistantRunner
     if field
       field_id = field[:id].to_s
       question = RiskFieldSet.question_for(field_id.to_sym, include_tips: true)
+      @last_field_id = field_id      
       instr    = field[:assistant_instructions].to_s.strip
       tips = RiskFieldSet.normative_tips_for(field_id)
     # guarda la PREGUNTA para que el guardia pueda validarla
@@ -146,7 +147,8 @@ class AssistantRunner
         assistant_id:            ENV['OPENAI_ASSISTANT_ID'],
         additional_instructions: extra,
         temperature:             0)
-  end  
+    @last_field_id
+  end
 
   # Inicia la run y devuelve el TEXTO del último mensaje
   def run_and_wait(timeout: 40)
@@ -260,7 +262,7 @@ class AssistantRunner
     field    = next_pending_field
     return unless field
     question = RiskFieldSet.question_for(field, include_tips: true)   # ← YA incluye opciones
-
+    @last_field_id = field  
     # ↓ Recupera las instrucciones privadas que el JSON trae para ese campo
 
     # 3) Recuperamos las instrucciones privadas para este campo (sin índice si lo hubiera)

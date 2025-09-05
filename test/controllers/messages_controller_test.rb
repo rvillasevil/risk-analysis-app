@@ -14,6 +14,8 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     runner_mock.expect :thread_id, "tid"
     runner_mock.expect :submit_user_message, nil, [{content: "hello", file_id: nil}]
     runner_mock.expect :run_and_wait, "OK"
+    def runner_mock.thread_id; "tid"; end
+    def runner_mock.last_field_id; nil; end
 
     SemanticGuard.stub :validate, warning_text do
       AssistantRunner.stub :new, runner_mock do
@@ -37,6 +39,8 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     runner_mock.expect :thread_id, "tid"
     runner_mock.expect :submit_user_message, nil, [{ content: "ok", file_id: nil }]
     runner_mock.expect :run_and_wait, assistant_text
+    def runner_mock.thread_id; "tid"; end
+    def runner_mock.last_field_id; nil; end
 
     risk_fields = { test: { id: :test, label: "Test", validation: {} } }
 
@@ -61,6 +65,8 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     runner_mock.expect :thread_id, "tid"
     runner_mock.expect :submit_user_message, nil, [{ content: "bad", file_id: nil }]
     runner_mock.expect :run_and_wait, assistant_text
+    def runner_mock.thread_id; "tid"; end
+    def runner_mock.last_field_id; nil; end
 
     risk_fields = { test: { id: :test, label: "Test", validation: { min: 0 } } }
 
@@ -88,6 +94,8 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     runner_mock.expect :thread_id, "tid"
     runner_mock.expect :submit_user_message, nil, [{ content: "resp", file_id: nil }]
     runner_mock.expect :run_and_wait, assistant_text
+    def runner_mock.thread_id; "tid"; end
+    def runner_mock.last_field_id; nil; end
 
     risk_fields = { test: { id: :test, label: "Test", assistant_instructions: "" } }
 
@@ -118,6 +126,8 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     runner_mock.expect :thread_id, "tid"
     runner_mock.expect :submit_user_message, nil, [{ content: "respuesta", file_id: nil }]
     runner_mock.expect :run_and_wait, assistant_text
+    def runner_mock.thread_id; "tid"; end
+    def runner_mock.last_field_id; nil; end
 
     risk_fields = { test: { id: :test, label: "Test", assistant_instructions: "" } }
 
@@ -127,6 +137,35 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
           AssistantRunner.stub :new, runner_mock do
             assert_difference -> { Message.where(sender: "assistant").count }, 1 do
               post risk_assistant_messages_path(@risk_assistant), params: { message: { content: "respuesta" } }
+            end
+          end
+        end
+      end
+    end
+
+    runner_mock.verify
+    final = Message.where(sender: "assistant").order(:created_at).last
+    assert_equal "test", final.field_asked
+    assert_includes final.content, "Explicación normativa: Norm"
+  end
+
+  test "uses runner field when response lacks markers" do
+    assistant_text = "Pregunta siguiente"
+
+    runner_mock = Minitest::Mock.new
+    runner_mock.expect :submit_user_message, nil, [{ content: "resp", file_id: nil }]
+    runner_mock.expect :run_and_wait, assistant_text
+    def runner_mock.thread_id; "tid"; end
+    def runner_mock.last_field_id; "test"; end
+
+    risk_fields = { test: { id: :test, label: "Test", assistant_instructions: "" } }
+
+    RiskFieldSet.stub :by_id, risk_fields do
+      RiskFieldSet.stub :normative_tips_for, "Tip" do
+        NormativeExplanationGenerator.stub :generate, ->(fid, question:) { assert_equal "test", fid; "Norm" } do
+          AssistantRunner.stub :new, runner_mock do
+            assert_difference -> { Message.where(sender: "assistant").count }, 1 do
+              post risk_assistant_messages_path(@risk_assistant), params: { message: { content: "resp" } }
             end
           end
         end

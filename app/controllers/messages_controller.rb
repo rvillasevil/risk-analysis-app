@@ -234,27 +234,9 @@ class MessagesController < ApplicationController
 
     pairs = assistant_text.scan(/##(?<field_id>[^#()]+?)(?:\s*\((?<item_label>[^)]+)\))?##.*?&&\s*(?<value>.*?)\s*&&/m)
     flags = assistant_text.scan(/⚠️\s*(.*?)\s*⚠️/m).flatten
-    sanitized_text = assistant_text.gsub(/(?:\u2705[^#]*?)?##[^#]+##.*?&&.*?&&\s*[.,]?/m, "").strip
-
-    question_field_id = sanitized_text[/##([^#]+)##/, 1]&.strip
-    sanitized_text = sanitized_text.sub(/##[^#]+##/, '').strip if question_field_id
-
-    expected_field = @message.field_asked.presence || last_q&.field_asked
-    field_verified = true
-
-    if question_field_id.present?
-      field_verified = RiskFieldSet.by_id.key?(question_field_id.to_sym) &&
-                      (expected_field.blank? || question_field_id.to_s == expected_field.to_s)
-
-      unless field_verified
-        Rails.logger.warn("assistant_interaction: unexpected field '#{question_field_id}' (expected '#{expected_field}')")
-        question_field_id = expected_field
-      end
-    else
-      field_verified = expected_field.present? && RiskFieldSet.by_id.key?(expected_field.to_sym)
-      question_field_id = expected_field
-    end
-
+    sanitized_text = assistant_text.gsub(/(?:\u2705[^#]*?)?##[^#]+##.*?&&.*?&&\s*[.,]?/m, "")
+    sanitized_text = sanitized_text.gsub(/##[^#]+##/, '')
+    sanitized_text = ActionController::Base.helpers.strip_tags(sanitized_text).strip
     confirmations = []
 
       pairs.each do |field_id, item_label, value|
@@ -290,10 +272,13 @@ class MessagesController < ApplicationController
       )
     end
 
-    field_for_question = question_field_id.presence ||
+    field_for_question = runner.last_field_id ||
                          @message.field_asked.presence ||
                          last_q&.field_asked.presence
-    field_for_question ||= runner.send(:next_pending_field)
+    field_for_question ||= begin
+      answered = @risk_assistant.messages.where.not(key: nil).pluck(:key)
+      RiskFieldSet.next_field_hash(answered)&.dig(:id)
+    end
     return unless field_for_question
     field_for_question = field_for_question.to_s
 
@@ -327,23 +312,17 @@ class MessagesController < ApplicationController
                     end
 
     parts = [question_text]
-    if field_verified
-      norm_explanation = NormativeExplanationGenerator.generate(field_asked, question: question_text)
+    norm_explanation = NormativeExplanationGenerator.generate(field_asked, question: question_text)
 
-      @risk_assistant.messages.create!(
-        sender: "assistant_normative_explanation",
-        role: "developer",
-        content: norm_explanation,
-        field_asked: field_asked,
-        thread_id: runner.thread_id
-      )
+    @risk_assistant.messages.create!(
+      sender: "assistant_normative_explanation",
+      role: "developer",
+      content: norm_explanation,
+      field_asked: field_asked,
+      thread_id: runner.thread_id
+    )
 
-      if norm_explanation.present?
-        parts << "Explicación normativa: #{norm_explanation}"
-      else
-        Rails.logger.warn("Explicación normativa ausente para #{field_for_question}")
-      end
-    end
+    parts << "Explicación normativa: #{norm_explanation}" if norm_explanation.present?
     final_content = parts.join("\n")
 
     @risk_assistant.messages.create!(
