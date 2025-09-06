@@ -249,10 +249,19 @@ class MessagesController < ApplicationController
       field_for_question = campo_actual
 
       siguiente_valido = siguiente.present? && RiskFieldSet.by_id.key?(siguiente.to_sym)
+      transition_without_confirmation = false      
 
       if estado == "confirmado"
         field_for_question = siguiente if siguiente_valido
         field_for_question = nil unless siguiente_valido
+      elsif siguiente_valido && mensaje.to_s.include?("?")
+        field_for_question = siguiente
+        transition_without_confirmation = true
+      end
+
+      if transition_without_confirmation
+        @message.update!(field_asked: field_for_question)
+        Rails.logger.info("MessagesController#assistant_interaction: transición sin confirmación hacia #{field_for_question}")        
       end
 
       runner.set_last_field(field_for_question) if field_for_question
@@ -269,7 +278,7 @@ class MessagesController < ApplicationController
           thread_id:     runner.thread_id
         )
       end
-      
+
       if explicacion.present?
         @risk_assistant.messages.create!(
           sender:      "assistant_normative_explanation",
@@ -398,7 +407,6 @@ class MessagesController < ApplicationController
       thread_id: runner.thread_id
     )
 
-    parts << "Explicación normativa: #{norm_explanation}" if norm_explanation.present?
     final_content = parts.join("\n")
 
     @risk_assistant.messages.create!(

@@ -123,7 +123,8 @@ class AssistantRunner
       extra << "### Tip normativo:\n#{tips}\n\n" if tips.present?
       extra << "### Pregunta:\n#{question}\n\n"
       extra << "### Formato de respuesta:\n" \
-               "Devuelve un JSON con las claves `campo_actual` (valor `#{field_id}`), `estado_del_campo`, `valor`, `siguiente_campo`, `mensaje_para_usuario` y `explicacion_normativa`.\n"    
+               "Devuelve un JSON con las claves `campo_actual` (valor `#{field_id}`), `estado_del_campo`, `valor`, `siguiente_campo`, `mensaje_para_usuario` y `explicacion_normativa`.\n" \
+               "No pases al siguiente campo hasta que `estado_del_campo` sea 'confirmado'. Si cambias de campo, establece `estado_del_campo` como 'confirmado' para el campo anterior.\n"  
       extra << "⚠️ Tras confirmar, responde SOLO \"OK\" y espera la siguiente instrucción."
       extra << "\nAntes de formular la siguiente pregunta, revisa este historial y señala cualquier contradicción detectada."
 
