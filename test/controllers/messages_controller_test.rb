@@ -178,6 +178,43 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     assert_includes final.content, "Explicación normativa: Norm"
   end
 
+  test "ignores incorrect field_asked param when last question exists" do
+    @risk_assistant.messages.create!(
+      sender: "assistant", role: "assistant",
+      content: "Pregunta real", field_asked: "real", thread_id: "tid"
+    )
+
+    assistant_text = "Siguiente"
+
+    runner_mock = Minitest::Mock.new
+    runner_mock.expect :thread_id, "tid"
+    runner_mock.expect :submit_user_message, nil, [{ content: "resp", file_id: nil }]
+    runner_mock.expect :run_and_wait, assistant_text
+    def runner_mock.thread_id; "tid"; end
+    def runner_mock.last_field_id; nil; end
+
+    risk_fields = {
+      real:  { id: :real,  label: "Real",  assistant_instructions: "" },
+      wrong: { id: :wrong, label: "Wrong", assistant_instructions: "" }
+    }
+
+    RiskFieldSet.stub :by_id, risk_fields do
+      RiskFieldSet.stub :normative_tips_for, "" do
+        NormativeExplanationGenerator.stub :generate, ->(fid, question:) { assert_equal "real", fid; "Norm" } do
+          AssistantRunner.stub :new, runner_mock do
+            post risk_assistant_messages_path(@risk_assistant),
+                 params: { message: { content: "resp", field_asked: "wrong" } }
+          end
+        end
+      end
+    end
+
+    runner_mock.verify
+    final = Message.where(sender: "assistant").order(:created_at).last
+    assert_equal "real", final.field_asked
+    assert_includes final.content, "Explicación normativa: Norm"
+  end
+
   test "skip then answer assigns new field_asked" do
     risk_fields = {
       first:  { id: :first,  label: "First" },

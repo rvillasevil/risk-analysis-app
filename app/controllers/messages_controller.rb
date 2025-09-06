@@ -332,8 +332,8 @@ class MessagesController < ApplicationController
     end
 
     field_for_question = runner.last_field_id ||
-                         @message.field_asked.presence ||
-                         last_q&.field_asked.presence
+                         last_q&.field_asked.presence ||
+                         @message.field_asked.presence
     field_for_question ||= begin
       answered = @risk_assistant.messages.where.not(key: nil).pluck(:key)
       RiskFieldSet.next_field_hash(answered)&.dig(:id)
@@ -342,23 +342,23 @@ class MessagesController < ApplicationController
     field_for_question = field_for_question.to_s
 
     return unless RiskFieldSet.by_id.key?(field_for_question.to_sym)
-    field_asked = field_for_question
-    runner.set_last_field(field_asked)
+    question_field = field_for_question
+    runner.set_last_field(question_field)
 
 
     @risk_assistant.messages.create!(
       sender:    "assistant_raw",
       role:      "developer",
       content:   assistant_text,
-      field_asked: field_asked,
+      field_asked: question_field,
       thread_id: runner.thread_id
     )
 
-    assistant_instructions = RiskFieldSet.by_id[field_asked.to_sym][:assistant_instructions]
-    tips  = RiskFieldSet.normative_tips_for(field_asked)
+    assistant_instructions = RiskFieldSet.by_id[question_field.to_sym][:assistant_instructions]
+    tips  = RiskFieldSet.normative_tips_for(question_field)
 
     base_question = sanitized_text.presence ||
-                    RiskFieldSet.question_for(field_asked.to_sym, include_tips: false)
+                    RiskFieldSet.question_for(question_field.to_sym, include_tips: false)
 
     question_text = if sanitized_text.present?
                       sanitized_text
@@ -372,13 +372,13 @@ class MessagesController < ApplicationController
                     end
 
     parts = [question_text]
-    norm_explanation = NormativeExplanationGenerator.generate(field_asked, question: question_text)
+    norm_explanation = NormativeExplanationGenerator.generate(question_field, question: question_text)
 
     @risk_assistant.messages.create!(
       sender: "assistant_normative_explanation",
       role: "developer",
       content: norm_explanation,
-      field_asked: field_asked,
+      field_asked: question_field,
       thread_id: runner.thread_id
     )
 
@@ -389,7 +389,7 @@ class MessagesController < ApplicationController
       sender: "assistant",
       role: "assistant",
       content: final_content,
-      field_asked: field_asked,
+      field_asked: question_field,
       thread_id: runner.thread_id
     )
 
@@ -399,7 +399,7 @@ class MessagesController < ApplicationController
         sender: "assistant_summary",
         role: "developer",
         content: confirmations.join("\n"),
-        field_asked: field_asked,
+        field_asked: question_field,
         thread_id: runner.thread_id
       )
     end
