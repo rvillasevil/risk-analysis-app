@@ -35,7 +35,9 @@ class RiskAssistant < ApplicationRecord
   def campos
     field_ids = RiskFieldSet.by_id.keys.map(&:to_s)
     confirmed = messages.where.not(key: nil).pluck(:key)
-    asked     = messages.where.not(field_asked: nil).pluck(:field_asked)
+    asked     = messages.where(sender: %w[assistant assistant_guard])
+                         .where.not(field_asked: nil)
+                         .pluck(:field_asked)
 
     field_ids.index_with do |fid|
       if confirmed.any? { |k| k == fid || k.start_with?("#{fid}.") }

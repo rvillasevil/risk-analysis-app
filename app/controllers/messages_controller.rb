@@ -251,13 +251,13 @@ class MessagesController < ApplicationController
 
       siguiente_valido = siguiente.present? && RiskFieldSet.by_id.key?(siguiente.to_sym)
 
-      runner.set_last_field(field_for_question) if field_for_question
-
       if estado == "confirmado"
         field_for_question = siguiente if siguiente_valido
         field_for_question = nil unless siguiente_valido
       end
 
+      runner.set_last_field(field_for_question) if field_for_question     
+      
       if estado == "confirmado" && campo_actual.present?
         Message.save_unique!(
           risk_assistant: @risk_assistant,
@@ -297,8 +297,9 @@ class MessagesController < ApplicationController
     sanitized_text = sanitized_text.gsub(/##[^#]+##/, '')
     sanitized_text = ActionController::Base.helpers.strip_tags(sanitized_text).strip
     confirmations = []
+    confirmed_fields = []    
 
-      pairs.each do |field_id, item_label, value|
+    pairs.each do |field_id, item_label, value|
       clean_id = field_id.to_s.strip
 
       if last_q && clean_id !~ /\.\d+\./
@@ -319,6 +320,7 @@ class MessagesController < ApplicationController
       )
 
       confirmations << "✅ #{RiskFieldSet.label_for(clean_id)}: #{value}"
+      confirmed_fields << clean_id      
     end
   
 
@@ -331,9 +333,12 @@ class MessagesController < ApplicationController
       )
     end
 
-    field_for_question = runner.last_field_id ||
-                         last_q&.field_asked.presence ||
-                         @message.field_asked.presence
+    field_for_question = runner.last_field_id
+    if field_for_question && confirmed_fields.include?(field_for_question.to_s)
+      field_for_question = nil
+    end
+    field_for_question ||= last_q&.field_asked.presence ||
+                          @message.field_asked.presence
     field_for_question ||= begin
       answered = @risk_assistant.messages.where.not(key: nil).pluck(:key)
       RiskFieldSet.next_field_hash(answered)&.dig(:id)
