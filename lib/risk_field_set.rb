@@ -140,7 +140,59 @@ class RiskFieldSet
     # --------------------------------------------------------------------------
     def children_of_array(array_id)
       flat_fields.select { |f| f[:parent] == array_id }
-    end    
+    end
+
+    # Recorre un array de objetos y encuentra el siguiente campo pendiente.
+    # array_id    – id del campo array (sin índices)
+    # index_path  – índices de los arrays padres para construir el prefijo
+    # answered    – Set con los ids de campos ya respondidos
+    def next_from_array(array_id, index_path, answered)
+      array_id   = array_id.to_s
+      array_f    = by_id[array_id.to_sym] || {}
+      children   = children_of_array(array_id)
+
+      segments = array_id.split('.')
+      prefix_parts = []
+      segments.each_with_index do |seg, idx|
+        prefix_parts << seg
+        prefix_parts << index_path[idx] if index_path[idx]
+      end
+      prefix = prefix_parts.join('.')
+      prefix = prefix.empty? ? '' : prefix + '.'
+
+      row_indices = answered
+                      .select { |k| k.start_with?(prefix) }
+                      .map { |k| k[prefix.length..].split('.').first.to_i }
+                      .uniq
+                      .sort
+      row_indices = [0] if row_indices.empty?
+
+      row_indices.each do |row_idx|
+        children.each do |child|
+          child_suffix = child[:id].to_s.split('.')[segments.length..].join('.')
+          field_id = "#{prefix}#{row_idx}.#{child_suffix}"
+
+          if child[:type] == :array_of_objects
+            pending = next_from_array(child[:id], index_path + [row_idx], answered)
+            return pending if pending
+          else
+            return field_id.to_sym unless answered.include?(field_id)
+          end
+        end
+      end
+
+      if array_f[:allow_add_remove_rows]
+        next_idx    = row_indices.max.to_i + 1
+        first_child = children.first
+        if first_child
+          suffix = first_child[:id].to_s.split('.')[segments.length..].join('.')
+          return "#{prefix}#{next_idx}.#{suffix}".to_sym
+        end
+      end
+
+      nil
+    end
+    private_class_method :next_from_array  
 
     def validate_answer(field, value)
       v = field[:validation] || {}
@@ -185,7 +237,7 @@ class RiskFieldSet
 
       root_fields.each do |field|
         if field[:type] == :array_of_objects
-          pending = next_from_array(field[:id], [], answers)
+          pending = next_from_array(field[:id], [], answered)
           return field_hash_for(pending) if pending
         else
           return field if !answered.include?(field[:id].to_s)
@@ -199,9 +251,69 @@ class RiskFieldSet
       h && h[:id]
     end
 
+    def field_hash_for(id)
+      by_id[id.to_sym]
+    end
+
     public :next_field_hash, :next_field_id
+    private :field_hash_for    
 
     private
+
+    def next_from_array(array_id, prefix_parts, answers)
+      answered = answers.keys.map(&:to_s).to_set
+      info = by_id[array_id.to_sym]
+      return nil unless info
+
+      count_field = info[:array_count_source_field_id]
+
+      if count_field
+        count_key = (prefix_parts + [count_field]).reject(&:blank?).join('.')
+        return count_key unless answered.include?(count_key)
+        count = answers[count_key].to_i
+      else
+        segment = array_id.to_s.split('.').last
+        prefix = (prefix_parts + [segment]).join('.')
+        idx_re = /^#{Regexp.escape(prefix)}\.(\d+)\./
+        existing = answered.map { |k| k[idx_re, 1] }.compact.map(&:to_i)
+        count = [existing.max.to_i + 1, 1].max
+      end
+
+      segment = array_id.to_s.split('.').last
+      (0...count).each do |idx|
+        item_prefix = prefix_parts + [segment, idx]
+        children_of_array(array_id).each do |child|
+          if child[:type] == :array_of_objects
+            pending = next_from_array(child[:id], item_prefix, answers)
+            return pending if pending
+          else
+            suffix = child[:id].sub(/^#{Regexp.escape(array_id)}\./, '')
+            key = (item_prefix + [suffix]).join('.')
+            return key unless answered.include?(key)
+          end
+        end
+      end
+
+      if count_field.nil? && info[:allow_add_remove_rows]
+        idx = count
+        item_prefix = prefix_parts + [segment, idx]
+        child = children_of_array(array_id).first
+        if child
+          suffix = child[:id].sub(/^#{Regexp.escape(array_id)}\./, '')
+          return (item_prefix + [suffix]).join('.')
+        end
+      end
+
+      nil
+    end
+
+    def field_hash_for(key)
+      return nil unless key
+      base = key.to_s.split('.').reject { |s| s.match?(/^\d+$/) }.join('.')
+      f = by_id[base.to_sym]
+      f && f.merge(id: key.to_s)
+    end
+
 
     # Decide parsear JSON o YAML según presencia de JSON_PATH
     def load_data!
