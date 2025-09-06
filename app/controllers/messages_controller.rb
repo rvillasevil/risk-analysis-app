@@ -279,15 +279,7 @@ class MessagesController < ApplicationController
         )
       end
 
-      if explicacion.present?
-        @risk_assistant.messages.create!(
-          sender:      "assistant_normative_explanation",
-          role:        "developer",
-          content:     explicacion,
-          field_asked: field_for_question,
-          thread_id:   runner.thread_id
-        )
-      end
+      mensaje = "#{mensaje}\nExplicación normativa: #{explicacion}" if explicacion.present?
 
       @risk_assistant.messages.create!(
         sender:      "assistant",
@@ -398,14 +390,7 @@ class MessagesController < ApplicationController
 
     parts = [question_text]
     norm_explanation = NormativeExplanationGenerator.generate(question_field, question: question_text)
-
-    @risk_assistant.messages.create!(
-      sender: "assistant_normative_explanation",
-      role: "developer",
-      content: norm_explanation,
-      field_asked: question_field,
-      thread_id: runner.thread_id
-    )
+    parts << "Explicación normativa: #{norm_explanation}"
 
     final_content = parts.join("\n")
 
