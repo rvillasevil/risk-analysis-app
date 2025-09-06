@@ -240,8 +240,23 @@ class MessagesController < ApplicationController
       mensaje      = parsed["mensaje_para_usuario"]
       siguiente    = parsed["siguiente_campo"]
 
-      field_for_question = (estado == "confirmado") ? siguiente : campo_actual
-      field_for_question = nil if estado == "confirmado" && siguiente.nil?
+      # Determine which field should be asked next. By default we keep the
+      # current field, but if the field was confirmed we only move to the next
+      # one if it's present and valid according to RiskFieldSet.
+      if campo_actual.present? && @message.field_asked != campo_actual
+        @message.update!(field_asked: campo_actual)
+      end
+
+      field_for_question = campo_actual
+
+      siguiente_valido = siguiente.present? && RiskFieldSet.by_id.key?(siguiente.to_sym)
+
+      runner.set_last_field(field_for_question) if field_for_question
+
+      if estado == "confirmado"
+        field_for_question = siguiente if siguiente_valido
+        field_for_question = nil unless siguiente_valido
+      end
 
       if estado == "confirmado" && campo_actual.present?
         Message.save_unique!(
@@ -256,12 +271,12 @@ class MessagesController < ApplicationController
         )
       end
 
-      field_to_use = field_for_question
+
       @risk_assistant.messages.create!(
         sender:      "assistant",
         role:        "assistant",
         content:     mensaje,
-        field_asked: field_to_use,
+        field_asked: field_for_question,
         thread_id:   runner.thread_id
       )
 
@@ -328,6 +343,7 @@ class MessagesController < ApplicationController
 
     return unless RiskFieldSet.by_id.key?(field_for_question.to_sym)
     field_asked = field_for_question
+    runner.set_last_field(field_asked)
 
 
     @risk_assistant.messages.create!(

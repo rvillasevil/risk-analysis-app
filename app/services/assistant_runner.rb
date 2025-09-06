@@ -16,7 +16,10 @@ class AssistantRunner
     @thread_id      = risk_assistant.thread_id.presence || create_thread
     @fields_json    = build_fields_json
     inject_instructions_once if !risk_assistant.initialised?
+  end
 
+  def set_last_field(field_id)
+    @last_field_id = field_id
   end
 
   def inject_instructions_once
