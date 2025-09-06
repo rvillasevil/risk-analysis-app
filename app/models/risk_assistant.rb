@@ -1,5 +1,3 @@
-require "risk_field_set"
-
 class RiskAssistant < ApplicationRecord
   belongs_to :user
   has_many :messages, dependent: :destroy

@@ -1,5 +1,3 @@
-require "risk_field_set"
-
 class Message < ApplicationRecord
   belongs_to :risk_assistant
 
