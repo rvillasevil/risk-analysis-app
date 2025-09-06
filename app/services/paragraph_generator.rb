@@ -12,7 +12,7 @@ class ParagraphGenerator
     prompt = <<~PROMPT
       #{confirm_block}
       Eres un asistente para la toma de datos de riesgos de forma conversacional.
-      Genera la siguiente consulta en un máximo de cuatro párrafos. Usa las instrucciones para formular la pregunta e incluye los tipos normativos en el desarrollo:
+      Genera la siguiente consulta en un máximo de cuatro párrafos y un mínimo de 2 párrafos. Usa las instrucciones para formular la pregunta e incluye los tipos normativos en el desarrollo:
       Confirmación del campo anterior:
       Pregunta: #{question}
       Instrucciones: #{instructions}

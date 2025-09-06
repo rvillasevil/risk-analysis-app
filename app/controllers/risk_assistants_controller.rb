@@ -11,6 +11,10 @@
       @messages = @risk_assistant.messages
       @company_name = @messages.where("key LIKE ?", "%Nombre de la empresa%").last
 
+      # Hash de estados de campos para enviar al LLM cuando sea necesario
+      @campos = @risk_assistant.campos
+      @final_summary = final_confirmation(@campos)
+
       #Completados
       @completed = @risk_assistant.messages
                                    .where.not(key: [nil, ""])
@@ -80,7 +84,7 @@
       # --------------------------
       total_fields = RiskFieldSet.flat_fields.size
       total_done   = filled_ids.size
-      @overall_pct = total_fields.zero? ? 0 : ((total_done * 100.0) / total_fields).round      
+      @overall_pct = total_fields.zero? ? 0 : ((total_done * 100.0) / total_fields).round    
     end
 
     def new
@@ -187,6 +191,14 @@
 
     private
   
+    # Si todos los campos están confirmados, devuelve un hash con los
+    # pares key/value para mostrar al usuario como resumen final.
+    # En caso contrario, devuelve un hash vacío.
+    def final_confirmation(campos)
+      return {} unless campos.values.all? { |s| s == "confirmado" }
+      @risk_assistant.messages.where.not(key: [nil, ""]).pluck(:key, :value).to_h
+    end
+
     def risk_assistant_params
       params.require(:risk_assistant).permit(:name, :thread_id)
     end

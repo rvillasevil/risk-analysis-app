@@ -24,8 +24,8 @@ class MessagesController < ApplicationController
       return redirect_blank_message if message_blank?
 
       last_question   = @risk_assistant.messages
-                                    .where(sender: "assistant", key: nil)
-                                    .order(:created_at)
+                                    .where(role: "assistant", key: nil)
+                                    .where.not(field_asked: nil)
                                     .last
       requested_field = params.dig(:message, :field_asked)
       expected_field  = requested_field.presence || last_question&.field_asked
@@ -226,8 +226,47 @@ class MessagesController < ApplicationController
     runner.submit_user_message(content: @message.content, file_id: nil)
     assistant_text = runner.run_and_wait
 
+    # Intentar interpretar la respuesta como JSON estructurado
+    begin
+      parsed = JSON.parse(assistant_text)
+    rescue JSON::ParserError
+      parsed = nil
+    end
+
+    if parsed.is_a?(Hash) && parsed["mensaje_para_usuario"].present?
+      campo_actual = parsed["campo_actual"]
+      estado       = parsed["estado_del_campo"]
+      valor        = parsed["valor"] || @message.content
+      mensaje      = parsed["mensaje_para_usuario"]
+
+      if estado == "confirmado" && campo_actual.present?
+        Message.save_unique!(
+          risk_assistant: @risk_assistant,
+          key:           campo_actual,
+          value:         valor,
+          content:       "✅ Perfecto, #{RiskFieldSet.label_for(campo_actual)} es &&#{valor}&&.",
+          sender:        "assistant_confirmation",
+          role:          "developer",
+          field_asked:   nil,
+          thread_id:     runner.thread_id
+        )
+      end
+
+      @risk_assistant.messages.create!(
+        sender:    "assistant",
+        role:      "assistant",
+        content:   mensaje,
+        field_asked: campo_actual,
+        thread_id: runner.thread_id
+      )
+
+      return
+    end
+
+
     last_q = @risk_assistant.messages
-                            .where(sender: ["assistant", "assistant_guard"], role: "assistant", thread_id: runner.thread_id)                            .where.not(field_asked: nil)
+                            .where(sender: ["assistant", "assistant_guard"], role: "assistant", thread_id: runner.thread_id)
+                            .where.not(field_asked: nil)
                             .where(key: nil)
                             .order(:created_at)
                             .last

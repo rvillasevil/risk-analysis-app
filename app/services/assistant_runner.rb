@@ -71,6 +71,10 @@ class AssistantRunner
     answered = risk_assistant.messages.where.not(key: nil).pluck(:key)
     field    = RiskFieldSet.next_field_hash(answered)   # helper de RiskFieldSet
 
+    # Estados actuales de los campos para proporcionar contexto al LLM
+    states_json = risk_assistant.campos.to_json
+
+    
     unless field
       summary = ConversationSummarizer.summarize(risk_assistant)
       @last_field_id = nil      
@@ -110,6 +114,7 @@ class AssistantRunner
       history_block = confirmations.any? ? "### Historial de respuestas confirmadas:\n#{confirmations.join("\n")}\n\n" : ""
 
       extra = +""
+      extra << "### Estados de campos:\n#{states_json}\n\n"
       extra << history_block
       extra << "### Instrucciones de campo:\n#{instr}\n\n" if instr.present?
       extra << "### Tip normativo:\n#{tips}\n\n" if tips.present?
@@ -136,7 +141,7 @@ class AssistantRunner
       parts << "Explicación normativa: #{norm_explanation}" if norm_explanation.present?
 
       risk_assistant.messages.create!(
-        sender:    "paragraph_generator",
+        sender:    "assistant",        
         role:      "assistant",
         content:   parts.join("\n"),
         field_asked: field_id,
@@ -292,8 +297,12 @@ class AssistantRunner
 
     history_block = confirmations.any? ? "Historial de respuestas confirmadas:\n#{confirmations.join("\n")}\n\n" : ""
 
+    states_block = risk_assistant.campos.to_json    
 
     extra = <<~SYS
+      Estados de campos:
+      #{states_block}
+
       #{history_block}
       Lista interna de campos (no mostrar al usuario):
       ```json

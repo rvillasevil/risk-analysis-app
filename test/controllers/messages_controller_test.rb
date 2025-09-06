@@ -177,4 +177,55 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     assert_equal "test", final.field_asked
     assert_includes final.content, "Explicación normativa: Norm"
   end
+
+  test "skip then answer assigns new field_asked" do
+    risk_fields = {
+      first:  { id: :first,  label: "First" },
+      second: { id: :second, label: "Second" }
+    }
+
+    RiskFieldSet.stub :by_id, risk_fields do
+      RiskFieldSet.stub :label_for, ->(id) { risk_fields[id.to_sym][:label] } do
+        RiskFieldSet.stub :normative_tips_for, "" do
+          NormativeExplanationGenerator.stub :generate, ->(fid, question:) { assert_equal "second", fid; "Norm" } do
+            @risk_assistant.messages.create!(
+              sender: "assistant", role: "assistant",
+              content: "Pregunta 1", field_asked: "first", thread_id: "tid"
+            )
+
+            skip_runner = Struct.new(:ra) do
+              def ask_next!
+                ra.messages.create!(
+                  sender: "paragraph_generator", role: "assistant",
+                  content: "Pregunta 2", field_asked: "second", thread_id: "tid"
+                )
+              end
+            end.new(@risk_assistant)
+
+            AssistantRunner.stub :new, skip_runner do
+              post risk_assistant_messages_path(@risk_assistant), params: { message: { content: "skip" } }
+            end
+
+            runner_mock = Minitest::Mock.new
+            runner_mock.expect :thread_id, "tid"
+            runner_mock.expect :submit_user_message, nil, [{ content: "42", file_id: nil }]
+            runner_mock.expect :run_and_wait, "Gracias"
+            def runner_mock.thread_id; "tid"; end
+            def runner_mock.last_field_id; nil; end
+
+            AssistantRunner.stub :new, runner_mock do
+              post risk_assistant_messages_path(@risk_assistant), params: { message: { content: "42" } }
+            end
+            runner_mock.verify
+
+            user_msg = Message.where(sender: "user").order(:created_at).last
+            assert_equal "second", user_msg.field_asked
+
+            final = Message.where(sender: "assistant").order(:created_at).last
+            assert_equal "second", final.field_asked
+          end
+        end
+      end
+    end
+  end
 end
