@@ -238,6 +238,10 @@ class MessagesController < ApplicationController
       estado       = parsed["estado_del_campo"]
       valor        = parsed["valor"] || @message.content
       mensaje      = parsed["mensaje_para_usuario"]
+      siguiente    = parsed["siguiente_campo"]
+
+      field_for_question = (estado == "confirmado") ? siguiente : campo_actual
+      field_for_question = nil if estado == "confirmado" && siguiente.nil?
 
       if estado == "confirmado" && campo_actual.present?
         Message.save_unique!(
@@ -252,12 +256,13 @@ class MessagesController < ApplicationController
         )
       end
 
+      field_to_use = field_for_question
       @risk_assistant.messages.create!(
-        sender:    "assistant",
-        role:      "assistant",
-        content:   mensaje,
-        field_asked: campo_actual,
-        thread_id: runner.thread_id
+        sender:      "assistant",
+        role:        "assistant",
+        content:     mensaje,
+        field_asked: field_to_use,
+        thread_id:   runner.thread_id
       )
 
       return
