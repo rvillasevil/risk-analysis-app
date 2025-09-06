@@ -240,6 +240,7 @@ class MessagesController < ApplicationController
       estado       = parsed["estado_del_campo"]
       valor        = parsed["valor"] || @message.content
       mensaje      = parsed["mensaje_para_usuario"]
+      explicacion  = parsed["explicacion_normativa"]      
       siguiente    = parsed["siguiente_campo"]
 
       # Determine which field should be asked next. By default we keep the
@@ -268,7 +269,16 @@ class MessagesController < ApplicationController
           thread_id:     runner.thread_id
         )
       end
-
+      
+      if explicacion.present?
+        @risk_assistant.messages.create!(
+          sender:      "assistant_normative_explanation",
+          role:        "developer",
+          content:     explicacion,
+          field_asked: field_for_question,
+          thread_id:   runner.thread_id
+        )
+      end
 
       @risk_assistant.messages.create!(
         sender:      "assistant",

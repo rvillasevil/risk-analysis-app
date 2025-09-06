@@ -123,7 +123,7 @@ class AssistantRunner
       extra << "### Tip normativo:\n#{tips}\n\n" if tips.present?
       extra << "### Pregunta:\n#{question}\n\n"
       extra << "### Formato de respuesta:\n" \
-               "Devuelve un JSON que incluya la clave `campo_actual` con el valor `#{field_id}`.\n"      
+               "Devuelve un JSON con las claves `campo_actual` (valor `#{field_id}`), `estado_del_campo`, `valor`, `siguiente_campo`, `mensaje_para_usuario` y `explicacion_normativa`.\n"    
       extra << "⚠️ Tras confirmar, responde SOLO \"OK\" y espera la siguiente instrucción."
       extra << "\nAntes de formular la siguiente pregunta, revisa este historial y señala cualquier contradicción detectada."
 
@@ -143,10 +143,9 @@ class AssistantRunner
       )      
       parts = [expanded]
       parts << "Tip normativo: #{tips}" if tips.present?
-      parts << "Explicación normativa: #{norm_explanation}" if norm_explanation.present?
 
       risk_assistant.messages.create!(
-        sender:    "assistant",        
+        sender:    "assistant",
         role:      "assistant",
         content:   parts.join("\n"),
         field_asked: field_id,
@@ -210,7 +209,7 @@ class AssistantRunner
     h = RiskFieldSet.next_field_hash(answers)
     h && h[:id].to_sym
   end 
-  
+
   # ------------------------------------------------------------
   # Lanza la run con instrucciones + la PREGUNTA exacta
   # ------------------------------------------------------------
@@ -287,6 +286,7 @@ class AssistantRunner
       8. Usa la plantilla indicada en assistant_instructions si existe.
       9. Si se adjunta un archivo, busca la información relacionada con cada uno de los campos y valida cada uno de ellos.
       10. Revisa el historial y señala cualquier contradicción antes de formular la siguiente pregunta.
+      11. Devuelve SIEMPRE un JSON con las claves `campo_actual`, `estado_del_campo`, `valor`, `siguiente_campo`, `mensaje_para_usuario` y `explicacion_normativa`.      
 
     SYS
  
