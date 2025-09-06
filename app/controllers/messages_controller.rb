@@ -131,7 +131,7 @@ class MessagesController < ApplicationController
         thread_id:     current_thread
       )
 
-      answered   = @risk_assistant.messages.where.not(key: nil).pluck(:key)
+      answered   = @risk_assistant.messages.where.not(key: nil).pluck(:key, :value).to_h
       next_field = RiskFieldSet.next_field_hash(answered)
       if next_field
         display_text = RiskFieldSet.question_for(next_field[:id], include_tips: true)
@@ -203,7 +203,7 @@ class MessagesController < ApplicationController
     end
 
     next_field_id = RiskFieldSet.next_field_hash(
-                      @risk_assistant.messages.where.not(key: nil).pluck(:key)
+                      @risk_assistant.messages.where.not(key: nil).pluck(:key, :value).to_h
                     )&.dig(:id)
     next_label = next_field_id ? RiskFieldSet.label_for(next_field_id) : "campo pendiente"
 
@@ -233,8 +233,10 @@ class MessagesController < ApplicationController
       parsed = nil
     end
 
+    campo_actual = parsed.is_a?(Hash) ? parsed["campo_actual"] : nil
+    @message.update!(field_asked: campo_actual) if campo_actual.present?
+
     if parsed.is_a?(Hash) && parsed["mensaje_para_usuario"].present?
-      campo_actual = parsed["campo_actual"]
       estado       = parsed["estado_del_campo"]
       valor        = parsed["valor"] || @message.content
       mensaje      = parsed["mensaje_para_usuario"]
@@ -243,10 +245,6 @@ class MessagesController < ApplicationController
       # Determine which field should be asked next. By default we keep the
       # current field, but if the field was confirmed we only move to the next
       # one if it's present and valid according to RiskFieldSet.
-      if campo_actual.present? && @message.field_asked != campo_actual
-        @message.update!(field_asked: campo_actual)
-      end
-
       field_for_question = campo_actual
 
       siguiente_valido = siguiente.present? && RiskFieldSet.by_id.key?(siguiente.to_sym)
@@ -256,7 +254,7 @@ class MessagesController < ApplicationController
         field_for_question = nil unless siguiente_valido
       end
 
-      runner.set_last_field(field_for_question) if field_for_question     
+      runner.set_last_field(field_for_question) if field_for_question
       
       if estado == "confirmado" && campo_actual.present?
         Message.save_unique!(
@@ -266,7 +264,7 @@ class MessagesController < ApplicationController
           content:       "✅ Perfecto, #{RiskFieldSet.label_for(campo_actual)} es &&#{valor}&&.",
           sender:        "assistant_confirmation",
           role:          "developer",
-          field_asked:   nil,
+          field_asked:   campo_actual,
           thread_id:     runner.thread_id
         )
       end
@@ -334,13 +332,16 @@ class MessagesController < ApplicationController
     end
 
     field_for_question = runner.last_field_id
+
     if field_for_question && confirmed_fields.include?(field_for_question.to_s)
       field_for_question = nil
     end
+
     field_for_question ||= last_q&.field_asked.presence ||
                           @message.field_asked.presence
+
     field_for_question ||= begin
-      answered = @risk_assistant.messages.where.not(key: nil).pluck(:key)
+      answered = @risk_assistant.messages.where.not(key: nil).pluck(:key, :value).to_h
       RiskFieldSet.next_field_hash(answered)&.dig(:id)
     end
     return unless field_for_question

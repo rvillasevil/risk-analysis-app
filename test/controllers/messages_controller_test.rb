@@ -87,6 +87,41 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     assert_match "El valor mínimo es 0", warning.content
   end
 
+  test "updates field_asked from json response and persists confirmation" do
+    assistant_text = {
+      campo_actual: "test",
+      estado_del_campo: "confirmado",
+      valor: "123",
+      mensaje_para_usuario: "ok",
+      siguiente_campo: nil
+    }.to_json
+
+    runner_mock = Minitest::Mock.new
+    runner_mock.expect :thread_id, "tid"
+    runner_mock.expect :submit_user_message, nil, [{ content: "123", file_id: nil }]
+    runner_mock.expect :run_and_wait, assistant_text
+    def runner_mock.thread_id; "tid"; end
+    def runner_mock.last_field_id; nil; end
+
+    risk_fields = { test: { id: :test, label: "Test", assistant_instructions: "" } }
+
+    RiskFieldSet.stub :by_id, risk_fields do
+      RiskFieldSet.stub :label_for, ->(_){ "Test" } do
+        AssistantRunner.stub :new, runner_mock do
+          assert_difference -> { Message.where(sender: "assistant_confirmation", field_asked: "test").count }, 1 do
+            post risk_assistant_messages_path(@risk_assistant), params: { message: { content: "123" } }
+          end
+          user_msg = Message.where(sender: "user").order(:created_at).last
+          assert_equal "test", user_msg.field_asked
+          assistant_msg = Message.where(sender: "assistant").order(:created_at).last
+          assert_equal "test", assistant_msg.field_asked
+        end
+      end
+    end
+
+    runner_mock.verify
+  end  
+
   test "final message uses message field_asked and includes normative explanation" do
     assistant_text = "Gracias por la información"
 

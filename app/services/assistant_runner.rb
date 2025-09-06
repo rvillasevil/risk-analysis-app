@@ -71,8 +71,8 @@ class AssistantRunner
 
   # ⇒ dentro de la clase AssistantRunner
   def ask_next!
-    answered = risk_assistant.messages.where.not(key: nil).pluck(:key)
-    field    = RiskFieldSet.next_field_hash(answered)   # helper de RiskFieldSet
+    answers = risk_assistant.messages.where.not(key: nil).pluck(:key, :value).to_h
+    field    = RiskFieldSet.next_field_hash(answers)   # helper de RiskFieldSet
 
     # Estados actuales de los campos para proporcionar contexto al LLM
     states_json = risk_assistant.campos.to_json
@@ -122,6 +122,8 @@ class AssistantRunner
       extra << "### Instrucciones de campo:\n#{instr}\n\n" if instr.present?
       extra << "### Tip normativo:\n#{tips}\n\n" if tips.present?
       extra << "### Pregunta:\n#{question}\n\n"
+      extra << "### Formato de respuesta:\n" \
+               "Devuelve un JSON que incluya la clave `campo_actual` con el valor `#{field_id}`.\n"      
       extra << "⚠️ Tras confirmar, responde SOLO \"OK\" y espera la siguiente instrucción."
       extra << "\nAntes de formular la siguiente pregunta, revisa este historial y señala cualquier contradicción detectada."
 
@@ -204,64 +206,11 @@ class AssistantRunner
     # Encuentra el siguiente campo que NO tenga valor en BD
     # ------------------------------------------------------------
   def next_pending_field
-    answered = @risk_assistant.messages.where.not(key: nil).pluck(:key).to_set
-    root_fields = RiskFieldSet.flat_fields.select { |f| f[:parent].nil? }
-
-    root_fields.each do |field|
-      if field[:type] == :array_of_objects
-        pending = next_from_array(field[:id], [], answered)
-        return pending if pending
-      else
-        return field[:id].to_sym unless answered.include?(field[:id])
-      end
-    end
-    nil
-  end
-
-  def next_from_array(array_id, prefix_parts, answered)
-    info = RiskFieldSet.by_id[array_id.to_sym]
-      return nil unless info
-
-    count_field = info[:array_count_source_field_id]
-
-    if count_field
-      count_key = (prefix_parts + [count_field]).reject(&:blank?).join('.')
-      count_msg = @risk_assistant.messages.where(key: count_key).order(:created_at).last
-      return count_key.to_sym unless count_msg
-      count = count_msg.value.to_i
-    else
-      prefix = (prefix_parts + [array_id]).reject(&:blank?).join('.')
-      idx_re  = /^#{Regexp.escape(prefix)}\.(\d+)\./
-      existing = answered.map { |k| k[idx_re, 1] }.compact.map(&:to_i)
-      count = [existing.max.to_i + 1, 1].max
-    end
-
-    (0...count).each do |idx|
-      item_prefix = prefix_parts + [array_id, idx]
-      RiskFieldSet.children_of_array(array_id).each do |child|
-        if child[:type] == :array_of_objects
-          pending = next_from_array(child[:id], item_prefix, answered)
-          return pending if pending
-        else
-          suffix = child[:id].sub(/^#{Regexp.escape(array_id)}\./, '')
-          key = (item_prefix + [suffix]).join('.')
-          return key.to_sym unless answered.include?(key)
-        end
-      end
-    end
-
-    if count_field.nil? && info[:allow_add_remove_rows]
-      idx = count
-      item_prefix = prefix_parts + [array_id, idx]
-      child = RiskFieldSet.children_of_array(array_id).first
-      if child
-        suffix = child[:id].sub(/^#{Regexp.escape(array_id)}\./, '')
-        return (item_prefix + [suffix]).join('.').to_sym
-      end
-    end
-    nil
-  end    
-
+    answers = @risk_assistant.messages.where.not(key: nil).pluck(:key, :value).to_h
+    h = RiskFieldSet.next_field_hash(answers)
+    h && h[:id].to_sym
+  end 
+  
   # ------------------------------------------------------------
   # Lanza la run con instrucciones + la PREGUNTA exacta
   # ------------------------------------------------------------

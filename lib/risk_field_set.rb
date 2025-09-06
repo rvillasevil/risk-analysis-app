@@ -4,6 +4,7 @@
 require "yaml"
 require "json"
 require "pathname"
+require "set"
 
 
 class RiskFieldSet
@@ -176,18 +177,29 @@ class RiskFieldSet
 
     public :reset_cache!, :reload!
 
-        # ------- NUEVO: helpers para el siguiente campo -----------------
-    def next_field_hash(answered_keys = [])
-      answered = answered_keys.map(&:to_s)
-      flat_fields.find { |f| !answered.include?(f[:id].to_s) }
+    # ------- helpers para obtener el siguiente campo pendiente ---------
+    # answers: Hash con pares { 'field_id' => 'valor' }
+    def next_field_hash(answers = {})
+      answered = answers.keys.map(&:to_s).to_set
+      root_fields = flat_fields.select { |f| f[:parent].nil? }
+
+      root_fields.each do |field|
+        if field[:type] == :array_of_objects
+          pending = next_from_array(field[:id], [], answers)
+          return field_hash_for(pending) if pending
+        else
+          return field if !answered.include?(field[:id].to_s)
+        end
+      end
+      nil
     end
 
-    def next_field_id(answered_keys = [])
-      h = next_field_hash(answered_keys)
+    def next_field_id(answers = {})
+      h = next_field_hash(answers)
       h && h[:id]
-    end    
+    end
 
-    public :next_field_hash, :next_field_id   # ← AÑADE ESTA LÍNEA
+    public :next_field_hash, :next_field_id
 
     private
 
