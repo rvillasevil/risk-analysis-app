@@ -1,6 +1,6 @@
 class RiskAssistant < ApplicationRecord
   belongs_to :user
-  has_many :messages, dependent: :destroy
+  has_many :messages, class_name: "Message", dependent: :destroy
 
   has_one :report
 
@@ -23,28 +23,4 @@ class RiskAssistant < ApplicationRecord
                                 :riesgos_especifico, :siniestralidad, :recomendacione
 
   alias_attribute :initialised?, :initialised   # permite usar “?” al final
-
-  # Devuelve un hash con el estado de cada campo del cuestionario.
-  # El estado puede ser:
-  #   - "sin_preguntar": no hay mensajes relacionados con el campo.
-  #   - "en_proceso":   se ha preguntado pero no se ha confirmado un valor.
-  #   - "confirmado":   existe un mensaje con clave (key) para el campo.
-  # Se tienen en cuenta los identificadores definidos en RiskFieldSet.
-  def campos
-    field_ids = RiskFieldSet.by_id.keys.map(&:to_s)
-    confirmed = messages.where.not(key: nil).pluck(:key)
-    asked     = messages.where(sender: %w[assistant assistant_guard])
-                         .where.not(field_asked: nil)
-                         .pluck(:field_asked)
-
-    field_ids.index_with do |fid|
-      if confirmed.any? { |k| k == fid || k.start_with?("#{fid}.") }
-        "confirmado"
-      elsif asked.any? { |k| k == fid || k.start_with?("#{fid}.") }
-        "en_proceso"
-      else
-        "sin_preguntar"
-      end
-    end
-  end
 end

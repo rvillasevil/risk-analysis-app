@@ -17,11 +17,11 @@ class RiskFieldSet
   Field = Struct.new(
     :id, :label, :prompt, :type, :options, :example,
     :why, :context, :section, :validation, :assistant_instructions,
-    :normative_tips,    
+    :normative_tips,  
     :parent, :array_of_objects, :item_label_template,
     :array_count_source_field_id, :row_index_path,
     keyword_init: true
-  )
+  ) unless const_defined?(:Field)
 
   class << self
     # Devuelve el hash de secciones con sus campos ya procesados
@@ -251,61 +251,9 @@ class RiskFieldSet
       h && h[:id]
     end
 
-    def field_hash_for(id)
-      by_id[id.to_sym]
-    end
-
-    public :next_field_hash, :next_field_id
-    private :field_hash_for    
+    public :next_field_hash, :next_field_id   
 
     private
-
-    def next_from_array(array_id, prefix_parts, answers)
-      answered = answers.keys.map(&:to_s).to_set
-      info = by_id[array_id.to_sym]
-      return nil unless info
-
-      count_field = info[:array_count_source_field_id]
-
-      if count_field
-        count_key = (prefix_parts + [count_field]).reject(&:blank?).join('.')
-        return count_key unless answered.include?(count_key)
-        count = answers[count_key].to_i
-      else
-        segment = array_id.to_s.split('.').last
-        prefix = (prefix_parts + [segment]).join('.')
-        idx_re = /^#{Regexp.escape(prefix)}\.(\d+)\./
-        existing = answered.map { |k| k[idx_re, 1] }.compact.map(&:to_i)
-        count = [existing.max.to_i + 1, 1].max
-      end
-
-      segment = array_id.to_s.split('.').last
-      (0...count).each do |idx|
-        item_prefix = prefix_parts + [segment, idx]
-        children_of_array(array_id).each do |child|
-          if child[:type] == :array_of_objects
-            pending = next_from_array(child[:id], item_prefix, answers)
-            return pending if pending
-          else
-            suffix = child[:id].sub(/^#{Regexp.escape(array_id)}\./, '')
-            key = (item_prefix + [suffix]).join('.')
-            return key unless answered.include?(key)
-          end
-        end
-      end
-
-      if count_field.nil? && info[:allow_add_remove_rows]
-        idx = count
-        item_prefix = prefix_parts + [segment, idx]
-        child = children_of_array(array_id).first
-        if child
-          suffix = child[:id].sub(/^#{Regexp.escape(array_id)}\./, '')
-          return (item_prefix + [suffix]).join('.')
-        end
-      end
-
-      nil
-    end
 
     def field_hash_for(key)
       return nil unless key

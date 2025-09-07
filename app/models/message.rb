@@ -3,12 +3,6 @@ class Message < ApplicationRecord
 
   validates :sender, presence: true
   validates :content, presence: true
-  enum role: {
-    user:       "user",
-    assistant:  "assistant",
-    developer:  "developer"
-  }, _suffix: true
-  validates :role, inclusion: { in: %w[user assistant developer] }
   validates :key, uniqueness: { scope: :risk_assistant_id }, allow_blank: true
   validates :field_asked, inclusion: { in: RiskFieldSet.by_id.keys.map(&:to_s) }, allow_nil: true  
 
