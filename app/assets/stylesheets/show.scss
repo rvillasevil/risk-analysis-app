@@ -16,7 +16,7 @@ $padding-base:     0.75rem;
 $header-h   : 0px;   // alto del navbar
 $sidebar-pad: 1rem;
 $z-chat     : 100;
-
+$sidebar-width: 360px;
 // ──────────────────────────────────────────────────────────────────
 // Estructura principal
 // ──────────────────────────────────────────────────────────────────
@@ -203,11 +203,13 @@ main.chat-main {
     top: $header-h;
     left: 0;
     bottom: 0;
-    width: 300px;
+    width: $sidebar-width;
     padding: $sidebar-pad;
     overflow-y: auto;
     background: #f5f4f4;
     border-right: 1px solid #dee2e6;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
   }
 
   .fixed-sidebar .sidebar-box {
@@ -217,9 +219,31 @@ main.chat-main {
   }
 
   .chat-main {
-    margin-left: 300px;
+    margin-left: $sidebar-width;
   }
 }
+
+// Navegación del sidebar
+.sidebar-nav {
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+    color: $color-text;
+    &:hover {
+      background-color: $color-user-bg;
+      color: $color-primary;
+    }
+  }
+  .nav-item + .nav-item {
+    margin-top: 0.5rem;
+  }
+  i {
+    font-size: 1rem;
+  }
+}
+
 
 // Mensaje inicial cuando no hay historial
 .empty-chat {
@@ -237,5 +261,49 @@ main.chat-main {
   padding: $padding-base;
   border-radius: $border-radius;
 }
+
+// Uploaded files section
+.uploaded-files-section {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.uploaded-file-card {
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: lighten($color-bg, 3%);
+  }
+
+  .card-body {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .file-info {
+    .file-icon {
+      font-size: 1.2rem;
+    }
+    .file-name {
+      margin-right: 0.25rem;
+    }
+  }
+
+  .file-actions .btn {
+    margin-left: 0.25rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .uploaded-file-card .card-body {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .file-actions {
+      margin-top: 0.5rem;
+      width: 100%;
+    }
+  }
+}
+
 
 

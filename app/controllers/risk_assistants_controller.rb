@@ -1,7 +1,6 @@
   class RiskAssistantsController < ApplicationController
     before_action :authenticate_user!
-    before_action :set_risk_assistant, only: [:show, :generate_report, :report, :resume, :update_message, :create_message, :summary]
-  
+    before_action :set_risk_assistant, only: [:show, :generate_report, :report, :resume, :update_message, :create_message, :summary, :destroy_file]  
     def index
       @risk_assistants = current_user.risk_assistants
     end
@@ -10,6 +9,10 @@
       @risk_assistant = current_user.risk_assistants.find(params[:id])
       @messages = @risk_assistant.messages
       @company_name = @messages.where("key LIKE ?", "%Nombre de la empresa%").last
+
+      # Hash de estados de campos para enviar al LLM cuando sea necesario
+      @campos = @risk_assistant.campos
+      @final_summary = final_confirmation(@campos)
 
       #Completados
       @completed = @risk_assistant.messages
@@ -80,7 +83,7 @@
       # --------------------------
       total_fields = RiskFieldSet.flat_fields.size
       total_done   = filled_ids.size
-      @overall_pct = total_fields.zero? ? 0 : ((total_done * 100.0) / total_fields).round      
+      @overall_pct = total_fields.zero? ? 0 : ((total_done * 100.0) / total_fields).round    
     end
 
     def new
@@ -182,11 +185,25 @@
       @sections = RiskFieldSet.all
       @messages = @risk_assistant.messages
       render :summary
-    end    
+    end
+
+    def destroy_file
+      file = @risk_assistant.uploaded_files.find(params[:file_id])
+      file.purge
+      redirect_to risk_assistant_path(@risk_assistant), notice: "Archivo eliminado."
+    end
 
 
     private
   
+    # Si todos los campos están confirmados, devuelve un hash con los
+    # pares key/value para mostrar al usuario como resumen final.
+    # En caso contrario, devuelve un hash vacío.
+    def final_confirmation(campos)
+      return {} unless campos.values.all? { |s| s == "confirmado" }
+      @risk_assistant.messages.where.not(key: [nil, ""]).pluck(:key, :value).to_h
+    end
+
     def risk_assistant_params
       params.require(:risk_assistant).permit(:name, :thread_id)
     end

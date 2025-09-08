@@ -17,38 +17,13 @@
       <!-- Desktop -->
       <div class="d-none d-md-block">
         <div class="sidebar-box">
-          <%#── Sección de “Archivos subidos” ──────────────────────────────────── %>
-          <div class="mt-4">
-            <%= link_to "📋 Ver resumen de datos", summary_risk_assistant_path(@risk_assistant),
-                        class: "btn btn-outline-primary w-100" %>
-          </div> 
-          <h5 class="text-lg font-semibold mb-2" style="padding-top: 20px;">Archivos subidos</h5>
-          <% if @risk_assistant.uploaded_files.attached? %>
-            <div class="uploaded-files-section p-4 mb-6 border rounded bg-gray-50">
-              <ul class="list-unstyled">
-                <% @risk_assistant.uploaded_files.each do |file| %>
-                  <li class="mb-2">
-                    <i class="bi bi-file-earmark-pdf-fill text-red-600"></i>
-                    <%= link_to file.filename.to_s,
-                                url_for(file),
-                                target: "_blank",
-                                class: "text-blue-600 hover:underline" %>
-                    (<%= number_to_human_size(file.byte_size) %>)
-                  </li>
-                <% end %>
-              </ul>
-            </div>
-          <% else %>
-            <div class="uploaded-files-section p-4 mb-6 border rounded bg-gray-50">
-              <p class="text-muted">No hay archivos subidos.</p>
-            </div>
-          <% end %>         
-          <%= render partial: "sidebar",
-                     locals: {
+          <%#── Sección de “Archivos subidos” ──────────────────────────────────── %>          
+          <%= render partial: "sidebar_nav",                     
+                    locals: {
+                       risk_assistant: @risk_assistant,
                        sections: @sections,
                        progress_by_section: @progress_by_section,
-                       overall_pct: @overall_pct,
-                       risk_assistant: @risk_assistant
+                       overall_pct: @overall_pct
                      } %>
         </div>
       </div>
@@ -60,12 +35,12 @@
         </div>
         <div class="offcanvas-body p-0">
           <div class="sidebar-box border-0 rounded-0">
-            <%= render partial: "sidebar",
+            <%= render partial: "sidebar_nav",
                        locals: {
+                         risk_assistant: @risk_assistant,
                          sections: @sections,
                          progress_by_section: @progress_by_section,
-                         overall_pct: @overall_pct,
-                         risk_assistant: @risk_assistant
+                         overall_pct: @overall_pct
                        } %>
           </div>
         </div>

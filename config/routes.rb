@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       patch :update_message
       post :create_message
       get :summary
+      delete 'files/:file_id', to: 'risk_assistants#destroy_file', as: :file
     end
   end
 
