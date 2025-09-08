@@ -4,11 +4,16 @@ class Message < ApplicationRecord
   validates :sender, presence: true
   validates :content, presence: true
   validates :key, uniqueness: { scope: :risk_assistant_id }, allow_blank: true
-  validates :field_asked, inclusion: { in: RiskFieldSet.by_id.keys.map(&:to_s) }, allow_nil: true  
+  #validates :field_asked, inclusion: { in: RiskFieldSet.by_id.keys.map(&:to_s) }, allow_nil: true  
 
   # "assistant_guard" messages are now visible to users
-  INTERNAL_SENDERS = %w[assistant_confirmation assistant_raw assistant_flag assistant_summary assistant_normative_explanation].freeze
-  
+  INTERNAL_SENDERS = %w[
+    assistant_confirmation
+    assistant_raw
+    assistant_flag
+    assistant_summary
+  ].freeze
+
   # Messages that should be displayed to the end user
   scope :visible_to_user, -> { where.not(role: "developer").where.not(sender: INTERNAL_SENDERS) }
 

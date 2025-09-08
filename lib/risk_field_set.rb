@@ -192,7 +192,6 @@ class RiskFieldSet
 
       nil
     end
-    private_class_method :next_from_array  
 
     def validate_answer(field, value)
       v = field[:validation] || {}
@@ -251,17 +250,15 @@ class RiskFieldSet
       h && h[:id]
     end
 
+    def field_hash_for(id)
+      by_id[id.to_sym]
+    end    
+
     public :next_field_hash, :next_field_id   
 
+    private :field_hash_for
+
     private
-
-    def field_hash_for(key)
-      return nil unless key
-      base = key.to_s.split('.').reject { |s| s.match?(/^\d+$/) }.join('.')
-      f = by_id[base.to_sym]
-      f && f.merge(id: key.to_s)
-    end
-
 
     # Decide parsear JSON o YAML según presencia de JSON_PATH
     def load_data!

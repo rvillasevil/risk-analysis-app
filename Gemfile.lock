@@ -107,6 +107,7 @@ GEM
     dotenv-rails (3.1.8)
       dotenv (= 3.1.8)
       railties (>= 6.1)
+    drb (2.2.3)
     erb (5.0.2)
     erubi (1.13.1)
     ffi (1.17.2-x64-mingw-ucrt)
@@ -307,6 +308,7 @@ DEPENDENCIES
   devise
   docsplit
   dotenv-rails
+  drb
   fiddle
   hotwire-rails
   http

@@ -62,6 +62,8 @@ gem "mutex_m"
 gem 'benchmark'
 gem 'fiddle'
 
+gem 'drb'
+
 #gem "pgvector"
 
 group :development, :test do
