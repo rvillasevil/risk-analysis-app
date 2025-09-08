@@ -22,5 +22,21 @@ class RiskAssistant < ApplicationRecord
                                 :actividad_proceso, :almacenamiento, :instalaciones_auxiliare,
                                 :riesgos_especifico, :siniestralidad, :recomendacione
 
+  def campos
+    confirmados = messages.where.not(key: nil).pluck(:key, :value).to_h
+
+    resultado = {}
+    confirmados.each do |key, value|
+      resultado[key] = { estado: 'confirmado', valor: value }
+    end
+
+    RiskFieldSet.flat_fields.each do |field|
+      field_id = field[:id].to_s
+      resultado[field_id] ||= { estado: 'pendiente', valor: nil }
+    end
+
+    resultado
+  end                                
+
   alias_attribute :initialised?, :initialised   # permite usar “?” al final
 end
