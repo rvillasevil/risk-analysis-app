@@ -115,22 +115,22 @@ class MessagesController < ApplicationController
   def handle_file_upload(file, current_thread)
     return false unless file.present?
 
-    # 3) Si el usuario sube un archivo, extraer el texto y buscar campos automáticamente
+    field_key = @message.field_asked
+
+    file.rewind
+    @message = Message.save_unique!(
+      risk_assistant: @risk_assistant,
+      key:           field_key,
+      value:         file.original_filename,
+      content:       "Archivo subido correctamente.",
+      sender:        "assistant",
+      role:          "assistant",
+      field_asked:   field_key,
+      thread_id:     current_thread
+    )
+    @message.files.attach(file)
+
     if image_file?(file)
-      file.rewind
-      @risk_assistant.uploaded_files.attach(file)
-
-      Message.save_unique!(
-        risk_assistant: @risk_assistant,
-        key:           @message.field_asked,
-        value:         file.original_filename,
-        content:       "Archivo subido correctamente.",
-        sender:        "assistant",
-        role:          "assistant",
-        field_asked:   @message.field_asked,
-        thread_id:     current_thread
-      )
-
       answered   = @risk_assistant.messages.where.not(key: nil).pluck(:key, :value).to_h
       next_field = RiskFieldSet.next_field_hash(answered)
       if next_field
@@ -144,11 +144,13 @@ class MessagesController < ApplicationController
           thread_id:   current_thread
         )
 
-          redirect_to risk_assistant_path(@risk_assistant)
-          return true
-        end
-
+        redirect_to risk_assistant_path(@risk_assistant)
+        return true
+      end
+    end
+   
     extracted_text = TextExtractor.call(file)
+    doc_type = DocumentTypeClassifier.call(extracted_text)    
     file.rewind
     @risk_assistant.uploaded_files.attach(file)
 
@@ -163,6 +165,16 @@ class MessagesController < ApplicationController
       thread_id:     current_thread
     ) 
 
+    Message.save_unique!(
+      risk_assistant: @risk_assistant,
+      key:           "document_type",
+      value:         doc_type,
+      content:       "El documento parece ser una #{doc_type}.",
+      sender:        "assistant",
+      role:          "assistant",
+      thread_id:     current_thread
+    )
+    
     unless extracted_text.blank?
       @risk_assistant.messages.create!(
         sender:    "assistant",
@@ -172,10 +184,13 @@ class MessagesController < ApplicationController
       )
     end
 
-    doc_pairs = DocumentFieldExtractor.call(extracted_text)
-    if doc_pairs.any?
+    result   = DocumentFieldExtractor.call(extracted_text)
+    values   = result[:values]   || {}
+    warnings = result[:warnings] || {}
+
+    if values.any?
       summary_lines = []
-      doc_pairs.each do |campo_id, valor|
+      values.each do |campo_id, valor|
         label = RiskFieldSet.label_for(campo_id)
         Message.save_unique!(
           risk_assistant: @risk_assistant,
@@ -188,6 +203,15 @@ class MessagesController < ApplicationController
           thread_id:     current_thread
         )
         summary_lines << "✅ #{label}: #{valor}"
+      end
+
+      warnings.each do |campo_id, msg|
+        @risk_assistant.messages.create!(
+          sender:    'assistant_flag',
+          role:      'developer',
+          content:   "⚠️ #{RiskFieldSet.label_for(campo_id)}: #{msg} ⚠️",
+          thread_id: current_thread
+        )
       end
 
       todos_confirmaciones = summary_lines.join("\n")

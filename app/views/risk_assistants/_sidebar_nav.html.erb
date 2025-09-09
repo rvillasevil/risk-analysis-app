@@ -30,7 +30,7 @@
                                   title: "Descargar" do %>
                         <i class="bi bi-download"></i>
                       <% end %>
-                      <%= link_to risk_assistant_file_path(@risk_assistant, file),
+                      <%= link_to file_risk_assistant_path(@risk_assistant, file),
                                   data: { turbo_method: :delete, turbo_confirm: "¿Eliminar archivo?" },
                                   class: "btn btn-sm btn-outline-danger",
                                   title: "Eliminar" do %>
@@ -46,7 +46,7 @@
       <% end %>
     </li>
     <li class="nav-item mt-2">
-      <%= link_to resume_risk_assistant_path(risk_assistant), class: "nav-link d-flex align-items-center gap-2" do %>
+      <%= link_to risk_assistant_resume_path(risk_assistant), class: "nav-link d-flex align-items-center gap-2" do %>
         <i class="bi bi-graph-up"></i>
         <span>Progreso</span>
       <% end %>

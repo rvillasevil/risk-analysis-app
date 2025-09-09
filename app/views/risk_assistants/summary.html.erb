@@ -45,9 +45,10 @@
                     <%= number_with_delimiter(value.to_f, delimiter: ".") %>
 
                   <% when "file", "file_multiple" %>
-                    <% if @risk_assistant.uploaded_files.attached? %>
+                    <% msg = @risk_assistant.messages.find_by(key: key) %>
+                    <% if msg&.files&.attached? %>
                       <ul class="list-unstyled mb-0">
-                        <% @risk_assistant.uploaded_files.each do |file| %>
+                        <% msg.files.each do |file| %>
                           <li>
                             <%= link_to file.filename.to_s, rails_blob_path(file, disposition: "attachment"), target: "_blank" %>
                           </li>
@@ -99,9 +100,10 @@
                                 <%= number_with_delimiter(sub_value.to_f, delimiter: ".") %>
 
                               <% when "file", "file_multiple" %>
-                                <% if @risk_assistant.uploaded_files.attached? %>
+                                <% msg = @risk_assistant.messages.find_by(key: sub_key) %>
+                                <% if msg&.files&.attached? %>
                                   <ul class="list-unstyled mb-0">
-                                    <% @risk_assistant.uploaded_files.each do |file| %>
+                                    <% msg.files.each do |file| %>
                                       <li>
                                         <%= link_to file.filename.to_s, rails_blob_path(file, disposition: "attachment"), target: "_blank" %>
                                       </li>

@@ -1,5 +1,6 @@
 class Message < ApplicationRecord
   belongs_to :risk_assistant
+  has_many_attached :files  
 
   validates :sender, presence: true
   validates :content, presence: true

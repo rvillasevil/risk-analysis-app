@@ -16,9 +16,9 @@ class TextExtractor
 
     # 2) Si es PDF, extraer con PDF::Reader; en caso contrario, asumimos texto plano.
     text =
-      if file.content_type == 'application/pdf'
-        # 2) Procesar según tipo MIME
-        if file.content_type&.start_with?('image/')
+      if file.content_type&.start_with?('image/')
+        ''
+      elsif file.content_type == 'application/pdf'
           ''
         elsif file.content_type == 'application/pdf'
         extract_pdf_text(raw_bytes)

@@ -1,6 +1,6 @@
   class RiskAssistantsController < ApplicationController
     before_action :authenticate_user!
-    before_action :set_risk_assistant, only: [:show, :generate_report, :report, :resume, :update_message, :create_message, :summary, :destroy_file]  
+    before_action :set_risk_assistant, only: [:show, :generate_report, :report, :update_message, :create_message, :summary, :destroy_file]    
     def index
       @risk_assistants = current_user.risk_assistants
     end
@@ -172,7 +172,7 @@
         content:       params[:content] || params[:value]
       )
       if msg.persisted?
-        redirect_to resume_risk_assistant_path(@risk_assistant), notice: "Mensaje ##{msg.id} añadido."
+        redirect_to risk_assistant_resume_path(@risk_assistant), notice: "Mensaje ##{msg.id} añadido."
       else
         flash.now[:alert] = "No se pudo crear el mensaje: #{msg.errors.full_messages.join(', ')}"
         @records = @risk_assistant.messages.order(:created_at)
