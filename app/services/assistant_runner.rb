@@ -268,8 +268,8 @@ class AssistantRunner
 
       4.1 Añade justo después de la pregunta, una explicación de la pregunta de como mínimo 2 párrafos y máximo 3 párrafos, de no más de 500 palabras en total, que ayude al usuario a entender qué información se le está pidiendo y por qué es importante. Usa un lenguaje claro y sencillo, evitando tecnicismos y jerga compleja. Si el campo tiene tip normativo, incluye una explicación breve de la normativa relacionada con ese campo.
 
-      5. Incluye siempre en un párrafo independiente el desarrollo de la normativa relacionada con la pregunta del punto 3:
-          Normativa: #{tips.presence ? tips : "ninguna"}
+      <%# 5. Incluye siempre en un párrafo independiente el desarrollo de la normativa relacionada con la pregunta del punto 3:
+          Normativa: #{tips.presence ? tips : "ninguna"} %>
 
       6. Antes de validar un valor:
          – Si el campo es *select*, comprueba que la respuesta esté en

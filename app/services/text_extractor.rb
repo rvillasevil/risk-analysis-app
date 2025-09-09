@@ -19,8 +19,6 @@ class TextExtractor
       if file.content_type&.start_with?('image/')
         ''
       elsif file.content_type == 'application/pdf'
-          ''
-        elsif file.content_type == 'application/pdf'
         extract_pdf_text(raw_bytes)
       else
         raw_bytes.force_encoding('UTF-8').scrub

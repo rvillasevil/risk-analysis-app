@@ -150,20 +150,14 @@ class MessagesController < ApplicationController
     end
    
     extracted_text = TextExtractor.call(file)
-    doc_type = DocumentTypeClassifier.call(extracted_text)    
+
+    doc_type = nil
+    if extracted_text.present?
+      doc_type = DocumentTypeClassifier.call(extracted_text)
+    end    
+    
     file.rewind
     @risk_assistant.uploaded_files.attach(file)
-
-    Message.save_unique!(
-      risk_assistant: @risk_assistant,
-      key:           @message.field_asked,
-      value:         file.original_filename,
-      content:       "Archivo subido correctamente.",
-      sender:        "assistant",
-      role:          "assistant",
-      field_asked:   @message.field_asked,
-      thread_id:     current_thread
-    ) 
 
     Message.save_unique!(
       risk_assistant: @risk_assistant,
@@ -172,10 +166,21 @@ class MessagesController < ApplicationController
       content:       "El documento parece ser una #{doc_type}.",
       sender:        "assistant",
       role:          "assistant",
+      field_asked:   @message.field_asked,
       thread_id:     current_thread
     )
-    
-    unless extracted_text.blank?
+
+    if extracted_text.present?
+      Message.save_unique!(
+        risk_assistant: @risk_assistant,
+        key:           "document_type",
+        value:         doc_type,
+        content:       "El documento parece ser una #{doc_type}.",
+        sender:        "assistant",
+        role:          "assistant",
+        thread_id:     current_thread
+      )    
+
       @risk_assistant.messages.create!(
         sender:    "assistant",
         role:      "developer",
@@ -573,6 +578,4 @@ class MessagesController < ApplicationController
     Rails.logger.error("Error al procesar la respuesta: #{e.message}")
     {}
   end
-
-end
 

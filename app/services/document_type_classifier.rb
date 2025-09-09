@@ -8,6 +8,8 @@ class DocumentTypeClassifier
 
   def self.call(text)
     content = text.to_s
+    return nil if content.blank?
+
     KEYWORDS.each do |type, patterns|
       return type if patterns.any? { |regex| content.match?(regex) }
     end
