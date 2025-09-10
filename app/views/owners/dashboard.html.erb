@@ -2,11 +2,11 @@
 
 <nav>
   <ul>
-    <li><%= link_to 'Gestión de clientes', '/clients' %></li>
-    <li><%= link_to 'Data Collections', '/data_collections' %></li>
-    <li><%= link_to 'Documents', '/documents' %></li>
-    <li><%= link_to 'Summaries', '/summaries' %></li>
-    <li><%= link_to 'Policy Analyses', '/policy_analyses' %></li>
+    <li><%= link_to 'Gestión de clientes', user_clients_path(current_user) %></li>
+    <li><%= link_to 'Data Collections', data_collections_path %></li>
+    <li><%= link_to 'Documents', documents_path %></li>
+    <li><%= link_to 'Summaries', summaries_path %></li>
+    <li><%= link_to 'Policy Analyses', policy_analyses_path %></li>
   </ul>
 </nav>
 

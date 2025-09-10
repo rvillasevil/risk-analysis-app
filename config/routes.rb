@@ -19,10 +19,15 @@ Rails.application.routes.draw do
 
   resources :policy_analyses, only: [:index, :new, :create, :show, :destroy] do
     post :create_analysis, on: :member
-    post :ask, on: :member   # << añadimos esta línea    
+    post :ask, on: :member   # << añadimos esta línea
   end
 
+  resources :data_collections, only: :index
+  resources :documents,       only: :index
+  resources :summaries,       only: :index  
+
   get 'clients/dashboard', to: 'clients#dashboard', as: :client_dashboard
+  get 'owners/dashboard', to: 'owners#dashboard', as: :owner_dashboard  
 
   get 'invitations/accept', to: 'invitations#accept', as: :accept_invitation
 

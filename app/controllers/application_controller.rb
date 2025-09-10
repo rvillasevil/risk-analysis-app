@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  before_action { Current.owner = current_user.owner || current_user }  
+  before_action { Current.owner = current_user&.owner || current_user }
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   private
@@ -15,6 +15,10 @@ class ApplicationController < ActionController::Base
   alias_method :require_client!, :require_authorized_user!
 
   protected
+
+  def after_sign_in_path_for(resource)
+    resource.owner? ? owner_dashboard_path : client_dashboard_path
+  end  
 
   def configure_permitted_parameters
     allowed = [:name, :role, :company_name, :owner_id, :logo]
