@@ -1,12 +1,13 @@
   class RiskAssistantsController < ApplicationController
     before_action :authenticate_user!
+    before_action :require_client!
     before_action :set_risk_assistant, only: [:show, :generate_report, :report, :update_message, :create_message, :summary, :destroy_file]    
     def index
-      @risk_assistants = current_user.risk_assistants
+      @risk_assistants = owner_or_self.risk_assistants
     end
   
     def show
-      @risk_assistant = current_user.risk_assistants.find(params[:id])
+      @risk_assistants = owner_or_self.risk_assistants
       @messages = @risk_assistant.messages
       @company_name = @messages.where("key LIKE ?", "%Nombre de la empresa%").last
 
@@ -87,11 +88,11 @@
     end
 
     def new
-      @risk_assistant = current_user.risk_assistants.new
+      @risk_assistant = owner_or_self.risk_assistants.new
     end
   
     def create
-      @risk_assistant = current_user.risk_assistants.new(risk_assistant_params)
+      @risk_assistant = owner_or_self.risk_assistants.new(risk_assistant_params)
   
       if @risk_assistant.save
         redirect_to risk_assistant_path(@risk_assistant), notice: 'RiskAssistant creado con éxito.'
@@ -115,7 +116,7 @@
     end
     
     def report
-      @risk_assistant = current_user.risk_assistants.find(params[:id])
+      @risk_assistant = owner_or_self.risk_assistants.find(params[:id])
       @messages = @risk_assistant.messages
       @message = @risk_assistant.messages.last
       @report_markdown = fetch_response_from_openai(@message)
@@ -132,7 +133,7 @@
 
     # GET /risk_assistants/:id/resume
     def resume
-      @risk_assistant = current_user.risk_assistants.find(params[:id])
+      @risk_assistant = owner_or_self.risk_assistants.find(params[:id])
       # Columnas del modelo Message
       @columns = Message.column_names
       # Solo los mensajes de este RiskAssistant
@@ -239,7 +240,7 @@
     end
 
     def set_risk_assistant
-      @risk_assistant = RiskAssistant.find(params[:id])
+      @risk_assistant = owner_or_self.risk_assistants.find(params[:id])
     end
 
     # Permite editar todos los campos de Message excepto id, conversation_id, created_at, updated_at

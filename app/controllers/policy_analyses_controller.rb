@@ -1,18 +1,19 @@
 # app/controllers/policy_analyses_controller.rb
 class PolicyAnalysesController < ApplicationController
   before_action :authenticate_user!
+  before_action :require_client!
   before_action :set_policy_analysis, only: [:show, :create_analysis, :destroy, :ask]
 
   def index
-    @policy_analyses = current_user.policy_analyses
+    @policy_analyses = owner_or_self.policy_analyses
   end
 
   def new
-    @policy_analysis = current_user.policy_analyses.new
+    @policy_analysis = owner_or_self.policy_analyses.new
   end
 
   def create
-    @policy_analysis = current_user.policy_analyses.new
+    @policy_analysis = owner_or_self.policy_analyses.new
     if @policy_analysis.save
       attach_documents
       PolicyAnalysisJob.perform_later(@policy_analysis.id)
@@ -66,7 +67,7 @@ class PolicyAnalysesController < ApplicationController
   private
 
   def set_policy_analysis
-    @policy_analysis = current_user.policy_analyses.find(params[:id])
+    @policy_analysis = owner_or_self.policy_analyses.find(params[:id])
   end
 
   def attach_documents

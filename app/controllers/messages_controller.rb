@@ -448,7 +448,7 @@ class MessagesController < ApplicationController
   end
 
   def set_risk_assistant
-    @risk_assistant = current_user.risk_assistants.find(params[:risk_assistant_id])
+    @risk_assistant = owner_or_self.risk_assistants.find(params[:risk_assistant_id])
   end
 
   # ---------- subida de fichero + asociación al thread ----------
