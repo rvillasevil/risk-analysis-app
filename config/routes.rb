@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :users, only: [] do
     resources :clients, only: %i[index new create destroy]
   end  
+  resources :clients, only: :show  
   resources :risk_assistants, only: %i[index show new create destroy report] do
     resources :messages, only: :create
     member do 

@@ -1,5 +1,12 @@
-<h1>Panel de Cliente</h1>
+<h1><%= current_user.owner.company_name %></h1>
+<%= render 'shared/branding', owner: current_user.owner %>
+
+<% if current_user.owner.logo.attached? %>
+  <%= image_tag current_user.owner.logo, alt: "#{current_user.owner.company_name} logo" %>
+<% end %>
 <ul>
-  <li><%= link_to 'Toma de datos', risk_assistants_path %></li>
-  <li><%= link_to 'Documentos', policy_analyses_path %></li>
+  <li><%= link_to 'Toma de datos', '/data_collections' %></li>
+  <li><%= link_to 'Documentos', '/documents' %></li>
+  <li><%= link_to 'Resúmenes', '/summa  ries' %></li>
+  <li><%= link_to 'Análisis de pólizas', '/policy_analyses' %></li>
 </ul>

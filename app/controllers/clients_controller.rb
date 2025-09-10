@@ -1,19 +1,22 @@
 class ClientsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user
-  before_action :require_client!  
-  before_action :set_client, only: :destroy
+  before_action :set_user, except: :show
+  before_action :set_client, only: %i[destroy show]
 
   def index
-    @clients = @user.clients.active
+    @clients = @user.clients
   end
 
+  def show; end
+
   def new
-    @client = @user.clients.build
+    @client = User.new
   end
 
   def create
-    @client = @user.clients.build(client_params)
+    @client = User.new(client_params)
+    @client.owner_id = current_user.id
+    @client.role = :client
     if @client.save
       redirect_to user_clients_path(@user), notice: 'Client was successfully created.'
     else
@@ -22,7 +25,7 @@ class ClientsController < ApplicationController
   end
 
   def destroy
-    @client.update(inactive: true)
+    @client.destroy
     redirect_to user_clients_path(@user), notice: 'Client was archived.'
   end
 
@@ -31,14 +34,14 @@ class ClientsController < ApplicationController
   private
 
   def set_user
-    @user = User.find(params[:user_id])
+    @user = current_user
   end
 
   def set_client
-    @client = @user.clients.find(params[:id])
+    @client = (@user || current_user).clients.find(params[:id])
   end
 
   def client_params
-    params.require(:client).permit(:name)
+    params.require(:client).permit(:email, :name, :password, :password_confirmation)
   end
 end

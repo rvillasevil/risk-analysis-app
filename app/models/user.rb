@@ -2,7 +2,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  enum role: { owner: 'owner', client: 'client' }
+  enum role: { owner: 0, client: 1 }
 
   belongs_to :owner, class_name: 'User', optional: true
   has_many :clients, class_name: 'User', foreign_key: :owner_id, dependent: :nullify

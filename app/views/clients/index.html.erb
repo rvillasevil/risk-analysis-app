@@ -8,13 +8,13 @@
     </tr>
   </thead>
   <tbody>
-    <% @clients.each do |client| %>
+    <% current_user.clients.each do |client| %>
       <tr>
-        <td><%= client.name %></td>
-        <td><%= link_to 'Delete', user_client_path(@user, client), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to client.name, client_path(client) %></td>
+        <td><%= link_to 'Revocar acceso', user_client_path(current_user, client), method: :delete, data: { confirm: '¿Estás seguro?' } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<%= link_to 'New Client', new_user_client_path(@user) %>
+<%= link_to 'Nuevo cliente', new_user_client_path(current_user) %>

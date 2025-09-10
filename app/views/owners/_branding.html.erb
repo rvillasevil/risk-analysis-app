@@ -1,0 +1,6 @@
+<div class="branding text-center mb-4">
+  <% if current_user.logo.attached? %>
+    <%= image_tag current_user.logo, alt: current_user.company_name, height: 80, class: 'mb-2' %>
+  <% end %>
+  <h1 class="text-primary"><%= current_user.company_name %></h1>
+</div>

@@ -1,7 +1,9 @@
   class RiskAssistantsController < ApplicationController
     before_action :authenticate_user!
     before_action :require_client!
+    before_action :require_authorized_user!
     before_action :set_risk_assistant, only: [:show, :generate_report, :report, :update_message, :create_message, :summary, :destroy_file]    
+    
     def index
       @risk_assistants = owner_or_self.risk_assistants
     end
