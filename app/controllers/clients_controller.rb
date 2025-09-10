@@ -14,19 +14,25 @@ class ClientsController < ApplicationController
   end
 
   def create
-    @client = User.new(client_params)
-    @client.owner_id = current_user.id
-    @client.role = :client
-    if @client.save
-      redirect_to user_clients_path(@user), notice: 'Client was successfully created.'
-    else
-      render :new, status: :unprocessable_entity
+    unless current_user.can_add_client?
+      redirect_to user_clients_path(@user), alert: 'Client limit reached.'
+      return
     end
+
+    invitation = ClientInvitation.create(
+      email: client_params[:email],
+      owner: current_user,
+      token: SecureRandom.hex(10)
+    )
+
+    ClientInvitationMailer.with(invitation: invitation).invite.deliver_now
+    redirect_to user_clients_path(@user), notice: 'Invitation sent.'    
   end
 
   def destroy
     @client.destroy
-    redirect_to user_clients_path(@user), notice: 'Client was archived.'
+    @client.update(inactive: true) unless @client.destroyed?
+    redirect_to user_clients_path(@user), notice: 'Client was revoked.'
   end
 
   def dashboard; end  
@@ -42,6 +48,6 @@ class ClientsController < ApplicationController
   end
 
   def client_params
-    params.require(:client).permit(:email, :name, :password, :password_confirmation)
+    params.require(:client).permit(:email)
   end
 end

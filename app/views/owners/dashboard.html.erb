@@ -1,4 +1,4 @@
-<%= render 'branding' %>
+<%= render 'shared/branding' %>
 
 <nav>
   <ul>
@@ -9,3 +9,29 @@
     <li><%= link_to 'Policy Analyses', '/policy_analyses' %></li>
   </ul>
 </nav>
+
+<section>
+  <h2>Clientes</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% current_user.clients.each do |client| %>
+        <tr>
+          <td><%= client.name %></td>
+          <td>
+            <%= link_to 'Revocar', user_client_path(current_user, client), method: :delete, data: { confirm: '¿Estás seguro?' } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if current_user.can_add_client? %>
+    <%= link_to 'Nuevo cliente', new_user_client_path(current_user) %>
+  <% end %>
+</section>

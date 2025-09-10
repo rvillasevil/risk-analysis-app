@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: { registrations: 'registrations' }
+  devise_for :owners, class_name: 'User', controllers: { registrations: 'owners/registrations' }  
   resources :users, only: [] do
     resources :clients, only: %i[index new create destroy]
   end  
@@ -21,7 +22,9 @@ Rails.application.routes.draw do
     post :ask, on: :member   # << añadimos esta línea    
   end
 
-  get 'clients/dashboard', to: 'clients#dashboard', as: :client_dashboard  
+  get 'clients/dashboard', to: 'clients#dashboard', as: :client_dashboard
+
+  get 'invitations/accept', to: 'invitations#accept', as: :accept_invitation
 
   get  'risk_assistants/:id/report', to: "risk_assistants#report", as: 'risk_assistant_report'
   get  'risk_assistants/:id/resume', to: "risk_assistants#resume", as: 'risk_assistant_resume'

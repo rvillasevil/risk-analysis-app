@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_09_10_053357) do
+ActiveRecord::Schema[7.0].define(version: 2025_09_10_183518) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -69,6 +69,16 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_10_053357) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["risk_assistant_id"], name: "index_almacenamientos_on_risk_assistant_id"
+  end
+
+  create_table "client_invitations", force: :cascade do |t|
+    t.string "email"
+    t.string "token"
+    t.bigint "owner_id", null: false
+    t.datetime "accepted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["owner_id"], name: "index_client_invitations_on_owner_id"
   end
 
   create_table "clients", force: :cascade do |t|
@@ -131,6 +141,16 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_10_053357) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["risk_assistant_id"], name: "index_instalaciones_auxiliares_on_risk_assistant_id"
+  end
+
+  create_table "invitations", force: :cascade do |t|
+    t.string "token", null: false
+    t.bigint "owner_id", null: false
+    t.datetime "accepted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["owner_id"], name: "index_invitations_on_owner_id"
+    t.index ["token"], name: "index_invitations_on_token", unique: true
   end
 
   create_table "messages", force: :cascade do |t|
@@ -235,10 +255,12 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_10_053357) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "actividad_procesos", "risk_assistants"
   add_foreign_key "almacenamientos", "risk_assistants"
+  add_foreign_key "client_invitations", "users", column: "owner_id"
   add_foreign_key "clients", "users"
   add_foreign_key "edificios_construccions", "risk_assistants"
   add_foreign_key "identificacions", "risk_assistants"
   add_foreign_key "instalaciones_auxiliares", "risk_assistants"
+  add_foreign_key "invitations", "users", column: "owner_id"
   add_foreign_key "messages", "risk_assistants"
   add_foreign_key "policy_analyses", "users"
   add_foreign_key "recomendaciones", "risk_assistants"

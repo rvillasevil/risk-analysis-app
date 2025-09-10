@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  before_action { Current.owner = current_user.owner || current_user }  
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   private
