@@ -1,1 +1,39 @@
-<h1>Summaries</h1>
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3">Resúmenes</h1>
+  </div>
+
+  <% if notice %>
+    <div class="alert alert-success"><%= notice %></div>
+  <% end %>
+  <% if alert %>
+    <div class="alert alert-danger"><%= alert %></div>
+  <% end %>
+
+  <% if @summaries.present? %>
+    <div class="row text-center fw-semibold border-bottom pb-2 mb-3">
+      <div class="col-md-8 text-start">Contenido</div>
+      <div class="col-md-2">Fecha</div>
+      <div class="col-md-2">Acciones</div>
+    </div>
+
+    <% @summaries.each do |summary| %>
+      <div class="row align-items-center py-2 border-bottom">
+        <div class="col-md-8 text-start">
+          <%= truncate(summary.content, length: 80) %>
+        </div>
+        <div class="col-md-2 text-center">
+          <%= l summary.created_at, format: :short %>
+        </div>
+        <div class="col-md-2 text-center">
+          <div class="btn-group" role="group">
+            <%= link_to "Ver", summary_path(summary), class: "btn btn-outline-primary btn-sm me-2" %>
+            <%= link_to "Eliminar", summary_path(summary), data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro de eliminar este resumen?" }, class: "btn btn-outline-danger btn-sm" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="text-center">No hay resúmenes disponibles.</p>
+  <% end %>
+</div>

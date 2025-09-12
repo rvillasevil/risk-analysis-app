@@ -1,1 +1,28 @@
-<h1>Data Collections</h1>
+<div class="container py-4">
+  <% if notice %>
+    <div class="alert alert-success"><%= notice %></div>
+  <% end %>
+  <% if alert %>
+    <div class="alert alert-danger"><%= alert %></div>
+  <% end %>
+
+  <div class="row text-center fw-semibold border-bottom pb-2 mb-3">
+    <div class="col-md-10 text-start"><h1 class="h3 mb-0">Data Collections</h1></div>
+    <div class="col-md-2">Acciones</div>
+  </div>
+
+  <% (@data_collections || []).each do |data_collection| %>
+    <div class="row align-items-center py-2 border-bottom">
+      <div class="col-md-10 text-start">
+        <%= data_collection.name %>
+      </div>
+      <div class="col-md-2 text-end">
+        <%= link_to 'Ver', '#', class: 'btn btn-outline-secondary btn-sm' %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="mt-4 text-center">
+    <%= link_to 'Nuevo', '#', class: 'btn btn-success btn-lg' %>
+  </div>
+</div>

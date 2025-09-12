@@ -1,0 +1,7 @@
+<p>
+  You have been invited to join. Click the link below to complete your registration:
+</p>
+<p>
+  <% signup_link = "#{root_url}signup?token=#{@invitation.token}" %>
+  <a href="<%= signup_link %>"><%= signup_link %></a>
+</p>

@@ -1,1 +1,53 @@
-<h1>Documents</h1>
+<!-- app/views/documents/index.html.erb -->
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3">Mis Documentos</h1>
+    <%= link_to "Nuevo documento", new_document_path, class: "btn btn-success btn-lg" %>
+  </div>
+
+  <% if notice %>
+    <div class="alert alert-success"><%= notice %></div>
+  <% end %>
+  <% if alert %>
+    <div class="alert alert-danger"><%= alert %></div>
+  <% end %>
+
+  <!-- Cabecera responsive -->
+  <div class="row text-center fw-semibold border-bottom pb-2 mb-3">
+    <div class="col-md-6 text-start">Documentos</div>
+    <div class="col-md-2">Fecha</div>
+    <div class="col-md-2">Estado</div>
+    <div class="col-md-2">Acciones</div>
+  </div>
+
+  <!-- Listado de documentos -->
+  <% @documents&.each do |document| %>
+    <div class="row align-items-center py-2 border-bottom">
+      <div class="col-md-6 text-start">
+        <% if document.respond_to?(:filename) %>
+          <%= link_to document.filename.to_s, rails_blob_path(document, disposition: "attachment"), class: "text-decoration-none" %>
+        <% elsif document.respond_to?(:file) && document.file.attached? %>
+          <%= link_to document.file.filename.to_s, rails_blob_path(document.file, disposition: "attachment"), class: "text-decoration-none" %>
+        <% else %>
+          Documento sin nombre
+        <% end %>
+      </div>
+      <div class="col-md-2 text-center">
+        <%= l(document.respond_to?(:created_at) ? document.created_at : Time.current, format: :short) %>
+      </div>
+      <div class="col-md-2 text-center">
+        <% if document.respond_to?(:extractions) && document.extractions.present? %>
+          <span class="badge bg-success">Analizado</span>
+        <% else %>
+          <span class="badge bg-secondary">Pendiente</span>
+        <% end %>
+      </div>
+      <div class="col-md-2 text-center">
+        <div class="btn-group" role="group">
+          <%= link_to "Ver", document_path(document), data: { turbo_frame: "_top" }, class: "btn btn-outline-primary btn-sm me-2" %>
+          <%= link_to "Eliminar", document_path(document), data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro de eliminar este documento?" }, class: "btn btn-outline-danger btn-sm" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

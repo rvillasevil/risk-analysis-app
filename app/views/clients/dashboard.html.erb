@@ -1,8 +1,20 @@
-<%= render 'shared/branding' %>
+<div class="container py-4">
+  <%= render 'shared/branding' %>
 
-<ul>
-  <li><%= link_to 'Toma de datos', data_collections_path %></li>
-  <li><%= link_to 'Documentos', documents_path %></li>
-  <li><%= link_to 'Resúmenes', summaries_path %></li>
-  <li><%= link_to 'Análisis de pólizas', policy_analyses_path %></li>
-</ul>
+  <h1 class="h3 mb-4">Panel del Cliente</h1>
+
+  <div class="row g-3">
+    <div class="col-md-6 col-lg-3">
+      <%= link_to 'Toma de datos', data_collections_path, class: 'btn btn-primary w-100' %>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <%= link_to 'Documentos', documents_path, class: 'btn btn-primary w-100' %>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <%= link_to 'Resúmenes', summaries_path, class: 'btn btn-primary w-100' %>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <%= link_to 'Análisis de pólizas', policy_analyses_path, class: 'btn btn-primary w-100' %>
+    </div>
+  </div>
+</div>
