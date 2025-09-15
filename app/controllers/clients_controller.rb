@@ -5,6 +5,8 @@ class ClientsController < ApplicationController
 
   def index
     @clients = @user.clients
+    @client_invitations = @user.client_invitations.order(created_at: :desc)
+
   end
 
   def show; end
@@ -19,14 +21,22 @@ class ClientsController < ApplicationController
       return
     end
 
+    token = params.dig(:user, :token).presence || SecureRandom.hex(10)
+
     invitation = ClientInvitation.create(
-      email: client_params[:email],
+      email: client_params[:email].presence,
       owner: current_user,
-      token: SecureRandom.hex(10)
+      token: client_params[:token].presence || SecureRandom.hex(10)
     )
 
-    ClientInvitationMailer.with(invitation: invitation).invite.deliver_now
-    redirect_to user_clients_path(@user), notice: 'Invitation sent.'    
+    if send_invitation_email?(invitation)
+      ClientInvitationMailer.with(invitation: invitation).invite.deliver_now
+      notice = 'Invitation sent.'
+    else
+      notice = 'Token generated.'
+    end
+
+    redirect_to user_clients_path(@user), notice: notice 
   end
 
   def destroy
@@ -48,6 +58,12 @@ class ClientsController < ApplicationController
   end
 
   def client_params
-    params.require(:user).permit(:email)
+    params.require(:user).permit(:email, :token)
+  end
+
+  def send_invitation_email?(invitation)
+    return false unless invitation.email.present?
+
+    ActiveModel::Type::Boolean.new.cast(params[:send_email])
   end
 end

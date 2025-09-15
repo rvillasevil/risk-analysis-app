@@ -29,7 +29,7 @@ Rails.application.routes.draw do
   get 'clients/dashboard', to: 'clients#dashboard', as: :client_dashboard
   get 'owners/dashboard', to: 'owners#dashboard', as: :owner_dashboard  
 
-  get 'invitations/accept', to: 'invitations#accept', as: :accept_invitation
+  get 'client_invitations/accept', to: 'invitations#accept', as: :accept_client_invitation
 
   get  'risk_assistants/:id/report', to: "risk_assistants#report", as: 'risk_assistant_report'
   get  'risk_assistants/:id/resume', to: "risk_assistants#resume", as: 'risk_assistant_resume'

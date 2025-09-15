@@ -7,7 +7,11 @@
         <%= render "devise/shared/error_messages", resource: resource %>
 
         <%= f.hidden_field :role, value: params[:role] || resource.role %>
-        <%= hidden_field_tag :invitation_token, params[:invitation_token] %>        
+
+        <div class="mb-3">
+          <%= label_tag :invitation_token, "Token de invitación", class: "form-label" %><br />
+          <%= text_field_tag :invitation_token, params[:invitation_token], class: "form-control" %>
+        </div>       
 
         <div class="mb-3">
           <%= f.label :email, class: "form-label" %><br />

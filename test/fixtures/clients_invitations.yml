@@ -1,0 +1,11 @@
+valid_invitation:
+  email: new_client@example.com
+  token: valid-token-123
+  owner: owner
+  accepted_at:
+
+expired_invitation:
+  email: expired_client@example.com
+  token: expired-token-123
+  owner: owner
+  accepted_at: <%= 1.day.ago %>
