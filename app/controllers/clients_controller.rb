@@ -48,6 +48,6 @@ class ClientsController < ApplicationController
   end
 
   def client_params
-    params.require(:client).permit(:email) 
+    params.require(:user).permit(:email)
   end
 end

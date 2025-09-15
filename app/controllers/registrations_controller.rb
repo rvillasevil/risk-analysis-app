@@ -2,16 +2,29 @@ class RegistrationsController < Devise::RegistrationsController
   def create
     build_resource(sign_up_params)
 
-    invitation = ClientInvitation.find_by(email: resource.email, accepted_at: nil)
-    if invitation
-      resource.owner_id = invitation.owner_id
-      resource.role = :client
+    invitation = ClientInvitation.find_by(token: params[:invitation_token], accepted_at: nil)
+
+    unless invitation
+      resource.errors.add(:base, 'La invitación es inválida o ha expirado.')
+      clean_up_passwords resource
+      set_minimum_password_length
+      return respond_with resource
     end
+
+    unless invitation.email.to_s.casecmp?(resource.email.to_s)
+      resource.errors.add(:email, 'no coincide con la invitación.')
+      clean_up_passwords resource
+      set_minimum_password_length
+      return respond_with resource
+    end
+
+    resource.owner_id = invitation.owner_id
+    resource.role = :client    
 
     resource.save
     yield resource if block_given?
     if resource.persisted?
-      invitation&.update!(accepted_at: Time.current)
+      invitation.update!(accepted_at: Time.current)
 
       if resource.active_for_authentication?
         set_flash_message! :notice, :signed_up
