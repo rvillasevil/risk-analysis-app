@@ -9,10 +9,10 @@
       <%= link_to 'Data Collections', data_collections_path, class: 'btn btn-primary w-100' %>
     </div>
     <div class="col">
-      <%= link_to 'Documents', documents_path, class: 'btn btn-primary w-100' %>
+      <%= link_to 'Documents', data_collections_path(anchor: 'documentos'), class: 'btn btn-primary w-100' %>
     </div>
     <div class="col">
-      <%= link_to 'Summaries', summaries_path, class: 'btn btn-primary w-100' %>
+      <%= link_to 'Summaries', data_collections_path(anchor: 'resumenes'), class: 'btn btn-primary w-100' %>
     </div>
     <div class="col">
       <%= link_to 'Policy Analyses', policy_analyses_path, class: 'btn btn-primary w-100' %>

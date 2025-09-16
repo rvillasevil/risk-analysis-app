@@ -3,6 +3,11 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   private
+  
+  def risk_assistants_scope
+    owner_or_self.risk_assistants
+  end
+  helper_method :risk_assistants_scope
 
   def owner_or_self
     current_user.owner || current_user

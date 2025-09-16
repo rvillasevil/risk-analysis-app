@@ -6,23 +6,38 @@
     <div class="alert alert-danger"><%= alert %></div>
   <% end %>
 
-  <div class="row text-center fw-semibold border-bottom pb-2 mb-3">
-    <div class="col-md-10 text-start"><h1 class="h3 mb-0">Data Collections</h1></div>
-    <div class="col-md-2">Acciones</div>
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Tomas de datos</h1>
+    <%= link_to 'Nueva toma de datos', new_risk_assistant_path, class: 'btn btn-success btn-lg' %>
   </div>
 
-  <% (@data_collections || []).each do |data_collection| %>
-    <div class="row align-items-center py-2 border-bottom">
-      <div class="col-md-10 text-start">
-        <%= data_collection.name %>
+  <% if @data_collections.present? %>
+    <div id="resumenes"></div>
+    <div id="documentos" class="row text-center fw-semibold border-bottom pb-2 mb-3">
+      <div class="col-md-5 text-start">Nombre</div>
+      <div class="col-md-3">Actualizado</div>
+      <div class="col-md-4">Acciones</div>
+    </div>
+
+    <% @data_collections.each do |data_collection| %>
+      <div class="row align-items-center py-2 border-bottom">
+        <div class="col-md-5 text-start">
+          <% name = data_collection.name.presence || "Toma ##{data_collection.id}" %>
+          <%= link_to name, risk_assistant_path(data_collection), class: 'text-decoration-none fw-semibold' %>
+        </div>
+        <div class="col-md-3 text-center">
+          <%= l data_collection.updated_at, format: :short %>
+        </div>
+        <div class="col-md-4 text-end d-flex justify-content-end gap-2">
+          <%= link_to 'Documentos', risk_assistant_documents_path(data_collection), class: 'btn btn-outline-primary btn-sm' %>
+          <%= link_to 'Resúmenes', risk_assistant_summaries_path(data_collection), class: 'btn btn-outline-secondary btn-sm' %>
+        </div>
       </div>
-      <div class="col-md-2 text-end">
-        <%= link_to 'Ver', '#', class: 'btn btn-outline-secondary btn-sm' %>
-      </div>
+    <% end %>
+  <% else %>
+    <div class="text-center py-5 border rounded bg-light-subtle">
+      <p class="mb-2 fw-semibold">Todavía no tienes tomas de datos registradas.</p>
+      <p class="mb-0 text-muted">Crea una nueva toma de datos para empezar a recopilar información y documentos.</p>
     </div>
   <% end %>
-
-  <div class="mt-4 text-center">
-    <%= link_to 'Nuevo', '#', class: 'btn btn-success btn-lg' %>
-  </div>
 </div>

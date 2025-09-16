@@ -4,7 +4,10 @@ class RiskAssistant < ApplicationRecord
 
   has_one :report
 
+  validates :user_id, uniqueness: true, if: -> { user.client? }
   validates :name, presence: true
+
+  before_validation :sync_client_owned
 
   has_one :identificacion, class_name: 'Identificacion', dependent: :destroy
   has_one :ubicacion_configuracion, dependent: :destroy
@@ -39,4 +42,10 @@ class RiskAssistant < ApplicationRecord
   end                                
 
   alias_attribute :initialised?, :initialised   # permite usar “?” al final
+  
+  private
+
+  def sync_client_owned
+    self.client_owned = user&.client? || false
+  en
 end

@@ -3,11 +3,14 @@ Rails.application.routes.draw do
   devise_for :owners, class_name: 'User', controllers: { registrations: 'owners/registrations' }  
   resources :users, only: [] do
     resources :clients, only: %i[index new create destroy]
-  end  
-  resources :clients, only: :show  
+  end
+  get 'clients/dashboard', to: 'clients#dashboard', as: :client_dashboard
+  resources :clients, only: :show 
   resources :risk_assistants, only: %i[index show new create destroy report] do
-    resources :messages, only: :create
-    member do 
+    resources :messages,   only: :create
+    resources :documents,  only: :index
+    resources :summaries,  only: :index
+    member do
       get :report
       get   :tabla_datos
       patch :update_message
@@ -22,12 +25,9 @@ Rails.application.routes.draw do
     post :ask, on: :member   # << añadimos esta línea
   end
 
-  resources :data_collections, only: :index
-  resources :documents,       only: :index
-  resources :summaries,       only: :index  
+  resources :data_collections, only: %i[index show new]
 
-  get 'clients/dashboard', to: 'clients#dashboard', as: :client_dashboard
-  get 'owners/dashboard', to: 'owners#dashboard', as: :owner_dashboard  
+  get 'owners/dashboard', to: 'owners#dashboard', as: :owner_dashboard 
 
   get 'client_invitations/accept', to: 'invitations#accept', as: :accept_client_invitation
 

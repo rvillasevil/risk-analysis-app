@@ -100,7 +100,7 @@
         redirect_to risk_assistant_path(@risk_assistant), notice: 'RiskAssistant creado con éxito.'
         create_openai_thread(@risk_assistant)
       else
-        flash[:error] = "No se pudo crear el RiskAssistant: #{@risk_assistant.errors.full_messages.join(', ')}"
+        flash.now[:alert] = "No se pudo crear el RiskAssistant: #{@risk_assistant.errors.full_messages.join(', ')}"
         render :new, status: :unprocessable_entity
       end
     end

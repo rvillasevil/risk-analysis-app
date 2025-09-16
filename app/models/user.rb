@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_many :clients, class_name: 'User', foreign_key: :owner_id, dependent: :nullify
   has_many :client_invitations, class_name: 'ClientInvitation', foreign_key: :owner_id, dependent: :destroy
 
+  after_commit :sync_risk_assistants_client_owned, if: -> { saved_change_to_role? } 
 
   has_one_attached :logo
   
@@ -31,5 +32,11 @@ class User < ApplicationRecord
 
   def can_add_client?
     true
+  end
+
+  private
+
+  def sync_risk_assistants_client_owned
+    risk_assistants.update_all(client_owned: client?)
   end
 end

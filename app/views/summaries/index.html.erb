@@ -1,6 +1,13 @@
 <div class="container py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3">Resúmenes</h1>
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+      <h1 class="h3 mb-1">Resúmenes de <%= @data_collection.name %></h1>
+      <p class="text-muted mb-0">Síntesis generadas automáticamente con los datos confirmados.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+      <%= link_to 'Ver conversación', risk_assistant_path(@data_collection), class: 'btn btn-outline-primary' %>
+      <%= link_to 'Volver a tomas de datos', data_collections_path, class: 'btn btn-outline-secondary' %>
+    </div>
   </div>
 
   <% if notice %>
@@ -11,29 +18,25 @@
   <% end %>
 
   <% if @summaries.present? %>
-    <div class="row text-center fw-semibold border-bottom pb-2 mb-3">
-      <div class="col-md-8 text-start">Contenido</div>
-      <div class="col-md-2">Fecha</div>
-      <div class="col-md-2">Acciones</div>
-    </div>
-
-    <% @summaries.each do |summary| %>
-      <div class="row align-items-center py-2 border-bottom">
-        <div class="col-md-8 text-start">
-          <%= truncate(summary.content, length: 80) %>
-        </div>
-        <div class="col-md-2 text-center">
-          <%= l summary.created_at, format: :short %>
-        </div>
-        <div class="col-md-2 text-center">
-          <div class="btn-group" role="group">
-            <%= link_to "Ver", summary_path(summary), class: "btn btn-outline-primary btn-sm me-2" %>
-            <%= link_to "Eliminar", summary_path(summary), data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro de eliminar este resumen?" }, class: "btn btn-outline-danger btn-sm" %>
+    <div class="row row-cols-1 g-3">
+      <% @summaries.each do |summary| %>
+        <div class="col">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <span class="badge text-bg-primary">Resumen</span>
+                <small class="text-muted"><%= l summary.created_at, format: :short %></small>
+              </div>
+              <pre class="mb-0 small text-wrap"><%= summary.content.presence || 'Sin contenido disponible.' %></pre>
+            </div>
           </div>
         </div>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
   <% else %>
-    <p class="text-center">No hay resúmenes disponibles.</p>
+    <div class="text-center py-5 border rounded bg-light-subtle">
+      <p class="mb-2 fw-semibold">Todavía no hay resúmenes generados.</p>
+      <p class="mb-0 text-muted">Continúa la conversación con el asistente para producir un resumen automático.</p>
+    </div>
   <% end %>
 </div>

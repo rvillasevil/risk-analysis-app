@@ -1,8 +1,14 @@
 <!-- app/views/documents/index.html.erb -->
 <div class="container py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3">Mis Documentos</h1>
-    <%= link_to "Nuevo documento", new_document_path, class: "btn btn-success btn-lg" %>
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+      <h1 class="h3 mb-1">Documentos de <%= @data_collection.name %></h1>
+      <p class="text-muted mb-0">Archivos compartidos durante la toma de datos.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+      <%= link_to 'Ver conversación', risk_assistant_path(@data_collection), class: 'btn btn-outline-primary' %>
+      <%= link_to 'Volver a tomas de datos', data_collections_path, class: 'btn btn-outline-secondary' %>
+    </div>
   </div>
 
   <% if notice %>
@@ -12,42 +18,46 @@
     <div class="alert alert-danger"><%= alert %></div>
   <% end %>
 
-  <!-- Cabecera responsive -->
-  <div class="row text-center fw-semibold border-bottom pb-2 mb-3">
-    <div class="col-md-6 text-start">Documentos</div>
-    <div class="col-md-2">Fecha</div>
-    <div class="col-md-2">Estado</div>
-    <div class="col-md-2">Acciones</div>
-  </div>
+  <% if @documents.any? %>
+    <div class="row text-center fw-semibold border-bottom pb-2 mb-3">
+      <div class="col-md-6 text-start">Documento</div>
+      <div class="col-md-2">Fecha</div>
+      <div class="col-md-2">Tamaño</div>
+      <div class="col-md-2">Acciones</div>
+    </div>
 
-  <!-- Listado de documentos -->
-  <% @documents&.each do |document| %>
-    <div class="row align-items-center py-2 border-bottom">
-      <div class="col-md-6 text-start">
-        <% if document.respond_to?(:filename) %>
-          <%= link_to document.filename.to_s, rails_blob_path(document, disposition: "attachment"), class: "text-decoration-none" %>
-        <% elsif document.respond_to?(:file) && document.file.attached? %>
-          <%= link_to document.file.filename.to_s, rails_blob_path(document.file, disposition: "attachment"), class: "text-decoration-none" %>
-        <% else %>
-          Documento sin nombre
-        <% end %>
-      </div>
-      <div class="col-md-2 text-center">
-        <%= l(document.respond_to?(:created_at) ? document.created_at : Time.current, format: :short) %>
-      </div>
-      <div class="col-md-2 text-center">
-        <% if document.respond_to?(:extractions) && document.extractions.present? %>
-          <span class="badge bg-success">Analizado</span>
-        <% else %>
-          <span class="badge bg-secondary">Pendiente</span>
-        <% end %>
-      </div>
-      <div class="col-md-2 text-center">
-        <div class="btn-group" role="group">
-          <%= link_to "Ver", document_path(document), data: { turbo_frame: "_top" }, class: "btn btn-outline-primary btn-sm me-2" %>
-          <%= link_to "Eliminar", document_path(document), data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro de eliminar este documento?" }, class: "btn btn-outline-danger btn-sm" %>
+    <% @documents.each do |document| %>
+      <div class="row align-items-center py-2 border-bottom">
+        <div class="col-md-6 text-start">
+          <%= link_to document.filename.to_s,
+                      url_for(document),
+                      target: '_blank',
+                      rel: 'noopener',
+                      class: 'text-decoration-none' %>
+        </div>
+        <div class="col-md-2 text-center">
+          <%= l document.created_at, format: :short %>
+        </div>
+        <div class="col-md-2 text-center">
+          <%= number_to_human_size(document.blob.byte_size) %>
+        </div>
+        <div class="col-md-2 text-center">
+          <div class="btn-group" role="group">
+            <%= link_to 'Descargar',
+                        rails_blob_path(document, disposition: 'attachment'),
+                        class: 'btn btn-outline-primary btn-sm' %>
+            <%= link_to 'Eliminar',
+                        file_risk_assistant_path(@data_collection, document),
+                        data: { turbo_method: :delete, turbo_confirm: '¿Estás seguro de eliminar este documento?' },
+                        class: 'btn btn-outline-danger btn-sm' %>
+          </div>
         </div>
       </div>
+    <% end %>
+  <% else %>
+    <div class="text-center py-5 border rounded bg-light-subtle">
+      <p class="mb-2 fw-semibold">No hay documentos cargados todavía.</p>
+      <p class="mb-0 text-muted">Sube archivos desde la conversación de la toma de datos para verlos aquí.</p>
     </div>
   <% end %>
 </div>
