@@ -2,7 +2,7 @@
 <div class="container py-4">
   <h1 class="mb-4"><%= @risk_assistant.name %> – Resumen de datos recopilados</h1>
 
-  <% RiskFieldSet.all.each do |section_id, section_hash| %>
+  <% @sections.each do |section_id, section_hash| %>
     <% section_label = section_hash[:title] %>
     <% fields = section_hash[:fields] %>
 
@@ -68,7 +68,7 @@
 
                   <% when "object" %>
                     <% obj_parent = f[:id] %>
-                    <% obj_fields = RiskFieldSet.flat_fields.select { |sf| sf[:parent] == obj_parent } %>
+                    <% obj_fields = @flat_fields.select { |sf| sf[:parent] == obj_parent } %>
                     <table class="table table-sm table-borderless mb-0">
                       <tbody>
                         <% obj_fields.each do |sf| %>
@@ -116,7 +116,7 @@
 
                               <% when "array_of_objects" %>
                                 <% array_parent = sf[:id] %>
-                                <% subfields = RiskFieldSet.flat_fields
+                                <% subfields = @flat_fields
                                                .select { |ss| ss[:parent] == array_parent }
                                                .reject { |ss| ss[:type].to_s == "subsection" } %>
                                 <% rows = @risk_assistant.messages
@@ -150,7 +150,7 @@
                                           <% cell = data[:values][col_id] %>
                                           <% if ssf[:type].to_s == "array_of_objects" %>
                                             <% nested_parent = ssf[:id] %>
-                                            <% nested_subfields = RiskFieldSet.flat_fields
+                                            <% nested_subfields = @flat_fields
                                                                       .select { |nsf| nsf[:parent] == nested_parent }
                                                                       .reject { |nsf| nsf[:type].to_s == "subsection" } %>
                                             <% nested_rows = @risk_assistant.messages
@@ -208,7 +208,7 @@
 
                   <% when "array_of_objects" %>
                     <% array_parent = f[:id] %>
-                    <% subfields = RiskFieldSet.flat_fields
+                    <% subfields = @flat_fields
                                    .select { |sf| sf[:parent] == array_parent }
                                    .reject { |sf| sf[:type].to_s == "subsection" } %>
                     <% rows = @risk_assistant.messages
@@ -242,7 +242,7 @@
                               <% cell = data[:values][col_id] %>
                               <% if sf[:type].to_s == "array_of_objects" %>
                                 <% nested_parent = sf[:id] %>
-                                <% nested_subfields = RiskFieldSet.flat_fields
+                                <% nested_subfields = @flat_fields
                                                           .select { |nsf| nsf[:parent] == nested_parent }
                                                           .reject { |nsf| nsf[:type].to_s == "subsection" } %>
                                 <% nested_rows = @risk_assistant.messages

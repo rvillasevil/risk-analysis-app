@@ -21,6 +21,11 @@ class User < ApplicationRecord
   has_one_attached :logo
   
   has_many :risk_assistants, class_name: 'RiskAssistant', dependent: :destroy
+  has_many :field_catalogues, foreign_key: :owner_id, dependent: :destroy  
+  has_many :user_field_sets, dependent: :destroy
+  has_many :user_field_sections, through: :user_field_sets
+  has_many :user_field_definitions, through: :user_field_sections
+  has_one :active_user_field_set, -> { active.order(updated_at: :desc) }, class_name: 'UserFieldSet'  
   has_many :policy_analyses, dependent: :destroy
 
   has_many :client_records, class_name: 'Client', dependent: :destroy
@@ -32,6 +37,18 @@ class User < ApplicationRecord
 
   def can_add_client?
     true
+  end
+
+  def catalogue_owner
+    owner || self
+  end
+
+  def active_field_catalogue
+    UserFieldSet.active_for_owner(self)
+  end
+
+  def active_catalogue_for_clients
+    catalogue_owner.active_field_catalogue
   end
 
   private

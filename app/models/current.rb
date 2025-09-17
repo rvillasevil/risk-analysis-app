@@ -1,3 +1,3 @@
 class Current < ActiveSupport::CurrentAttributes
-  attribute :owner
+  attribute :owner, :field_catalogue
 end

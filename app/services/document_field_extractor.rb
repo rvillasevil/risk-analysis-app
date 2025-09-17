@@ -16,11 +16,13 @@ class DocumentFieldExtractor
   #   :values    => { campo_id => valor }
   #   :warnings  => { campo_id => mensaje_de_advertencia }
   # Para todos los campos del JSON que aparezcan en dicho texto.
-  def self.call(extracted_text)
+  def self.call(extracted_text, owner: nil)
     return {} if extracted_text.blank?
 
+    owner ||= (Current.owner if defined?(Current) && Current.respond_to?(:owner))    
+
     # 1) Construir el array reducido de campos: solo id y label
-    fields_info = RiskFieldSet.flat_fields.map do |f|
+    fields_info = RiskFieldSet.flat_fields(owner: owner).map do |f|
       { "id" => f[:id].to_s, "label" => f[:label].to_s }
     end
 
@@ -78,7 +80,7 @@ class DocumentFieldExtractor
     values = pairs.to_h
 
     # 5) Verificación de formato mediante LLM
-    warnings = verify_with_llm(values)
+    warnings = verify_with_llm(values, owner: owner)
 
     { values: values, warnings: warnings }
   rescue => e
@@ -88,11 +90,13 @@ class DocumentFieldExtractor
 
   # Verifica con un LLM que cada valor coincida con el formato esperado.
   # Devuelve un hash { campo_id => advertencia } para los campos problemáticos.
-  def self.verify_with_llm(values)
+  def self.verify_with_llm(values, owner: nil)
     return {} if values.empty?
 
+    owner ||= (Current.owner if defined?(Current) && Current.respond_to?(:owner))    
+
     info = values.map do |id, val|
-      f = RiskFieldSet.by_id[id.to_sym] || {}
+      f = RiskFieldSet.by_id(owner: owner)[id.to_sym] || {}
       {
         id: id,
         label: f[:label].to_s,

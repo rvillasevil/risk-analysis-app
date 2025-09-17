@@ -10,10 +10,11 @@ class AssistantRunner
     "OpenAI-Beta"   => "assistants=v2"
   }.freeze
 
-  attr_reader :risk_assistant, :thread_id, :last_field_id
+  attr_reader :risk_assistant, :thread_id, :last_field_id, :catalogue_owner
   def initialize(risk_assistant)
     @risk_assistant = risk_assistant
     @thread_id      = risk_assistant.thread_id.presence || create_thread
+    @catalogue_owner = risk_assistant.catalogue_owner    
     @fields_json    = build_fields_json
     inject_instructions_once if !risk_assistant.initialised?
   end
@@ -72,7 +73,7 @@ class AssistantRunner
   # ⇒ dentro de la clase AssistantRunner
   def ask_next!
     answers = risk_assistant.messages.where.not(key: nil).pluck(:key, :value).to_h
-    field    = RiskFieldSet.next_field_hash(answers)   # helper de RiskFieldSet
+    field    = RiskFieldSet.next_field_hash(answers, owner: catalogue_owner)   # helper de RiskFieldSet
 
     # Estados actuales de los campos para proporcionar contexto al LLM
     states_json = risk_assistant.campos.to_json
@@ -94,10 +95,10 @@ class AssistantRunner
 
     if field
       field_id = field[:id].to_s
-      question = RiskFieldSet.question_for(field_id.to_sym, include_tips: true)
+      question = RiskFieldSet.question_for(field_id.to_sym, include_tips: true, owner: catalogue_owner)
       @last_field_id = field_id      
       instr    = field[:assistant_instructions].to_s.strip
-      tips = RiskFieldSet.normative_tips_for(field_id)
+      tips = RiskFieldSet.normative_tips_for(field_id, owner: catalogue_owner)
     # guarda la PREGUNTA para que el guardia pueda validarla
 
       risk_assistant.messages.create!(
@@ -112,7 +113,7 @@ class AssistantRunner
       confirmations = risk_assistant.messages
                                     .where.not(key: nil)
                                     .order(:created_at)
-                                    .map { |m| "✅ #{RiskFieldSet.label_for(m.key)}: #{m.value}" }
+                                    .map { |m| "✅ #{RiskFieldSet.label_for(m.key, owner: catalogue_owner)}: #{m.value}" }
 
       history_block = confirmations.any? ? "### Historial de respuestas confirmadas:\n#{confirmations.join("\n")}\n\n" : ""
 
@@ -134,7 +135,7 @@ class AssistantRunner
                                              normative_tips: tips,
                                              confirmations: confirmations)
 
-      norm_explanation = NormativeExplanationGenerator.generate(field_id, question: expanded)     
+      norm_explanation = NormativeExplanationGenerator.generate(field_id, question: expanded, owner: catalogue_owner) 
       parts = [expanded]
       parts << "Tip normativo: #{tips}" if tips.present?
       parts << "Explicación normativa: #{norm_explanation}"      
@@ -182,7 +183,7 @@ class AssistantRunner
   def build_fields_json
     Rails.logger.info "AssistantRunner: generando lista de campos…"
     # Enviamos TODO lo que el modelo necesita:
-    RiskFieldSet.flat_fields.map { |f|
+    RiskFieldSet.flat_fields(owner: catalogue_owner).map { |f|
       {
         id:          f[:id],
         label:       f[:label],
@@ -201,7 +202,7 @@ class AssistantRunner
     # ------------------------------------------------------------
   def next_pending_field
     answers = @risk_assistant.messages.where.not(key: nil).pluck(:key, :value).to_h
-    h = RiskFieldSet.next_field_hash(answers)
+    h = RiskFieldSet.next_field_hash(answers, owner: catalogue_owner)
     h && h[:id].to_sym
   end 
 
@@ -212,7 +213,7 @@ class AssistantRunner
     
     field    = next_pending_field
     return unless field
-    question = RiskFieldSet.question_for(field, include_tips: true)   # ← YA incluye opciones
+    question = RiskFieldSet.question_for(field, include_tips: true, owner: catalogue_owner)   # ← YA incluye opciones
     @last_field_id = field  
     # ↓ Recupera las instrucciones privadas que el JSON trae para ese campo
 
@@ -222,9 +223,9 @@ class AssistantRunner
     base_key = field.to_s.include?(".") ?
                  field.to_s.sub(/\.\d+\.(.+)$/, '.\1').to_sym :
                  field.to_sym
-    info  = RiskFieldSet.by_id[base_key]
+    info  = RiskFieldSet.by_id(owner: catalogue_owner)[base_key]
     instr = info ? info[:assistant_instructions].to_s.strip : ""
-    tips = RiskFieldSet.normative_tips_for(field)
+    tips = RiskFieldSet.normative_tips_for(field, owner: catalogue_owner)
     # El asistente generará la pregunta exacta como parte de la respuesta,
     # por lo que aquí no la publicamos para evitar duplicidades en el chat.         
 
@@ -232,14 +233,14 @@ class AssistantRunner
     npf = next_pending_field
     label = ""
     if npf
-      byid = RiskFieldSet.by_id[npf.to_sym]
+      byid = RiskFieldSet.by_id(owner: catalogue_owner)[npf.to_sym]
       label = byid[:label].to_s.strip if byid
     end
 
     confirmations = risk_assistant.messages
                                   .where.not(key: nil)
                                   .order(:created_at)
-                                  .map { |m| "✅ #{RiskFieldSet.label_for(m.key)}: #{m.value}" }
+                                  .map { |m| "✅ #{RiskFieldSet.label_for(m.key, owner: catalogue_owner)}: #{m.value}" }
 
     history_block = confirmations.any? ? "Historial de respuestas confirmadas:\n#{confirmations.join("\n")}\n\n" : ""
 

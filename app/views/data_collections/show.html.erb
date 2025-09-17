@@ -1,0 +1,42 @@
+<div class="container my-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3">Conversación de onboarding</h1>
+    <div>
+      <span class="badge bg-secondary"><%= @field_catalogue.status.humanize %></span>
+      <% if @field_catalogue.active? %>
+        <span class="badge bg-success">Catálogo listo</span>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <h2 class="h5">Mensajes</h2>
+    <div class="border rounded p-3 bg-light" style="max-height: 400px; overflow-y: auto;">
+      <% if @messages.blank? %>
+        <p class="text-muted">Aún no hay mensajes en esta conversación.</p>
+      <% else %>
+        <% @messages.each do |message| %>
+          <div class="mb-3">
+            <small class="text-muted d-block"><%= l(message.created_at, format: :short) %> · <%= message.role.upcase %></small>
+            <p class="mb-0"><%= simple_format(message.content) %></p>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <%= form_with url: send_message_data_collection_path(@field_catalogue), scope: :message, method: :post, local: true do |f| %>
+      <div class="mb-2">
+        <%= f.label :content, 'Tu mensaje', class: 'form-label' %>
+        <%= f.text_area :content, rows: 4, class: 'form-control', placeholder: 'Responde a la última pregunta del asistente...' %>
+      </div>
+      <%= f.submit 'Enviar mensaje', class: 'btn btn-primary' %>
+    <% end %>
+  </div>
+
+  <div class="d-flex gap-3">
+    <%= button_to 'Generar catálogo definitivo', finalize_data_collection_path(@field_catalogue), method: :post, class: 'btn btn-success', data: { turbo_confirm: 'Esto pedirá al asistente que genere el catálogo final. ¿Continuar?' } %>
+    <%= link_to 'Volver al listado', data_collections_path, class: 'btn btn-outline-secondary' %>
+  </div>
+</div>

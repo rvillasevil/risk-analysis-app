@@ -5,14 +5,16 @@ class MessagesController < ApplicationController
   require "fileutils"
   require "risk_field_set"
 
-  MISSING_FIELD_TEMPLATES = RiskFieldSet.by_id.transform_values do |field|
-    question = RiskFieldSet.question_for(field[:id], include_tips: false)
-    question = question.lines.reject { |l| l.start_with?("Contexto:") }.join
-    reason   = field[:why].to_s.strip
-    msg      = "⚠️ Falta el dato #{field[:label]}."
-    msg += " #{reason}" unless reason.empty?
-    "#{msg}\n\n#{question}"
-  end.freeze
+  MISSING_FIELD_TEMPLATES = lambda do |owner = nil|
+    RiskFieldSet.by_id(owner: owner).transform_values do |field|
+      question = RiskFieldSet.question_for(field[:id], include_tips: false, owner: owner)
+      question = question.lines.reject { |l| l.start_with?("Contexto:") }.join
+      reason   = field[:why].to_s.strip
+      msg      = "⚠️ Falta el dato #{field[:label]}."
+      msg += " #{reason}" unless reason.empty?
+      "#{msg}\n\n#{question}"
+    end
+  end
 
   CONFIRMED_CONTEXT_LIMIT = 100   
 
@@ -30,7 +32,7 @@ class MessagesController < ApplicationController
       requested_field = params.dig(:message, :field_asked)
       expected_field  = requested_field.presence || last_question&.field_asked
 
-      if requested_field.present? && !RiskFieldSet.by_id.key?(requested_field.to_sym)
+      if requested_field.present? && !RiskFieldSet.by_id(owner: @catalogue_owner).key?(requested_field.to_sym)
         Rails.logger.warn("MessagesController#create: invalid field_asked '#{requested_field}'")
         expected_field = last_question&.field_asked
         unless expected_field
@@ -100,7 +102,7 @@ class MessagesController < ApplicationController
       thread_id:     current_thread
     )
 
-    label = RiskFieldSet.label_for(@message.field_asked)
+    label = RiskFieldSet.label_for(@message.field_asked, owner: @catalogue_owner)
     @risk_assistant.messages.create!(
       sender: "assistant",
       role:   "assistant",
@@ -132,9 +134,9 @@ class MessagesController < ApplicationController
 
     if image_file?(file)
       answered   = @risk_assistant.messages.where.not(key: nil).pluck(:key, :value).to_h
-      next_field = RiskFieldSet.next_field_hash(answered)
+      next_field = RiskFieldSet.next_field_hash(answered, owner: @catalogue_owner)
       if next_field
-        display_text = RiskFieldSet.question_for(next_field[:id], include_tips: true)
+        display_text = RiskFieldSet.question_for(next_field[:id], include_tips: true, owner: @catalogue_owner)
 
         @risk_assistant.messages.create!(
           sender:      "assistant",
@@ -189,14 +191,14 @@ class MessagesController < ApplicationController
       )
     end
 
-    result   = DocumentFieldExtractor.call(extracted_text)
+    result   = DocumentFieldExtractor.call(extracted_text, owner: @catalogue_owner)
     values   = result[:values]   || {}
     warnings = result[:warnings] || {}
 
     if values.any?
       summary_lines = []
       values.each do |campo_id, valor|
-        label = RiskFieldSet.label_for(campo_id)
+        label = RiskFieldSet.label_for(campo_id, owner: @catalogue_owner)
         Message.save_unique!(
           risk_assistant: @risk_assistant,
           key:           campo_id,
@@ -232,9 +234,10 @@ class MessagesController < ApplicationController
     end
 
     next_field_id = RiskFieldSet.next_field_hash(
-                      @risk_assistant.messages.where.not(key: nil).pluck(:key, :value).to_h
+                      @risk_assistant.messages.where.not(key: nil).pluck(:key, :value).to_h,
+                      owner: @catalogue_owner
                     )&.dig(:id)
-    next_label = next_field_id ? RiskFieldSet.label_for(next_field_id) : "campo pendiente"
+    next_label = next_field_id ? RiskFieldSet.label_for(next_field_id, owner: @catalogue_owner) : "campo pendiente"
 
     @risk_assistant.messages.create!(
       sender:    "assistant",
@@ -277,7 +280,7 @@ class MessagesController < ApplicationController
       # one if it's present and valid according to RiskFieldSet.
       field_for_question = campo_actual
 
-      siguiente_valido = siguiente.present? && RiskFieldSet.by_id.key?(siguiente.to_sym)
+      siguiente_valido = siguiente.present? && RiskFieldSet.by_id(owner: @catalogue_owner).key?(siguiente.to_sym)
       transition_without_confirmation = false      
 
       if estado == "confirmado"
@@ -350,14 +353,14 @@ class MessagesController < ApplicationController
         key:           clean_id,
         value:         value,
         item_label:    item_label,
-        content:       "✅ Perfecto, #{RiskFieldSet.label_for(clean_id)} es &&#{value}&&.",
+        content:       "✅ Perfecto, #{RiskFieldSet.label_for(clean_id, owner: @catalogue_owner)} es &&#{value}&&.",
         sender:        "assistant_confirmation",
         role:          "developer",
         field_asked:   nil,
         thread_id:     runner.thread_id
       )
 
-      confirmations << "✅ #{RiskFieldSet.label_for(clean_id)}: #{value}"
+      confirmations << "✅ #{RiskFieldSet.label_for(clean_id, owner: @catalogue_owner)}: #{value}"
       confirmed_fields << clean_id      
     end
   
@@ -382,12 +385,12 @@ class MessagesController < ApplicationController
 
     field_for_question ||= begin
       answered = @risk_assistant.messages.where.not(key: nil).pluck(:key, :value).to_h
-      RiskFieldSet.next_field_hash(answered)&.dig(:id)
+      RiskFieldSet.next_field_hash(answered, owner: @catalogue_owner)&.dig(:id)
     end
     return unless field_for_question
     field_for_question = field_for_question.to_s
 
-    return unless RiskFieldSet.by_id.key?(field_for_question.to_sym)
+    return unless RiskFieldSet.by_id(owner: @catalogue_owner).key?(field_for_question.to_sym)
     question_field = field_for_question
     runner.set_last_field(question_field)
 
@@ -400,11 +403,11 @@ class MessagesController < ApplicationController
       thread_id: runner.thread_id
     )
 
-    assistant_instructions = RiskFieldSet.by_id[question_field.to_sym][:assistant_instructions]
-    tips  = RiskFieldSet.normative_tips_for(question_field)
+    assistant_instructions = RiskFieldSet.by_id(owner: @catalogue_owner)[question_field.to_sym][:assistant_instructions]
+    tips  = RiskFieldSet.normative_tips_for(question_field, owner: @catalogue_owner)
 
     base_question = sanitized_text.presence ||
-                    RiskFieldSet.question_for(question_field.to_sym, include_tips: false)
+                    RiskFieldSet.question_for(question_field.to_sym, include_tips: false, owner: @catalogue_owner)
 
     question_text = if sanitized_text.present?
                       sanitized_text
@@ -418,7 +421,7 @@ class MessagesController < ApplicationController
                     end
 
     parts = [question_text]
-    norm_explanation = NormativeExplanationGenerator.generate(question_field, question: question_text)
+    norm_explanation = NormativeExplanationGenerator.generate(question_field, question: question_text, owner: @catalogue_owner)
     parts << "Explicación normativa: #{norm_explanation}"
 
     final_content = parts.join("\n")
@@ -448,7 +451,8 @@ class MessagesController < ApplicationController
   end
 
   def set_risk_assistant
-    @risk_assistant = owner_or_self.risk_assistants.find(params[:risk_assistant_id])
+    @risk_assistant   = owner_or_self.risk_assistants.find(params[:risk_assistant_id])
+    @catalogue_owner = @risk_assistant.catalogue_owner
   end
 
   # ---------- subida de fichero + asociación al thread ----------

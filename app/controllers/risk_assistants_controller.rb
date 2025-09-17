@@ -24,7 +24,7 @@
                                    .order(:created_at)
 
       # Catálogo de secciones definido en config/risk_assistant/*
-      catalogue = RiskFieldSet.all
+      catalogue = RiskFieldSet.all(owner: owner_or_self)
 
       # Títulos de las secciones en el orden configurado
       @sections = catalogue.map { |_id, sec| sec[:title] }
@@ -42,7 +42,7 @@
       completed_by_id = {}
       keyed.each do |msg|
         raw_label = msg.key.to_s.strip.downcase          # ej. "nombre de la empresa..."
-        id_sym    = RiskFieldSet.label_to_id[raw_label]  # ⇒ :nombre  |  nil si no mapea
+        id_sym    = RiskFieldSet.label_to_id(owner: owner_or_self)[raw_label]  # ⇒ :nombre  |  nil si no mapea
         next unless id_sym
 
         completed_by_id[id_sym] = msg.value
@@ -51,7 +51,7 @@
       # ------------------------------------------------------------
       # 2. Catálogo de secciones
       # ------------------------------------------------------------
-      catalogue = RiskFieldSet.all
+      catalogue = RiskFieldSet.all(owner: owner_or_self)
 
       @sections_data = catalogue.map do |sec_id, sec_h|
         ids         = sec_h[:fields].map { |f| f[:id].to_sym }
@@ -84,7 +84,7 @@
       # --------------------------
       # 3) progreso global (opcional)
       # --------------------------
-      total_fields = RiskFieldSet.flat_fields.size
+      total_fields = RiskFieldSet.flat_fields(owner: owner_or_self).size
       total_done   = filled_ids.size
       @overall_pct = total_fields.zero? ? 0 : ((total_done * 100.0) / total_fields).round    
     end
@@ -185,7 +185,8 @@
 
     def summary
       # Aquí cargamos todo lo que necesitemos para la vista
-      @sections = RiskFieldSet.all
+      @sections = RiskFieldSet.all(owner: owner_or_self)
+      @flat_fields = RiskFieldSet.flat_fields(owner: owner_or_self)
       @messages = @risk_assistant.messages
       render :summary
     end

@@ -10,7 +10,7 @@ class ConversationSummarizer
     confirmations = risk_assistant.messages
                                  .where.not(key: nil)
                                  .order(:created_at)
-                                 .map { |m| "#{RiskFieldSet.label_for(m.key)}: #{m.value}" }
+                                 .map { |m| "#{RiskFieldSet.label_for(m.key, owner: risk_assistant.catalogue_owner)}: #{m.value}" }
     return "" if confirmations.empty?
 
     prompt = <<~PROMPT

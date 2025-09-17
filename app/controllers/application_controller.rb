@@ -1,9 +1,9 @@
 class ApplicationController < ActionController::Base
-  before_action { Current.owner = current_user&.owner || current_user }
+  before_action :set_current_owner
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   private
-  
+
   def risk_assistants_scope
     owner_or_self.risk_assistants
   end
@@ -30,4 +30,9 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:account_update, keys: %i[name role owner_id company_name logo])
     devise_parameter_sanitizer.permit(:sign_up,        keys: %i[name role owner_id company_name logo])
   end
+
+  def set_current_owner
+    Current.owner = current_user&.owner || current_user
+    Current.field_catalogue = FieldCatalogue.active_for(Current.owner)
+  end  
 end

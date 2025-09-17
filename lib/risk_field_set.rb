@@ -23,37 +23,41 @@ class RiskFieldSet
     keyword_init: true
   ) unless const_defined?(:Field)
 
+  Catalog = Struct.new(
+    :sections, :flat_fields, :by_id, :label_to_id, :id_to_label,
+    keyword_init: true
+  ) unless const_defined?(:Catalog)  
+
   class << self
     # Devuelve el hash de secciones con sus campos ya procesados
-    def all
-      @sections ||= load_data!
+    def all(owner: nil)
+      catalog_for(owner: owner).sections
     end
 
     # Array plano de TODOS los campos (sin subsecciones)
-    def flat_fields
-      @flat ||= all.values.flat_map { |sec| sec[:fields] }
+    def flat_fields(owner: nil)
+      catalog_for(owner: owner).flat_fields
     end
 
     # Índice rápido id_sym -> campo
-    def by_id
-      @by_id ||= flat_fields.index_by { |f| f[:id].to_sym }
+    def by_id(owner: nil)
+      catalog_for(owner: owner).by_id
     end
 
     # Índice label.downcase -> id_sym
-    def label_to_id
-      @label_to_id ||= flat_fields
-                         .index_by { |f| f[:label].strip.downcase }
-                         .transform_values { |f| f[:id].to_sym }
+    def label_to_id(owner: nil)
+      catalog_for(owner: owner).label_to_id
     end
 
     # Label legible dado un id
-    def label_for(id_sym)
-      @id_to_label ||= flat_fields.index_by { |f| f[:id].to_sym }
-      (@id_to_label[id_sym.to_sym] || {})[:label] || id_sym.to_s.humanize
+    def label_for(id_sym, owner: nil)
+      record = catalog_for(owner: owner).id_to_label[id_sym.to_sym]
+      (record || {})[:label] || id_sym.to_s.humanize
     end
 
     # Construye el prompt enriquecido, incluyendo siempre las opciones
-    def question_for(id_sym, include_tips: true)
+    def question_for(id_sym, include_tips: true, owner: nil)
+      owner = resolve_owner(owner)
       id_str    = id_sym.to_s
       segments  = id_str.split('.')
       base_segs = []             # id sin índices numéricos
@@ -67,7 +71,7 @@ class RiskFieldSet
         if nxt&.match?(/\A\d+\z/)
           # id del array con índice
           array_key = (base_segs + [seg]).join('.').to_sym
-          array_f   = by_id[array_key]
+          array_f   = by_id(owner: owner)[array_key]
           idx       = nxt.to_i
 
           if array_f && array_f[:item_label_template]
@@ -89,7 +93,7 @@ class RiskFieldSet
       end
 
       base_id = base_segs.join('.')
-      f = by_id[base_id.to_sym] or return "¿?"
+      f = by_id(owner: owner)[base_id.to_sym] or return "¿?"
 
       prefix = labels.join(' · ')
       question = f[:prompt].to_s.strip
@@ -128,7 +132,7 @@ class RiskFieldSet
       end
 
       base_id = base_segs.join('.')
-      f = by_id[base_id.to_sym]      
+      f = by_id(owner: owner)[base_id.to_sym]   
       f && f[:normative_tips].to_s.strip.presence.to_s
     end
 
@@ -138,18 +142,19 @@ class RiskFieldSet
     # de un array con id = array_id. Esto equivale a buscar en flat_fields
     # aquellos f[:parent] == array_id.
     # --------------------------------------------------------------------------
-    def children_of_array(array_id)
-      flat_fields.select { |f| f[:parent] == array_id }
+    def children_of_array(array_id, owner: nil)
+      flat_fields(owner: owner).select { |f| f[:parent] == array_id }
     end
 
     # Recorre un array de objetos y encuentra el siguiente campo pendiente.
     # array_id    – id del campo array (sin índices)
     # index_path  – índices de los arrays padres para construir el prefijo
     # answered    – Set con los ids de campos ya respondidos
-    def next_from_array(array_id, index_path, answered)
+    def next_from_array(array_id, index_path, answered, owner: nil)
+      owner      = resolve_owner(owner)
       array_id   = array_id.to_s
-      array_f    = by_id[array_id.to_sym] || {}
-      children   = children_of_array(array_id)
+      array_f    = by_id(owner: owner)[array_id.to_sym] || {}
+      children   = children_of_array(array_id, owner: owner)
 
       segments = array_id.split('.')
       prefix_parts = []
@@ -173,7 +178,7 @@ class RiskFieldSet
           field_id = "#{prefix}#{row_idx}.#{child_suffix}"
 
           if child[:type] == :array_of_objects
-            pending = next_from_array(child[:id], index_path + [row_idx], answered)
+            pending = next_from_array(child[:id], index_path + [row_idx], answered, owner: owner)
             return pending if pending
           else
             return field_id.to_sym unless answered.include?(field_id)
@@ -212,32 +217,37 @@ class RiskFieldSet
     end
 
     # Limpia todos los caches — útil tras actualizar el fichero
-    def reset_cache!
-      @sections    =
-      @flat        =
-      @by_id       =
-      @label_to_id =
-      @id_to_label = nil
+    def reset_cache!(owner: nil)
+      resolved = resolve_owner(owner)
+
+      if owner.nil?
+        @catalog_cache = {}
+      elsif resolved
+        catalog_cache.delete(resolved.id)
+      else
+        catalog_cache.delete(nil)
+      end
     end
 
     # Recarga la definición de campos desde el fichero de configuración
-    def reload!
-      reset_cache!
-      all
+    def reload!(owner: nil)
+      reset_cache!(owner: owner)
+      all(owner: owner)
     end
 
     public :reset_cache!, :reload!
 
     # ------- helpers para obtener el siguiente campo pendiente ---------
     # answers: Hash con pares { 'field_id' => 'valor' }
-    def next_field_hash(answers = {})
+    def next_field_hash(answers = {}, owner: nil)
+      owner    = resolve_owner(owner)
       answered = answers.keys.map(&:to_s).to_set
-      root_fields = flat_fields.select { |f| f[:parent].nil? }
+      root_fields = flat_fields(owner: owner).select { |f| f[:parent].nil? }
 
       root_fields.each do |field|
         if field[:type] == :array_of_objects
-          pending = next_from_array(field[:id], [], answered)
-          return field_hash_for(pending) if pending
+          pending = next_from_array(field[:id], [], answered, owner: owner)
+          return field_hash_for(pending, owner: owner) if pending
         else
           return field if !answered.include?(field[:id].to_s)
         end
@@ -245,13 +255,13 @@ class RiskFieldSet
       nil
     end
 
-    def next_field_id(answers = {})
-      h = next_field_hash(answers)
+    def next_field_id(answers = {}, owner: nil)
+      h = next_field_hash(answers, owner: owner)
       h && h[:id]
     end
 
-    def field_hash_for(id)
-      by_id[id.to_sym]
+    def field_hash_for(id, owner: nil)
+      by_id(owner: owner)[id.to_sym]
     end    
 
     public :next_field_hash, :next_field_id   
@@ -260,8 +270,82 @@ class RiskFieldSet
 
     private
 
+    def catalog_for(owner: nil)
+      owner = resolve_owner(owner)
+      key   = owner&.id
+      catalog_cache[key] ||= build_catalog(owner)
+    end
+
+    def catalog_cache
+      @catalog_cache ||= {}
+    end
+
+    def resolve_owner(owner)
+      return owner if owner
+      return Current.owner if defined?(Current) && Current.respond_to?(:owner)
+
+      nil
+    end
+
+    def build_catalog(owner)
+      sections =
+        if owner && (set = ::UserFieldSet.active_for_owner(owner))
+          sections_from_user_field_set(set)
+        else
+          load_sections_from_files
+        end
+
+      build_catalog_from_sections(sections)
+    end
+
+    def build_catalog_from_sections(sections)
+      normalized_sections = symbolize_sections(sections)
+      flat = normalized_sections.values.flat_map { |sec| sec[:fields] }
+      byid = flat.index_by { |f| f[:id].to_sym }
+      labels = flat
+                 .index_by { |f| f[:label].to_s.strip.downcase }
+                 .transform_values { |f| f[:id].to_sym }
+
+      Catalog.new(
+        sections: normalized_sections,
+        flat_fields: flat,
+        by_id: byid,
+        label_to_id: labels,
+        id_to_label: byid
+      )
+    end
+
+    def symbolize_sections(sections)
+      sections.each_with_object({}) do |(key, value), acc|
+        fields = Array(value[:fields]).map { |field| symbolize_field(field) }
+        acc[key.to_sym] = {
+          title: value[:title],
+          fields: fields
+        }
+      end
+    end
+
+    def symbolize_field(field)
+      hash = field.deep_symbolize_keys
+      hash[:options] = Array.wrap(hash[:options])
+      hash
+    end
+
+    def sections_from_user_field_set(set)
+      set
+        .sections
+        .includes(:field_definitions)
+        .order(:position, :id)
+        .each_with_object({}) do |section, acc|
+          acc[section.key.to_sym] = {
+            title: section.title,
+            fields: section.field_definitions.ordered.map(&:to_risk_field_hash)
+          }
+        end
+    end    
+
     # Decide parsear JSON o YAML según presencia de JSON_PATH
-    def load_data!
+    def load_sections_from_files
       if JSON_PATH && File.exist?(JSON_PATH)
         Rails.logger.info "RiskFieldSet: cargando #{JSON_PATH.basename}"
         parse_json(JSON_PATH)

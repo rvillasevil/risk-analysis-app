@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: 'registrations' }
-  devise_for :owners, class_name: 'User', controllers: { registrations: 'owners/registrations' }  
+  devise_for :owners, class_name: 'User', controllers: { registrations: 'owners/registrations' }
   resources :users, only: [] do
     resources :clients, only: %i[index new create destroy]
   end
@@ -25,14 +25,17 @@ Rails.application.routes.draw do
     post :ask, on: :member   # << añadimos esta línea
   end
 
-  resources :data_collections, only: %i[index show new]
+  resources :data_collections, only: %i[index show create] do
+    post :send_message, on: :member
+    post :finalize, on: :member
+  end
 
   get 'owners/dashboard', to: 'owners#dashboard', as: :owner_dashboard 
 
   get 'client_invitations/accept', to: 'invitations#accept', as: :accept_client_invitation
 
-  get  'risk_assistants/:id/report', to: "risk_assistants#report", as: 'risk_assistant_report'
-  get  'risk_assistants/:id/resume', to: "risk_assistants#resume", as: 'risk_assistant_resume'
+  get  'risk_assistants/:id/report', to: 'risk_assistants#report', as: 'risk_assistant_report'
+  get  'risk_assistants/:id/resume', to: 'risk_assistants#resume', as: 'risk_assistant_resume'
 
   root 'static_pages#home'
 end
