@@ -1,49 +1,174 @@
-<%= render 'shared/branding' %>
-
 <div class="container py-4">
-  <div class="row mb-4 g-2">
-    <div class="col">
-      <%= link_to 'Gestión de clientes', user_clients_path(current_user), class: 'btn btn-primary w-100' %>
+  <%= render 'shared/branding' %>
+
+  <% owner = current_user %>
+  <% catalogues = Array(owner.field_catalogues.ordered.limit(8)) %>
+  <% ongoing_conversations = catalogues.select { |catalogue| catalogue.status != 'ready' } %>
+  <% ready_summaries = catalogues.select { |catalogue| catalogue.status == 'ready' } %>
+  <% policy_analyses = Array(owner.policy_analyses.order(created_at: :desc).limit(5)) %>
+  <% recent_documents = policy_analyses.flat_map do |analysis| %>
+    <% analysis.documents.attachments.map { |attachment| { analysis: analysis, attachment: attachment } } %>
+  <% end.compact.sort_by { |entry| (entry[:attachment]&.created_at) || entry[:analysis]&.created_at }.reverse.first(4) %>
+  <% summary_events = ready_summaries.sort_by(&:updated_at).reverse.first(6).map do |catalogue| %>
+    {
+      title: "Resumen ##{catalogue.id}",
+      description: 'Resumen listo para compartir con el cliente.',
+      timestamp: catalogue.updated_at,
+      icon: 'summary',
+      status_chip: { text: 'Listo', status: :success, icon: 'sparkle' }
+    }
+  <% end %>
+
+  <header class="dashboard-header d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+    <div>
+      <h1 class="h3 mb-2">Panel del Propietario</h1>
+      <p class="text-muted mb-0">Gestiona clientes, conversaciones y entregables desde una vista centralizada.</p>
     </div>
-    <div class="col">
-      <%= link_to 'Data Collections', data_collections_path, class: 'btn btn-primary w-100' %>
+    <div class="d-flex flex-wrap gap-2">
+      <%= link_to 'Invitar cliente', new_user_client_path(owner), class: 'btn btn-primary' %>
+      <%= link_to 'Ver asistentes', risk_assistants_path, class: 'btn btn-outline-primary' %>
     </div>
-    <div class="col">
-      <%= link_to 'Documents', data_collections_path(anchor: 'documentos'), class: 'btn btn-primary w-100' %>
+  </header>
+
+  <% kpis = [
+    {
+      title: 'Clientes activos',
+      value: owner.clients.count,
+      subtitle: 'Usuarios con acceso vigente a la plataforma.',
+      icon: 'user',
+      status_chip: {
+        text: owner.clients.any? ? 'En crecimiento' : 'Sin clientes',
+        status: owner.clients.any? ? :success : :muted,
+        icon: owner.clients.any? ? 'sparkle' : 'alert'
+      },
+      primary_cta: { label: 'Gestionar clientes', path: user_clients_path(owner) },
+      secondary_cta: owner.can_add_client? ? { label: 'Agregar nuevo', path: new_user_client_path(owner) } : nil
+    },
+    {
+      title: 'Conversaciones en curso',
+      value: ongoing_conversations.count,
+      subtitle: 'Procesos de onboarding en marcha.',
+      icon: 'chat',
+      trend: ongoing_conversations.any? ? "#{ongoing_conversations.count} activas" : nil,
+      status_chip: {
+        text: ongoing_conversations.any? ? 'Monitorizar' : 'Sin actividad',
+        status: ongoing_conversations.any? ? :warning : :muted,
+        icon: ongoing_conversations.any? ? 'pulse' : 'hourglass'
+      },
+      primary_cta: { label: 'Ver data collections', path: data_collections_path },
+      secondary_cta: { label: 'Nueva conversación', path: data_collections_path }
+    },
+    {
+      title: 'Resúmenes generados',
+      value: ready_summaries.count,
+      subtitle: 'Entregables listos para compartir.',
+      icon: 'summary',
+      trend: ready_summaries.any? ? 'Resultados recientes disponibles' : nil,
+      status_chip: {
+        text: ready_summaries.any? ? 'Listo' : 'En preparación',
+        status: ready_summaries.any? ? :success : :warning,
+        icon: ready_summaries.any? ? 'check' : 'hourglass'
+      },
+      primary_cta: { label: 'Ver resúmenes', path: data_collections_path(anchor: 'resumenes') },
+      secondary_cta: { label: 'Análisis de pólizas', path: policy_analyses_path }
+    }
+  ] %>
+
+  <div class="row g-4 mb-4">
+    <% kpis.each do |kpi| %>
+      <div class="col-xl-4 col-lg-6">
+        <%= render 'clients/kpi_card', **kpi %>
+      </div>
+    <% end %>
+  </div>
+
+  <% conversation_items = ongoing_conversations.first(4).map do |catalogue| %>
+    error_message = catalogue.metadata&.[]('last_error')
+    {
+      icon: 'chat',
+      title: "Conversación ##{catalogue.id}",
+      meta: "Actualizado #{l(catalogue.updated_at, format: :short)}",
+      body: error_message.present? ? "Último error: #{error_message}" : nil,
+      status_chip: {
+        text: catalogue.status == 'failed' ? 'Con incidencias' : 'Activa',
+        status: catalogue.status == 'failed' ? :danger : :warning,
+        icon: catalogue.status == 'failed' ? 'alert' : 'pulse'
+      },
+      actions: [
+        { label: 'Abrir detalle', path: data_collection_path(catalogue), variant: :primary }
+      ]
+    }
+  <% end %>
+
+  <% document_items = recent_documents.map do |entry| %>
+    analysis = entry[:analysis]
+    attachment = entry[:attachment]
+    timestamp = attachment.created_at || analysis.created_at
+    {
+      icon: 'document',
+      title: attachment.blob.filename.to_s,
+      meta: "Subido #{l(timestamp, format: :short)}",
+      body: "Análisis ##{analysis.id}",
+      status_chip: {
+        text: attachment.blob.content_type.to_s.split('/').last.upcase,
+        status: :info,
+        icon: 'inbox'
+      },
+      actions: [
+        { label: 'Ver análisis', path: policy_analysis_path(analysis), variant: :link }
+      ]
+    }
+  <% end %>
+
+  <% client_items = owner.clients.order(:created_at).limit(6).map do |client| %>
+    name = client.name.presence || client.email
+    {
+      icon: 'user',
+      title: name,
+      meta: client.email,
+      status_chip: {
+        text: client.inactive? ? 'Inactivo' : 'Activo',
+        status: client.inactive? ? :muted : :success,
+        icon: client.inactive? ? 'pause' : 'check'
+      },
+      actions: [
+        { label: 'Ver perfil', path: client_path(client), variant: :secondary },
+        { label: 'Revocar', path: user_client_path(owner, client), method: :delete, data: { confirm: '¿Deseas revocar el acceso de este cliente?' }, variant: :danger }
+      ]
+    }
+  <% end %>
+
+  <% invitation_items = owner.client_invitations.order(created_at: :desc).limit(5).map do |invitation| %>
+    {
+      icon: 'inbox',
+      title: invitation.email,
+      meta: "Enviada #{l(invitation.created_at, format: :short)}",
+      status_chip: {
+        text: invitation.accepted_at.present? ? 'Aceptada' : 'Pendiente',
+        status: invitation.accepted_at.present? ? :success : :warning,
+        icon: invitation.accepted_at.present? ? 'check' : 'hourglass'
+      }
+    }
+  <% end %>
+
+  <div class="row g-4">
+    <div class="col-xl-4 col-lg-6">
+      <%= render 'clients/widget_card', title: 'Conversaciones en curso', subtitle: 'Monitorea el avance con tus clientes.', items: conversation_items, empty_state: 'No hay conversaciones activas.', header_cta: { label: 'Ver todas', path: data_collections_path } %>
     </div>
-    <div class="col">
-      <%= link_to 'Summaries', data_collections_path(anchor: 'resumenes'), class: 'btn btn-primary w-100' %>
+    <div class="col-xl-4 col-lg-6">
+      <%= render 'clients/widget_card', title: 'Últimos documentos', subtitle: 'Archivos agregados recientemente.', items: document_items, empty_state: 'Aún no se suben documentos.' %>
     </div>
-    <div class="col">
-      <%= link_to 'Policy Analyses', policy_analyses_path, class: 'btn btn-primary w-100' %>
+    <div class="col-xl-4 col-lg-12">
+      <%= render 'clients/timeline', title: 'Resúmenes listos', subtitle: 'Los resultados más recientes.', events: summary_events, empty_state: 'Todavía no se han generado resúmenes.', header_cta: { label: 'Ver todos', path: data_collections_path(anchor: 'resumenes') } %>
     </div>
   </div>
 
-  <section>
-    <h2 class="h3 mb-3">Clientes</h2>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th class="text-center">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% current_user.clients.each do |client| %>
-          <tr>
-            <td><%= client.name %></td>
-            <td class="text-center">
-              <%= link_to 'Revocar', user_client_path(current_user, client), method: :delete, data: { confirm: '¿Estás seguro?' }, class: 'btn btn-outline-danger btn-sm' %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-
-    <% if current_user.can_add_client? %>
-      <div class="mt-3">
-        <%= link_to 'Nuevo cliente', new_user_client_path(current_user), class: 'btn btn-success' %>
-      </div>
-    <% end %>
-  </section>
+  <div class="row g-4 mt-1">
+    <div class="col-lg-7">
+      <%= render 'clients/widget_card', title: 'Clientes recientes', subtitle: 'Gestiona accesos y permisos.', items: client_items, empty_state: 'Aún no has agregado clientes.', header_cta: { label: 'Gestionar todos', path: user_clients_path(owner) } %>
+    </div>
+    <div class="col-lg-5">
+      <%= render 'clients/widget_card', title: 'Invitaciones enviadas', subtitle: 'Seguimiento de invitaciones pendientes.', items: invitation_items, empty_state: 'No hay invitaciones enviadas.', header_cta: { label: 'Enviar nueva', path: new_user_client_path(owner) } %>
+    </div>
+  </div>
 </div>

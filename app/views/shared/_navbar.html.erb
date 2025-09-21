@@ -20,37 +20,41 @@
 
     <!-- Links de navegación -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-lg-3">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+          <a class="nav-link" href="#inicio">Inicio</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Servicios</a>
+          <a class="nav-link" href="#problema">Problema</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Sobre Nosotros</a>
+          <a class="nav-link" href="#solucion">Solución</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="https://calendly.com/rvillasevil/30min">Contacto</a>
+          <a class="nav-link" href="#funcionalidades">Funcionalidades</a>          
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#testimonios">Testimonios</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#pasos-siguientes">Pasos siguientes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#demo">Demo</a>
+        </li>
+      </ul>
+      <div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center gap-2 ms-lg-4">
+        <%= link_to "Solicitar demo", "#demo", class: "btn btn-primary" %>        
 
         <% if user_signed_in? %>
           <% dashboard_path = current_user.client? ? client_dashboard_path : owner_dashboard_path %>
-          <li class="nav-item me-2">
-            <%= link_to "Dashboard", dashboard_path, class: "btn btn-outline-secondary" %>
-          </li>        
-          <li class="nav-item me-2">
-            <%= link_to "#{current_user.name || 'Usuario'}", edit_user_registration_path, class: "btn btn-outline-primary" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Logout", destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "btn btn-outline-danger" %>          
-          </li>
+          <%= link_to "Ir a mi panel", dashboard_path, class: "btn btn-outline-secondary" %>
+          <%= link_to "Cerrar sesión", destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "btn btn-outline-danger" %>
         <% else %>
-          <li class="nav-item">
-            <%= link_to "Login", new_user_session_path, class: "btn btn-outline-success" %>
-          </li>
+          <%= link_to "Iniciar sesión", new_user_session_path, class: "btn btn-outline-primary" %>
         <% end %>
-      </ul>
+      </div>
     </div>
   </div>
 </nav>

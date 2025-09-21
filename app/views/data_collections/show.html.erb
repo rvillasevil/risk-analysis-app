@@ -1,42 +1,117 @@
-<div class="container my-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3">Conversación de onboarding</h1>
+<div class="container py-4 dashboard-view" data-controller="table-filter">
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
     <div>
-      <span class="badge bg-secondary"><%= @field_catalogue.status.humanize %></span>
-      <% if @field_catalogue.active? %>
-        <span class="badge bg-success">Catálogo listo</span>
-      <% end %>
+      <h1 class="h3 mb-1">Conversación de onboarding</h1>
+      <p class="text-muted mb-0">Revisa el hilo con el asistente y genera el catálogo definitivo cuando estés listo.</p>
     </div>
-  </div>
-
-  <div class="mb-4">
-    <h2 class="h5">Mensajes</h2>
-    <div class="border rounded p-3 bg-light" style="max-height: 400px; overflow-y: auto;">
-      <% if @messages.blank? %>
-        <p class="text-muted">Aún no hay mensajes en esta conversación.</p>
-      <% else %>
-        <% @messages.each do |message| %>
-          <div class="mb-3">
-            <small class="text-muted d-block"><%= l(message.created_at, format: :short) %> · <%= message.role.upcase %></small>
-            <p class="mb-0"><%= simple_format(message.content) %></p>
-          </div>
+    <div class="d-flex flex-wrap gap-2">
+      <span class="badge <%= @field_catalogue.active? ? 'bg-status-ready' : (@field_catalogue.status == 'failed' ? 'bg-status-alert' : 'bg-status-pending') %>">
+        <% if @field_catalogue.status == 'failed' %>
+          Requiere acción
+        <% elsif @field_catalogue.active? %>
+          Catálogo listo
+        <% else %>
+          En progreso
         <% end %>
+      </span>
+      <%= link_to 'Volver al listado', data_collections_path, class: 'btn btn-outline-secondary' %>
+    </div>
+  </div>
+
+  <% if notice %>
+    <div class="alert alert-success"><%= notice %></div>
+  <% end %>
+  <% if alert %>
+    <div class="alert alert-danger"><%= alert %></div>
+  <% end %>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="card shadow-sm h-100" data-state="pending">
+        <div class="card-body">
+          <p class="text-muted text-uppercase small mb-1">Mensajes totales</p>
+          <h2 class="h4 mb-0"><%= @messages.size %></h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm h-100" data-state="ready">
+        <div class="card-body">
+          <p class="text-muted text-uppercase small mb-1">Última actualización</p>
+          <h2 class="h4 mb-0"><%= l(@field_catalogue.updated_at, format: :short) %></h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm h-100" data-state="<%= @field_catalogue.status == 'failed' ? 'alert' : 'pending' %>">
+        <div class="card-body">
+          <p class="text-muted text-uppercase small mb-1">Estado actual</p>
+          <h2 class="h4 mb-0"><%= @field_catalogue.status.humanize %></h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+      <div class="row g-3 align-items-end mb-3">
+        <div class="col-md-6">
+          <label for="message-search" class="form-label">Buscar mensajes</label>
+          <input id="message-search" type="search" class="form-control" placeholder="Palabras clave" data-table-filter-target="search" data-action="input->table-filter#filter">
+        </div>
+        <div class="col-md-3">
+          <label for="message-role" class="form-label">Rol</label>
+          <select id="message-role" class="form-select" data-table-filter-target="status" data-action="change->table-filter#filter">
+            <option value="all">Todos</option>
+            <option value="assistant">Asistente</option>
+            <option value="user">Propietario</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped align-middle">
+          <thead>
+            <tr>
+              <th scope="col">Fecha</th>
+              <th scope="col">Rol</th>
+              <th scope="col">Contenido</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @messages.each do |message| %>
+              <% role_label = message.role == 'assistant' ? 'Asistente' : 'Propietario' %>
+              <tr data-table-filter-target="row" data-table-filter-search-value="<%= [l(message.created_at, format: :short), role_label, message.content].join(' ') %>" data-table-filter-status="<%= message.role %>">
+                <td><%= l(message.created_at, format: :short) %></td>
+                <td><span class="badge <%= message.role == 'assistant' ? 'bg-neutral' : 'bg-status-ready' %>"><%= role_label %></span></td>
+                <td><%= simple_format(message.content) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-center text-muted d-none" data-table-filter-target="empty">No hay mensajes que coincidan con los filtros.</p>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-white">
+      <h2 class="h5 mb-0">Enviar mensaje al asistente</h2>
+    </div>
+    <div class="card-body">
+      <%= form_with url: send_message_data_collection_path(@field_catalogue), scope: :message, method: :post, local: true do |f| %>
+        <div class="mb-3">
+          <%= f.label :content, 'Tu mensaje', class: 'form-label' %>
+          <%= f.text_area :content, rows: 4, class: 'form-control', placeholder: 'Responde a la última pregunta del asistente…' %>
+        </div>
+        <%= f.submit 'Enviar mensaje', class: 'btn btn-primary' %>
       <% end %>
     </div>
   </div>
 
-  <div class="mb-4">
-    <%= form_with url: send_message_data_collection_path(@field_catalogue), scope: :message, method: :post, local: true do |f| %>
-      <div class="mb-2">
-        <%= f.label :content, 'Tu mensaje', class: 'form-label' %>
-        <%= f.text_area :content, rows: 4, class: 'form-control', placeholder: 'Responde a la última pregunta del asistente...' %>
-      </div>
-      <%= f.submit 'Enviar mensaje', class: 'btn btn-primary' %>
+  <div class="d-flex flex-wrap gap-3">
+    <%= link_to 'Generar catálogo definitivo', finalize_data_collection_path(@field_catalogue), class: 'btn btn-success', data: { turbo_method: :post, turbo_confirm: 'Esto pedirá al asistente que genere el catálogo final. ¿Continuar?' } %>
+    <% if @field_catalogue.status == 'failed' %>
+      <%= link_to 'Reintentar generación', finalize_data_collection_path(@field_catalogue), class: 'btn btn-outline-danger', data: { turbo_method: :post, turbo_confirm: 'Intentar regenerar el catálogo. ¿Continuar?' } %>
     <% end %>
-  </div>
-
-  <div class="d-flex gap-3">
-    <%= button_to 'Generar catálogo definitivo', finalize_data_collection_path(@field_catalogue), method: :post, class: 'btn btn-success', data: { turbo_confirm: 'Esto pedirá al asistente que genere el catálogo final. ¿Continuar?' } %>
-    <%= link_to 'Volver al listado', data_collections_path, class: 'btn btn-outline-secondary' %>
   </div>
 </div>

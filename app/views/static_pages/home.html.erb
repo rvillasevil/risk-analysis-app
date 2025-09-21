@@ -1,376 +1,248 @@
-  <style>
-    /* Animations & brand accents */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulseBg {
-      0%,100% { background-position: 0% 50%; }
-      50%     { background-position: 100% 50%; }
-    }
-
-    .feature-icon    { font-size: 3rem; color: #0d6efd; }
-    .plan-card       { transition: transform .3s ease-in-out, box-shadow .3s; }
-    .plan-card:hover { transform: translateY(-6px); box-shadow: 0 .75rem 1.5rem rgba(0,0,0,.1); }
-    .ribbon-early    { position: absolute; top: -10px; right: -10px; background:#dc3545; color:#fff; padding: .25rem .5rem; font-size:.8rem; font-weight:600; border-radius:.25rem; }
-    .testimonial     { background:#fff; padding:2rem; border-radius:.5rem; box-shadow:0 .25rem .5rem rgba(0,0,0,.1); }
-    .cta-banner      { background: linear-gradient(90deg,#6610f2,#0d6efd); color:#fff; padding:4rem 1rem; animation:pulseBg 8s infinite; }
-    @keyframes fadeInUp { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
-    @keyframes pulseBg {0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
-
-    .feature-icon  {font-size:2.5rem; color:#0d6efd;}
-    .benefit-icon  {font-size:2rem; color:#6610f2;}
-    .plan-card     {transition:transform .3s,box-shadow .3s;}
-    .plan-card:hover{transform:translateY(-6px);box-shadow:0 .75rem 1.5rem rgba(0,0,0,.1);}  
-    .ribbon-early  {position:absolute;top:-10px;right:-10px;background:#dc3545;color:#fff;padding:.25rem .5rem;font-size:.75rem;font-weight:600;border-radius:.25rem;}
-    .cta-banner    {background:linear-gradient(90deg,#6610f2,#0d6efd);color:#fff;padding:4rem 1rem;animation:pulseBg 8s infinite;}    
-  </style>
-    
-  <div class="container-fluid pt-5">
-    <div class="row mb-4 mb-lg-5 justify-content-lg-between">
-      <div class="col-3 col-md-1 col-lg-2 d-none d-md-flex align-items-center">
-        <div class="lc-block bg-dark ratio ratio-1x1 opacity-25" style=""> </div><!-- /lc-block -->
-      </div><!-- /col -->
-      <div class="col-4 col-md-3 col-lg-2 d-flex flex-column justify-content-between">
-        <div class="lc-block bg-primary ratio ratio-1x1 opacity-25" style=""> </div><!-- /lc-block -->
-        <div class="lc-block">
-          <img class="img-fluid" src="https://images.unsplash.com/photo-1531445075774-bfb641f42229?crop=entropy&amp;cs=tinysrgb&amp;fit=crop&amp;fm=jpg&amp;ixid=MnwzNzg0fDB8MXxzZWFyY2h8Njd8fGJ1aWxkaW5nfGVufDB8Mnx8fDE2MzQ1NTE3NDg&amp;ixlib=rb-1.2.1&amp;q=80&amp;w=1080&amp;h=1080" alt="Photo by Meriç Dağlı">
-        </div><!-- /lc-block -->
-      </div><!-- /col -->
-      <div class="col-4 col-md-4 col-lg-3"> <img class="img-fluid" src="https://images.unsplash.com/photo-1526546334624-2afe5b01088d?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwzNzg0fDB8MXxzZWFyY2h8MzF8fGJ1aWxkaW5nfGVufDB8MXx8fDE2MzQ1NTE2NTE&amp;ixlib=rb-1.2.1&amp;q=80&amp;w=1080" style="object-fit:cover" alt="Photo by Simone Hutsch"></div><!-- /col -->
-      <div class="col-4 col-md-3 col-lg-2 d-flex flex-column justify-content-between">
-        <div class="lc-block">
-          <img class="img-fluid" src="https://images.unsplash.com/photo-1528810084506-41bd091551af?crop=entropy&amp;cs=tinysrgb&amp;fit=crop&amp;fm=jpg&amp;ixid=MnwzNzg0fDB8MXxzZWFyY2h8NDJ8fGJ1aWxkaW5nfGVufDB8Mnx8fDE2MzQ1NTE3NDE&amp;ixlib=rb-1.2.1&amp;q=80&amp;w=1080&amp;h=1080" alt="Photo by Simone Hutsch">
-        </div><!-- /lc-block -->
-        <div class="lc-block bg-primary ratio ratio-1x1 opacity-25" style=""> </div><!-- /lc-block -->
-      </div><!-- /col -->
-      <div class="col-3 col-md-1 col-lg-2 d-none d-md-flex  align-items-center">
-        <div class="lc-block bg-dark ratio ratio-1x1 opacity-25" style=""> </div><!-- /lc-block -->
-      </div><!-- /col -->
-    </div>
-  </div>
-  <div class="container" style="margin-top: -33%;">
-    <div class="row justify-content-center">
-      <div class="lc-block text-center col-md-8">
-        <div editable="rich">
-          <h1 class="display-3 fw-bold mb-3" style="animation:fadeInUp .8s ease-out;">Elimina los formularios.<span class="text-primary">Hola a las Conversaciones Inteligentes.</span></h1>
-        </div>
-      </div>
-    </div>
-    <div class="row justify-content-center">
-      <div class="lc-block text-center col-xxl-6 col-md-8">
-        <div editable="rich">
-          <h5 class="">Transforma la captación de datos de tus clientes. Sustituye los tediosos documentos de Word y Excel por un chat conversacional con IA y ofrece una experiencia de cliente excepcional.</p>
-
-          <a href="https://calendly.com/rvillasevil/30min<%# new_user_registration_path %>" class="btn btn-danger btn-lg me-3">Solicitar Información</a>
-          <a href="<%= risk_assistants_path %>" class="btn btn-outline-primary btn-lg me-3">Ver Demo Plataforma</a>
-          <a href="<%= policy_analyses_path %>" class="btn btn-primary btn-lg">Comparativa de pólizas</a>       
-        </div>
-        <small class="d-block mt-3 text-muted">Oferta Early‑Adopter: 20 % descuento hasta el 30 de septiembre de 2025.</small>
-        <small class="d-block mt-2 text-muted">Sin compromiso. Descubre el futuro de la intermediación de seguros.</small> 
-      </div><!-- /lc-block -->
-    </div>
-  </div>
-
-<!-- ========== PROBLEMA ============================================= -->
-<section class="py-5">
-  <div class="container">
-    <div class="row align-items-center gx-5">
-      <div class="col-lg-6 mb-4 mb-lg-0">
-        <h2 class="fw-bold mb-3">¿Cansado de Perseguir Datos y Descifrar Documentos?</h2>
-        <p class="mb-4">Interminables emails, archivos de Excel eternos y datos incompletos. Ese proceso anticuado consume tiempo y limita tu visibilidad para colocar riesgos con eficacia.</p>
-        <ul class="list-unstyled">
-          <li class="d-flex align-items-start mb-3"><i class="bi bi-file-earmark-excel-fill text-danger me-2"></i> Formularios confusos que tu cliente nunca termina.</li>
-          <li class="d-flex align-items-start mb-3"><i class="bi bi-clock-history text-warning me-2"></i> Horas perdidas ordenando información.</li>
-          <li class="d-flex align-items-start"><i class="bi bi-envelope-exclamation text-secondary me-2"></i> Información incompleta que provoca reprocesos.</li>
-        </ul>
-      </div>
-      <div class="col-lg-6 text-center">
-        <img src="https://placehold.co/900x600?text=Paperwork" class="img-fluid rounded-4" alt="Documentos desorganizados"/>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========== SOLUCIÓN ============================================ -->
-<section class="py-5 bg-light">
-  <div class="container text-center">
-    <h2 class="fw-bold mb-4">Presentamos DataRisk: La Revolución Conversacional para el Bróker de Seguros</h2>
-    <p class="lead mb-4">Reemplaza formularios estático s de riesgos por un asistente de chat inteligente. Guiamos a tu cliente, estructuramos la información y te entregamos datos listos para analizar.</p>
-    <a href="#como-funciona" class="btn btn-outline-primary btn-lg">Ver Cómo Funciona</a>
-  </div>
-</section>
- 
- 
-<!-- ================= FEATURES ================= -->
-  <section class="py-5">
+<main class="landing-page">
+  <section id="inicio" class="hero-home py-5">
     <div class="container">
-      <div class="row text-center g-4">
-        <div class="col-md-3">
-          <div class="p-4">
-            <div class="feature-icon mb-3"><i class="bi bi-chat-dots"></i></div>
-            <h5>Captura Conversacional</h5>
-            <p>Interroga al cliente con IA, sin formularios interminables.</p>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="p-4">
-            <div class="feature-icon mb-3"><i class="bi bi-cloud-arrow-up"></i></div>
-            <h5>Carga & Análisis de Docs</h5>
-            <p>Extrae datos clave de planes de autoprotección, informes PCI y más.</p>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="p-4">
-            <div class="feature-icon mb-3"><i class="bi bi-bar-chart-line"></i></div>
-            <h5>Comparativa de Pólizas</h5>
-            <p>Benchmark automático de coberturas y límites entre aseguradoras.</p>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="p-4">
-            <div class="feature-icon mb-3"><i class="bi bi-robot"></i></div>
-            <h5>API & Integraciones</h5>
-            <p>Conecta tu ERP o CRM y automatiza la emisión.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-<!-- ========== BENEFICIOS BROKER =================================== -->
-<section class="py-5">
-  <div class="container">
-    <h2 class="text-center fw-bold mb-5">Potencia tu Correduría: Más Datos, Mejores Decisiones</h2>
-    <div class="row text-center g-4">
-      <div class="col-md-3">
-        <div class="px-3 py-4 h-100 border rounded-4">
-          <div class="benefit-icon mb-3"><i class="bi bi-graph-up-arrow"></i></div>
-          <h6 class="mb-2">+30 % Información</h6>
-          <p class="small">Preguntas inteligentes capturan detalles que un formulario nunca ve.</p>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="px-3 py-4 h-100 border rounded-4">
-          <div class="benefit-icon mb-3"><i class="bi bi-search"></i></div>
-          <h6 class="mb-2">Identifica Riesgos</h6>
-          <p class="small">Cada dato se estructura, mostrando puntos fuertes y brechas.</p>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="px-3 py-4 h-100 border rounded-4">
-          <div class="benefit-icon mb-3"><i class="bi bi-clock"></i></div>
-          <h6 class="mb-2">Optimiza tu Tiempo</h6>
-          <p class="small">Menos administración, más asesoramiento de valor.</p>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="px-3 py-4 h-100 border rounded-4">
-          <div class="benefit-icon mb-3"><i class="bi bi-stars"></i></div>
-          <h6 class="mb-2">Moderniza tu Marca</h6>
-          <p class="small">Ofrece una experiencia digital que tus competidores no igualan.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- ========== BENEFICIOS CLIENTE ================================== -->
-<section class="py-5 bg-light">
-  <div class="container">
-    <div class="row align-items-center gx-5">
-      <div class="col-lg-6 mb-4 mb-lg-0 text-center order-lg-2">
-        <img src="https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?auto=format&fit=crop&w=700&q=80" class="img-fluid rounded-4" alt="Cliente feliz">
-      </div>
-      <div class="col-lg-6 order-lg-1">
-        <h2 class="fw-bold mb-3">Facilítale la Vida a tu Cliente</h2>
-        <ul class="list-unstyled lh-lg">
-          <li><i class="bi bi-chat-left-text benefit-icon me-2"></i>Experiencia intuitiva: tan fácil como chatear.</li>
-          <li><i class="bi bi-lightning-charge benefit-icon me-2"></i>Proceso rápido y guiado: sin omisiones.</li>
-          <li><i class="bi bi-shield-lock benefit-icon me-2"></i>Portal seguro: sube y consulta documentación en un clic.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========== CÓMO FUNCIONA ======================================= -->
-<section id="como-funciona" class="py-5">
-  <div class="container text-center">
-    <h2 class="fw-bold mb-5">En Solo Tres Pasos</h2>
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="px-4 py-5 h-100 border rounded-4">
-          <div class="feature-icon mb-3"><i class="bi bi-person-plus"></i></div>
-          <h6 class="mb-2">1. Invita</h6>
-          <p class="small">Envía a tu cliente un enlace único para iniciar la conversación.</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="px-4 py-5 h-100 border rounded-4">
-          <div class="feature-icon mb-3"><i class="bi bi-chat-dots"></i></div>
-          <h6 class="mb-2">2. Conversa y Recopila</h6>
-          <p class="small">El asistente guía y estructura toda la información automáticamente.</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="px-4 py-5 h-100 border rounded-4">
-          <div class="feature-icon mb-3"><i class="bi bi-bar-chart-line"></i></div>
-          <h6 class="mb-2">3. Analiza y Actúa</h6>
-          <p class="small">Accede a datos organizados, genera informes y toma decisiones.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========== PLATAFORMA GESTIÓN ================================== -->
-<section class="py-5 bg-light">
-  <div class="container">
-    <div class="row align-items-center gx-5">
-      <div class="col-lg-6 mb-4 mb-lg-0 text-center">
-        <img src="https://images.unsplash.com/photo-1590086782792-42dd2457abd4?auto=format&fit=crop&w=900&q=80" class="img-fluid rounded-4 shadow" alt="Dashboard plataforma">
-      </div>
-      <div class="col-lg-6">
-        <h2 class="fw-bold mb-3">Tu Centro de Mando Inteligente</h2>
-        <ul class="list-unstyled lh-lg">
-          <li><i class="bi bi-people benefit-icon me-2"></i>Visión 360º del cliente en un único perfil.</li>
-          <li><i class="bi bi-cloud-arrow-up benefit-icon me-2"></i>Carga y descarga de archivos seguros.</li>
-          <li><i class="bi bi-file-earmark-text benefit-icon me-2"></i>Análisis y reportes listos para las aseguradoras.</li>
-          <li><i class="bi bi-shield-check benefit-icon me-2"></i>Seguridad de nivel bancario y cumplimiento RGPD.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= HOW IT WORKS ================= -->
-  <section class="py-5 bg-light">
-    <div class="container">
-      <h2 class="text-center mb-5">Cómo funciona</h2>
-      <div class="row g-4 text-center">
-        <div class="col-md-4">
-          <div class="p-4 h-100">
-            <div class="feature-icon mb-3"><i class="bi bi-clipboard-data"></i></div>
-            <h6>1. Chatea o sube archivos</h6>
-            <p>El cliente conversa con el bot o carga documentos técnicos.</p>
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <span class="hero-badge"><i class="bi bi-stars"></i> Plataforma IA para corredurías</span>
+          <h1 class="hero-title mt-4 mb-3">Convierte datos dispersos en <span>cotizaciones listas</span> en minutos.</h1>
+          <p class="hero-subtitle mb-4">DataRisk guía a tus clientes con conversaciones inteligentes, captura documentación crítica y genera análisis listos para colocar riesgos complejos sin fricción.</p>
+          <div class="hero-cta-group mb-3">
+            <%= link_to "Soy corredor: crear mi cuenta", new_owner_registration_path, class: "btn btn-primary btn-lg" %>
+            <%= link_to "Tengo invitación: acceder", new_user_session_path, class: "btn btn-outline-primary btn-lg" %>
+            <%= link_to "Solicitar demo guiada", "#demo", class: "btn btn-link text-decoration-none fw-semibold" %>
           </div>
+          <p class="hero-cta-note">¿Solo quieres explorar? Revisa la <%= link_to "demo autoguiada", risk_assistants_path, class: "text-decoration-none" %> o compara coberturas con nuestra <%= link_to "herramienta de pólizas", policy_analyses_path, class: "text-decoration-none" %>.</p>
+          <p class="hero-cta-note text-muted mt-2">Oferta Early‑Adopter: 20 % de descuento hasta el 30/09/2025.</p>
         </div>
-        <div class="col-md-4">
-          <div class="p-4 h-100">
-            <div class="feature-icon mb-3"><i class="bi bi-cpu"></i></div>
-            <h6>2. IA procesa y normaliza</h6>
-            <p>Detectamos valores de riesgo, sus coberturas y brechas.</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="p-4 h-100">
-            <div class="feature-icon mb-3"><i class="bi bi-file-earmark-richtext"></i></div>
-            <h6>3. Informe listo al instante</h6>
-            <p>Descarga PDF, Excel o envíalo a tu aseguradora preferida.</p>
+        <div class="col-lg-6">
+          <div class="hero-image">
+            <%= image_tag "platform-overview.svg", class: "img-fluid", alt: "Resumen de la plataforma DataRisk con panel y conversación" %>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-<!-- ================= PRICING ================= -->
-  <section id="pricing" class="py-5">
+  <section id="journey" class="journey-map py-5">
     <div class="container">
-      <h2 class="text-center mb-5">Planes y precios</h2>
-      <div class="row justify-content-center g-4">
-        <!-- Starter -->
-        <div class="col-md-4 position-relative">
-          <div class="plan-card border rounded-4 h-100 p-4 text-center">
-            <h5 class="mb-3">Starter</h5>
-            <h2 class="fw-bold">99€<small class="fs-6 fw-normal text-muted">/mes</small></h2>
-            <ul class="list-unstyled mt-3 mb-4 text-start">
-              <li><i class="bi bi-check2 text-success me-1"></i>Hasta 5 cuentas de cliente</li>
-              <li><i class="bi bi-check2 text-success me-1"></i>20 documentos/mes</li>
-              <li><i class="bi bi-check2 text-success me-1"></i>Chatbot IA básico</li>
-              <li><i class="bi bi-check2 text-success me-1"></i>Soporte email</li>
+      <div class="row justify-content-center mb-4">
+        <div class="col-lg-8 text-center">
+          <h2 class="fw-bold mb-3">Journey ideal: de visitante a cliente activo</h2>
+          <p class="text-muted">Diseñado para guiar a tus prospectos desde su primera visita hasta el acceso a la plataforma como clientes invitados.</p>
+        </div>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <article class="journey-step h-100">
+            <h5>1. Visitante informado</h5>
+            <p>Descubre el valor de DataRisk en la página de inicio y revisa las funcionalidades interactivas.</p>
+            <ul class="list-unstyled small mb-0">
+              <li class="d-flex align-items-start"><i class="bi bi-dot text-primary me-2"></i>CTA hacia la demo autoguiada.</li>
+              <li class="d-flex align-items-start"><i class="bi bi-dot text-primary me-2"></i>Comparativas y casos de uso reales.</li>
             </ul>
-            <a href="<%= new_user_registration_path %>?plan=starter" class="btn btn-outline-primary w-100">Comenzar</a>
+          </article>
+        </div>
+        <div class="col-md-4">
+          <article class="journey-step h-100">
+            <h5>2. Demo personalizada</h5>
+            <p>Agenda una sesión 1:1 o lanza la demo en vivo para ver el flujo de chat, análisis y reportes.</p>
+            <ul class="list-unstyled small mb-0">
+              <li class="d-flex align-items-start"><i class="bi bi-dot text-primary me-2"></i>Calendly integrado para seleccionar horario.</li>
+              <li class="d-flex align-items-start"><i class="bi bi-dot text-primary me-2"></i>Entrega de checklist con requisitos y ROI estimado.</li>
+            </ul>
+          </article>
+        </div>
+        <div class="col-md-4">
+          <article class="journey-step h-100">
+            <h5>3. Registro y onboarding</h5>
+            <p>El corredor crea su cuenta, invita a clientes y estos acceden con su invitación para continuar el proceso.</p>
+            <ul class="list-unstyled small mb-0">
+              <li class="d-flex align-items-start"><i class="bi bi-dot text-primary me-2"></i>Registro propietario en minutos.</li>
+              <li class="d-flex align-items-start"><i class="bi bi-dot text-primary me-2"></i>Acceso seguro para clientes vía invitación.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="problema" class="py-5">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <div class="problem-card">
+            <div class="problem-icon"><i class="bi bi-exclamation-triangle"></i></div>
+            <h2 class="fw-bold mb-3">Tu equipo no debería perseguir datos ni interpretar PDFs manualmente</h2>
+            <p class="mb-4">Correos sin respuesta, formularios eternos y documentos escaneados que nadie revisa. Ese proceso ralentiza la colocación, genera errores y frustra tanto a tu equipo como a tus clientes.</p>
+            <ul class="list-unstyled lh-lg mb-0">
+              <li><i class="bi bi-x-circle text-danger me-2"></i>Información incompleta y reprocesos constantes.</li>
+              <li><i class="bi bi-x-circle text-danger me-2"></i>Tiempo perdido en tareas administrativas repetitivas.</li>
+              <li><i class="bi bi-x-circle text-danger me-2"></i>Experiencia digital que no está a la altura de tus clientes corporativos.</li>
+            </ul>
+          </div>
+        </div>  
+        <div class="col-lg-6 text-center">
+          <%= image_tag "conversation-flow.svg", class: "img-fluid rounded-4 shadow", alt: "Flujo conversacional guiado de DataRisk" %>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="solucion" class="py-5 bg-light">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6 order-lg-2">
+          <div class="solution-card">
+            <div class="solution-icon"><i class="bi bi-lightbulb"></i></div>
+            <h2 class="fw-bold mb-3">La suite conversacional que estructura cada dato crítico</h2>
+            <p class="mb-4">DataRisk automatiza la recopilación, normalización y análisis de información para riesgos industriales. En un único flujo obtienes respuestas guiadas, extracción documental y reportes listos para asegurar.</p>
+            <p class="mb-1"><i class="bi bi-check-circle text-primary me-2"></i>Conversaciones con IA entrenada en términos de seguros.</p>
+            <p class="mb-1"><i class="bi bi-check-circle text-primary me-2"></i>Repositorio seguro para compartir evidencias y planes.</p>
+            <p class="mb-0"><i class="bi bi-check-circle text-primary me-2"></i>Informes comparativos que destacan brechas de cobertura.</p>
           </div>
         </div>
-        <!-- Professional -->
-        <div class="col-md-4 position-relative">
-          <span class="ribbon-early">-20 %</span>
-          <div class="plan-card border border-primary rounded-4 h-100 p-4 text-center bg-white">
-            <h5 class="mb-3 text-primary">Professional</h5>
-            <h2 class="fw-bold">249€<small class="fs-6 fw-normal text-muted">/mes</small></h2>
-            <ul class="list-unstyled mt-3 mb-4 text-start">
-              <li><i class="bi bi-check2 text-success me-1"></i>Cuentas ilimitadas</li>
-              <li><i class="bi bi-check2 text-success me-1"></i>100 documentos/mes</li>
-              <li><i class="bi bi-check2 text-success me-1"></i>Comparativa de pólizas avanzada</li>
-              <li><i class="bi bi-check2 text-success me-1"></i>Migración PDF gratuita</li>
-              <li><i class="bi bi-check2 text-success me-1"></i>Soporte prioritario</li>
-            </ul>
-            <a href="<%= new_user_registration_path %>?plan=pro" class="btn btn-primary w-100">Elegir Professional</a>
-            <small class="d-block mt-2 text-muted">Precio Early‑Adopter hasta 30 sep 2025</small>
+        <div class="col-lg-6 order-lg-1 text-center">
+          <%= image_tag "analytics-intelligence.svg", class: "img-fluid rounded-4 shadow", alt: "Panel analítico de DataRisk" %>
+        </div>
+      </div>
+    </div>
+    </section>
+
+
+  <section id="funcionalidades" class="py-5">
+    <div class="container">
+      <div class="row justify-content-center mb-5">
+        <div class="col-lg-8 text-center">
+          <h2 class="fw-bold mb-3">Funcionalidades esenciales para tu correduría</h2>
+          <p class="text-muted">De la primera conversación al informe final, cada módulo está pensado para agilizar la colaboración con clientes y aseguradoras.</p>
+        </div>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6 col-xl-3">
+          <div class="functionality-card h-100">
+            <div class="functionality-icon mb-3"><i class="bi bi-chat-dots"></i></div>
+            <h6>Captura conversacional guiada</h6>
+            <p class="text-muted mb-0">Flujos dinámicos que se adaptan al tipo de riesgo y validan respuestas en tiempo real.</p>
           </div>
         </div>
-        <!-- Enterprise -->
-        <div class="col-md-4 position-relative">
-          <div class="plan-card border rounded-4 h-100 p-4 text-center">
-            <h5 class="mb-3">Enterprise</h5>
-            <h2 class="fw-bold">A medida</h2>
-            <ul class="list-unstyled mt-3 mb-4 text-start">
-              <li><i class="bi bi-check2 text-success me-1"></i>Documentos ilimitados</li>
-              <li><i class="bi bi-check2 text-success me-1"></i>Acceso API completo</li>
-              <li><i class="bi bi-check2 text-success me-1"></i>Consultoría de integración</li>
-              <li><i class="bi bi-check2 text-success me-1"></i>SLA 99,9 % y gestor dedicado</li>
-            </ul>
-            <a href="/contact?type=enterprise" class="btn btn-outline-primary w-100">Solicitar propuesta</a>
+        <div class="col-md-6 col-xl-3">
+          <div class="functionality-card h-100">
+            <div class="functionality-icon mb-3"><i class="bi bi-cloud-arrow-up"></i></div>
+            <h6>Centro documental inteligente</h6>
+            <p class="text-muted mb-0">Sube planes de autoprotección, informes PCI o pólizas anteriores y extrae los puntos clave.</p>
+          </div>
+        </div>        
+        <div class="col-md-6 col-xl-3">
+          <div class="functionality-card h-100">
+            <div class="functionality-icon mb-3"><i class="bi bi-bar-chart-line"></i></div>
+            <h6>Comparativa automática de pólizas</h6>
+            <p class="text-muted mb-0">Destaca coberturas, límites y brechas en segundos con reportes listos para presentar.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="functionality-card h-100">
+            <div class="functionality-icon mb-3"><i class="bi bi-diagram-3"></i></div>
+            <h6>Integraciones y API</h6>
+            <p class="text-muted mb-0">Conecta CRM, ERP y fuentes internas para mantener la información sincronizada.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-<!-- ================= TESTIMONIALS ================= -->
-  <section class="py-5 bg-light">
+  <section id="demo" class="py-5">
     <div class="container">
-      <h2 class="text-center mb-5">Lo que dicen nuestros clientes</h2>
+      <div class="demo-banner text-center text-lg-start">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-7">
+            <h2 class="display-6 fw-bold mb-3 text-white">Solicita tu demo personalizada</h2>
+            <p class="mb-0">Te mostramos el journey completo, configuramos un caso real y te entregamos un plan de adopción con hitos claros.</p>
+          </div>
+          <div class="col-lg-5 d-flex flex-column flex-sm-row justify-content-lg-end gap-3">
+            <%= link_to "Agendar en Calendly", "https://calendly.com/rvillasevil/30min", class: "btn btn-light btn-lg" %>
+            <%= link_to "Probar demo ahora", risk_assistants_path, class: "btn btn-outline-light btn-lg" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>  
+
+  <section id="testimonios" class="py-5 bg-light">
+    <div class="container">
+      <div class="row justify-content-center mb-5">
+        <div class="col-lg-8 text-center">
+          <h2 class="fw-bold mb-3">Testimonios de brokers pioneros</h2>
+          <p class="text-muted">Equipos comerciales y técnicos que ya trabajan con DataRisk comparten su experiencia.</p>
+        </div>
+      </div>
       <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
           <div class="carousel-item active">
-            <div class="testimonial mx-auto" style="max-width:600px;">
-              <p class="mb-3">“Hemos reducido un 60 % el tiempo de informes y aumentado la fiabilidad de los datos.”</p>
-              <h6 class="mb-0">Juan Pérez</h6>
-              <small>Director de Riesgos, SegurosPlus</small>
-            </div>
+            <article class="testimonial-card">
+              <p class="testimonial-quote mb-3">“DataRisk nos ayudó a transformar la recopilación de información técnica en un proceso guiado. En menos de un mes reducimos un 60 % los tiempos de análisis y entregamos propuestas más completas.”</p>
+              <h6 class="mb-0">Juan Pérez</h6>
+              <span class="testimonial-role">Director de Riesgos · SegurosPlus</span>
+            </article>
           </div>
           <div class="carousel-item">
-            <div class="testimonial mx-auto" style="max-width:600px;">
-              <p class="mb-3">“La ingeniería virtual nos permite detectar riesgos antes de la inspección física.”</p>
-              <h6 class="mb-0">María Gómez</h6>
-              <small>Broker líder, RiskMasters</small>
+            <article class="testimonial-card">
+              <p class="testimonial-quote mb-3">“La combinación de chat inteligente y comparativas automáticas cambió la percepción de nuestros clientes industriales. Hoy priorizan nuestra correduría por la agilidad y visibilidad que ofrecemos.”</p>
+              <h6 class="mb-0">María Gómez</h6>
+              <span class="testimonial-role">Broker líder · RiskMasters</span>
+            </article>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Siguiente</span>
+        </button>
+      </div>
+    </div>
+  </section>                                                                                
+
+  <section id="pasos-siguientes" class="py-5">
+    <div class="container">
+      <div class="row g-4 align-items-stretch">
+        <div class="col-lg-6">
+          <div class="next-steps-card h-100">
+            <h3 class="fw-bold mb-3">Pasos siguientes para tu correduría</h3>
+            <ol class="mb-4">
+              <li>Revisa con tu equipo las funcionalidades clave y define el caso piloto.</li>
+              <li>Agenda una demo con nosotros y recibe un plan de despliegue.</li>
+              <li>Registra tu correduría, invita a clientes y activa los primeros flujos.</li>
+            </ol>
+            <div class="d-flex flex-wrap gap-3">
+              <%= link_to "Crear cuenta de corredor", new_owner_registration_path, class: "btn btn-primary" %>
+              <%= link_to "Tengo invitación", new_user_session_path, class: "btn btn-outline-primary" %>
             </div>
           </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
-        <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+        <div class="col-lg-6">
+          <div class="problem-card h-100">
+            <h4 class="fw-bold mb-3">Recursos recomendados</h4>
+            <ul class="list-unstyled lh-lg mb-4">
+              <li><i class="bi bi-journal-text text-primary me-2"></i><%= link_to "Guía de mejores prácticas para onboarding digital", policy_analyses_path, class: "text-decoration-none" %></li>
+              <li><i class="bi bi-bar-chart text-primary me-2"></i><%= link_to "Analiza y compara pólizas actuales", policy_analyses_path, class: "text-decoration-none" %></li>
+              <li><i class="bi bi-people text-primary me-2"></i><%= link_to "Explora los asistentes de riesgo", risk_assistants_path, class: "text-decoration-none" %></li>
+            </ul>
+            <p class="text-muted mb-0">¿Necesitas ayuda? Escríbenos a <a class="text-decoration-none" href="mailto:hola@datarisk.ai">hola@datarisk.ai</a>.</p>
+          </div>
+        </div>
       </div>
     </div>
-  </section>
+  </section>      
 
-<!-- ================= CTA BANNER ================= -->
-  <section class="cta-banner text-center">
-    <div class="container">
-      <h2 class="display-5 mb-3">¿Listo para modernizar tu correduría?</h2>
-      <p class="mb-4">Empieza hoy mismo y descubre por qué los mejores brokers confían en DataRisk.</p>
-      <a href="<%= new_user_registration_path %>" class="btn btn-light btn-lg">Activar prueba gratuita</a>
-    </div>
-  </section>
 
 <!-- ================= FOOTER ================= -->
   <footer class="bg-dark text-white text-center py-4">
-    <div class="container">
-      <p class="mb-2">© <%= Time.now.year %> DataRisk | Todos los derechos reservados</p>
-      <a href="/privacy" class="text-white me-3">Política de Privacidad</a>
-      <a href="/terms" class="text-white">Términos de Uso</a>
+    <div class="container footer-links">
+      <p class="mb-2">© <%= Time.zone.now.year %> DataRisk · Modernizamos la gestión de riesgos industriales</p>
+      <a href="/privacy" class="me-3">Política de privacidad</a>
+      <a href="/terms">Términos de uso</a>
     </div>
   </footer>
 
-<!-- Bootstrap 5 JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</main>

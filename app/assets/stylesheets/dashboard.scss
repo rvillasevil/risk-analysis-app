@@ -1,0 +1,279 @@
+
+.dashboard-header {
+  padding: 1rem 0 0.5rem;
+}
+
+.kpi-card {
+  border: none;
+  border-radius: 1rem;
+  background: #ffffff;
+}
+
+.kpi-card__value {
+  font-size: 2.25rem;
+  letter-spacing: -0.02em;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  background: #f1f5f9;
+  color: #1f2937;
+  text-transform: uppercase;
+}
+
+.status-chip--success {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.status-chip--warning {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.status-chip--danger {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.status-chip--info {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.status-chip--neutral {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.status-chip--muted {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  background: #eef2ff;
+  color: #3730a3;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.icon::before {
+  font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
+}
+
+.icon-sm {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.icon-lg {
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.5rem;
+}
+
+.icon-chat {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.icon-chat::before {
+  content: "\1F4AC";
+}
+
+.icon-document {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.icon-document::before {
+  content: "\1F4C4";
+}
+
+.icon-summary {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.icon-summary::before {
+  content: "\1F4CB";
+}
+
+.icon-pulse {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.icon-pulse::before {
+  content: "\26A1";
+}
+
+.icon-check {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.icon-check::before {
+  content: "\2713";
+}
+
+.icon-hourglass {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.icon-hourglass::before {
+  content: "\23F3";
+}
+
+.icon-sparkle {
+  background: #f5f3ff;
+  color: #7c3aed;
+}
+
+.icon-sparkle::before {
+  content: "\2728";
+}
+
+.icon-inbox {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.icon-inbox::before {
+  content: "\1F4E5";
+}
+
+.icon-folder {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.icon-folder::before {
+  content: "\1F4C1";
+}
+
+.icon-alert {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.icon-alert::before {
+  content: "\26A0";
+}
+
+.icon-user {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+.icon-user::before {
+  content: "\1F464";
+}
+
+.icon-briefcase {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.icon-briefcase::before {
+  content: "\1F4BC";
+}
+
+.icon-pause {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.icon-pause::before {
+  content: "\23F8";
+}
+
+.widget-card {
+  border: none;
+  border-radius: 1rem;
+}
+
+.widget-card .card-header {
+  background: transparent;
+}
+
+.widget-list__item {
+  padding: 1rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.widget-list__item:last-child {
+  border-bottom: none;
+}
+
+.timeline {
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.timeline__item {
+  position: relative;
+  padding-left: 2.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.timeline__item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline__item::before {
+  content: '';
+  position: absolute;
+  left: 1.2rem;
+  top: 0.85rem;
+  bottom: -1.5rem;
+  width: 2px;
+  background: #e5e7eb;
+}
+
+.timeline__item:last-child::before {
+  display: none;
+}
+
+.timeline__marker {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.timeline__dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 999px;
+  background: #2563eb;
+  display: inline-block;
+  margin-top: 0.35rem;
+}
+
+.timeline__content {
+  padding-bottom: 0.5rem;
+}
+
+@media (max-width: 767.98px) {
+  .kpi-card__value {
+    font-size: 1.75rem;
+  }
+}

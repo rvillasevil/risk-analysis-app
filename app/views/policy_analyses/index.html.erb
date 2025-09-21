@@ -1,8 +1,10 @@
-<!-- app/views/policy_analyses/index.html.erb -->
-<div class="container py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3">Mis Análisis de Pólizas</h1>
-    <%= link_to "Nueva Póliza", new_policy_analysis_path, class: "btn btn-success btn-lg" %>
+<div class="container py-4 dashboard-view" data-controller="table-filter">
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+      <h1 class="h3 mb-1">Mis análisis de pólizas</h1>
+      <p class="text-muted mb-0">Compara coberturas, identifica exclusiones y descarga conclusiones en segundos.</p>
+    </div>
+    <%= link_to "Nueva póliza", new_policy_analysis_path, class: "btn btn-success btn-lg" %>
   </div>
 
   <% if notice %>
@@ -12,51 +14,110 @@
     <div class="alert alert-danger"><%= alert %></div>
   <% end %>
 
-  <!-- Cabecera responsive -->
-  <div class="row text-center fw-semibold border-bottom pb-2 mb-3">
-    <div class="col-md-4 text-start">Documentos</div>
-    <div class="col-md-2">Fecha</div>
-    <div class="col-md-2">Estado</div>
-    <div class="col-md-4">Acciones</div>
-  </div>
-
-  <!-- Listado de análisis -->
-  <% @policy_analyses.each do |analysis| %>
-    <div class="row align-items-center py-2 border-bottom">
-      <div class="col-md-4 text-start">
-        <% if analysis.documents.attached? %>
-          <ul class="list-unstyled mb-0">
-            <% analysis.documents.each do |doc| %>
-              <li>
-                <%= link_to doc.filename.to_s, rails_blob_path(doc, disposition: "attachment"), class: "text-decoration-none" %>
-              </li>
-            <% end %>
-          </ul>
-        <% else %>
-          Sin documentos
-        <% end %>
+  <% if @policy_analyses.empty? %>
+    <div class="empty-state text-center py-5 border rounded bg-light-subtle">
+      <i class="bi bi-file-earmark-text display-6 text-muted" aria-hidden="true"></i>
+      <p class="mt-3 mb-1 fw-semibold">Aún no has subido pólizas para analizar.</p>
+      <p class="text-muted mb-3">Carga tus documentos para obtener comparativas automáticas.</p>
+      <%= link_to "Subir pólizas", new_policy_analysis_path, class: "btn btn-primary" %>
+    </div>
+  <% else %>
+    <% ready_count = @policy_analyses.count { |analysis| analysis.extractions.present? } %>
+    <% pending_count = @policy_analyses.size - ready_count %>
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="card shadow-sm" data-state="ready">
+          <div class="card-body">
+            <p class="text-muted text-uppercase small mb-1">Analizados</p>
+            <h2 class="h4 mb-0"><%= ready_count %></h2>
+          </div>
+        </div>
       </div>
-      <div class="col-md-2 text-center">
-        <%= l analysis.created_at, format: :short %>
+      <div class="col-md-4">
+        <div class="card shadow-sm" data-state="pending">
+          <div class="card-body">
+            <p class="text-muted text-uppercase small mb-1">Pendientes</p>
+            <h2 class="h4 mb-0"><%= pending_count %></h2>
+          </div>
+        </div>
       </div>
-      <div class="col-md-2 text-center">
-        <% if analysis.extractions.present? %>
-          <span class="badge bg-success">Analizado</span>
-        <% else %>
-          <span class="badge bg-secondary">Pendiente</span>
-        <% end %>
-      </div>
-      <div class="col-md-4 text-center">
-        <div class="btn-group" role="group">
-          <%= link_to "Ver", policy_analysis_path(analysis), data: { turbo_frame: "_top" }, class: "btn btn-outline-primary btn-sm me-2" %>
-          <%= link_to "Eliminar", policy_analysis_path(analysis), data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro de eliminar este análisis?" }, class: "btn btn-outline-danger btn-sm" %>
+      <div class="col-md-4">
+        <div class="card shadow-sm" data-state="alert">
+          <div class="card-body">
+            <p class="text-muted text-uppercase small mb-1">Total documentos</p>
+            <h2 class="h4 mb-0"><%= @policy_analyses.sum { |analysis| analysis.documents.count } %></h2>
+          </div>
         </div>
       </div>
     </div>
+
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <div class="row g-3 align-items-end mb-3">
+          <div class="col-md-6">
+            <label for="analysis-search" class="form-label">Buscar</label>
+            <input id="analysis-search" type="search" class="form-control" placeholder="Nombre del archivo o estado" data-table-filter-target="search" data-action="input->table-filter#filter">
+          </div>
+          <div class="col-md-3">
+            <label for="analysis-status" class="form-label">Estado</label>
+            <select id="analysis-status" class="form-select" data-table-filter-target="status" data-action="change->table-filter#filter">
+              <option value="all">Todos</option>
+              <option value="ready">Listo</option>
+              <option value="pending">Pendiente</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th scope="col">Documentos</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Estado</th>
+                <th scope="col" class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @policy_analyses.each do |analysis| %>
+                <% docs = analysis.documents.map(&:filename).join(', ') %>
+                <% ready = analysis.extractions.present? %>
+                <tr data-table-filter-target="row" data-table-filter-search-value="<%= [docs, l(analysis.created_at, format: :short)].join(' ') %>" data-table-filter-status="<%= ready ? 'ready' : 'pending' %>">
+                  <td>
+                    <% if analysis.documents.attached? %>
+                      <ul class="list-unstyled mb-0">
+                        <% analysis.documents.each do |doc| %>
+                          <li><i class="bi bi-file-earmark-text me-2 text-muted" aria-hidden="true"></i><%= doc.filename %></li>
+                        <% end %>
+                      </ul>
+                    <% else %>
+                      <span class="text-muted">Sin documentos</span>
+                    <% end %>
+                  </td>
+                  <td><%= l analysis.created_at, format: :short %></td>
+                  <td>
+                    <% if ready %>
+                      <span class="badge bg-status-ready">Listo</span>
+                    <% else %>
+                      <span class="badge bg-status-pending">Pendiente</span>
+                    <% end %>
+                  </td>
+                  <td class="text-end">
+                    <div class="btn-group" role="group">
+                      <%= link_to "Ver", policy_analysis_path(analysis), data: { turbo_frame: "_top" }, class: "btn btn-outline-primary btn-sm" %>
+                      <% if ready %>
+                        <%= link_to "Descargar JSON", policy_analysis_path(analysis, format: :json), class: "btn btn-outline-secondary btn-sm", data: { turbo: false } %>
+                      <% end %>
+                      <%= link_to "Eliminar", policy_analysis_path(analysis), data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro de eliminar este análisis?" }, class: "btn btn-outline-danger btn-sm" %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-center text-muted d-none" data-table-filter-target="empty">No hay análisis que coincidan con los filtros.</p>
+      </div>
+    </div>
   <% end %>
-
-  <div class="mt-4 text-center">
-    <%= link_to "Nueva Póliza", new_policy_analysis_path, class: "btn btn-primary btn-lg" %>
-  </div>
 </div>
-

@@ -1,0 +1,27 @@
+<div class="widget-card card h-100 shadow-sm">
+  <div class="card-header bg-white border-0 pb-0">
+    <div class="d-flex align-items-start justify-content-between">
+      <div>
+        <h3 class="h6 fw-semibold mb-1"><%= title %></h3>
+        <% if local_assigns[:subtitle].present? %>
+          <p class="text-muted small mb-0"><%= subtitle %></p>
+        <% end %>
+      </div>
+      <% if local_assigns[:header_cta].present? %>
+        <% options = { class: 'btn btn-sm btn-outline-primary' } %>
+        <% options[:method] = header_cta[:method] if header_cta[:method].present? %>
+        <% options[:data] = header_cta[:data] if header_cta[:data].present? %>
+        <%= link_to header_cta[:label], header_cta[:path], options %>
+      <% end %>
+    </div>
+  </div>
+  <div class="card-body">
+    <% if local_assigns[:events].present? && events.any? %>
+      <ol class="timeline list-unstyled mb-0">
+        <%= render partial: 'clients/timeline_item', collection: events, as: :event %>
+      </ol>
+    <% else %>
+      <p class="text-muted mb-0"><%= local_assigns[:empty_state].presence || 'Sin actividad reciente.' %></p>
+    <% end %>
+  </div>
+</div>

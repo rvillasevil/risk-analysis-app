@@ -1,0 +1,71 @@
+<div class="widget-card card h-100 shadow-sm">
+  <div class="card-header bg-white border-0 pb-0">
+    <div class="d-flex align-items-start justify-content-between">
+      <div>
+        <h3 class="h6 fw-semibold mb-1"><%= title %></h3>
+        <% if local_assigns[:subtitle].present? %>
+          <p class="text-muted small mb-0"><%= subtitle %></p>
+        <% end %>
+      </div>
+      <% if local_assigns[:header_cta].present? %>
+        <% options = { class: 'btn btn-sm btn-outline-primary' } %>
+        <% options[:method] = header_cta[:method] if header_cta[:method].present? %>
+        <% options[:data] = header_cta[:data] if header_cta[:data].present? %>
+        <%= link_to header_cta[:label], header_cta[:path], options %>
+      <% end %>
+    </div>
+  </div>
+  <div class="card-body">
+    <% if local_assigns[:items].present? && items.any? %>
+      <ul class="widget-list list-unstyled mb-0">
+        <% items.each do |item| %>
+          <li class="widget-list__item">
+            <div class="d-flex justify-content-between align-items-start gap-3">
+              <div class="d-flex align-items-start gap-3 flex-grow-1">
+                <% if item[:icon].present? %>
+                  <span class="icon icon-<%= item[:icon] %> icon-sm flex-shrink-0"></span>
+                <% end %>
+                <div class="flex-grow-1">
+                  <p class="fw-semibold mb-1"><%= item[:title] %></p>
+                  <% if item[:meta].present? %>
+                    <p class="text-muted small mb-1"><%= item[:meta] %></p>
+                  <% end %>
+                  <% if item[:body].present? %>
+                    <p class="small mb-0"><%= item[:body] %></p>
+                  <% end %>
+                </div>
+              </div>
+              <% if item[:status_chip].present? %>
+                <%= render 'clients/status_chip', **item[:status_chip] %>
+              <% end %>
+            </div>
+
+            <% if item[:actions].present? %>
+              <div class="d-flex flex-wrap gap-2 mt-3">
+                <% item[:actions].each do |action| %>
+                  <% variant = (action[:variant] || :primary).to_sym %>
+                  <% classes = case variant
+                              when :secondary
+                                'btn btn-outline-primary btn-sm'
+                              when :link
+                                'btn btn-link btn-sm px-0'
+                              when :danger
+                                'btn btn-outline-danger btn-sm'
+                              else
+                                'btn btn-primary btn-sm'
+                              end %>
+                  <% options = { class: classes } %>
+                  <% options[:method] = action[:method] if action[:method].present? %>
+                  <% options[:data] = action[:data] if action[:data].present? %>
+                  <%= link_to action[:label], action[:path], options %>
+                <% end %>
+              </div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-muted mb-0"><%= local_assigns[:empty_state].presence || 'Sin información disponible.' %></p>
+    <% end %>
+  </div>
+</div>

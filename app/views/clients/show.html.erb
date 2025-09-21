@@ -1,55 +1,114 @@
-<h1><%= @client.name %></h1>
+<% owner = @client.owner || current_user %>
+<% catalogues = Array(owner&.field_catalogues&.ordered&.limit(6)) %>
+<% activity_events = catalogues.map do |catalogue| %>
+  <% last_message = catalogue.messages.order(created_at: :desc).first %>
+  <% next unless last_message %>
+  {
+    title: "Conversación ##{catalogue.id}",
+    description: truncate(last_message.content, length: 120),
+    timestamp: last_message.created_at,
+    icon: last_message.role == 'assistant' ? 'sparkle' : 'chat',
+    status_chip: {
+      text: catalogue.status == 'ready' ? 'Listo' : catalogue.status == 'failed' ? 'Con incidencias' : 'En curso',
+      status: catalogue.status == 'ready' ? :success : catalogue.status == 'failed' ? :danger : :warning,
+      icon: catalogue.status == 'ready' ? 'check' : catalogue.status == 'failed' ? 'alert' : 'pulse'
+    }
+  }
+<% end.compact %>
+
 <div class="container py-4">
-  <div class="row justify-content-center">
-    <div class="col-lg-6 col-md-8">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h1 class="h4 mb-3"><%= @client.name.presence || @client.email %></h1>
-
-          <dl class="row mb-4">
-            <dt class="col-sm-4 text-muted">Correo electrónico</dt>
-            <dd class="col-sm-8 mb-2"><%= @client.email %></dd>
-
-            <% if @client.company_name.present? %>
-              <dt class="col-sm-4 text-muted">Empresa</dt>
-              <dd class="col-sm-8 mb-2"><%= @client.company_name %></dd>
+  <div class="card shadow-sm">
+    <div class="card-header bg-white border-0 pb-0">
+      <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+        <div>
+          <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+            <%= render 'clients/status_chip', text: (@client.client? ? 'Cliente' : 'Propietario'), status: (@client.client? ? :success : :info), icon: (@client.client? ? 'user' : 'sparkle') %>
+            <% if owner %>
+              <%= render 'clients/status_chip', text: owner.company_name.presence || 'Sin compañía', status: :info, icon: 'briefcase' %>
             <% end %>
-
-            <% if @client.owner.present? %>
-              <dt class="col-sm-4 text-muted">Propietario</dt>
-              <dd class="col-sm-8 mb-2"><%= @client.owner.name.presence || @client.owner.email %></dd>
-            <% end %>
-
-            <dt class="col-sm-4 text-muted">Fecha de alta</dt>
-            <dd class="col-sm-8"><%= l(@client.created_at, format: :long) %></dd>
-          </dl>
-
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="badge <%= @client.client? ? 'bg-success' : 'bg-primary' %>">
-              <%= @client.client? ? 'Cliente' : 'Propietario' %>
-            </span>
-            <%= link_to 'Volver', user_clients_path(@client.owner || current_user), class: 'btn btn-secondary' %>
           </div>
+          <h1 class="h4 mb-1"><%= @client.name.presence || @client.email %></h1>
+          <p class="text-muted mb-0"><%= @client.email %></p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <%= link_to 'Ir al panel', client_dashboard_path, class: 'btn btn-primary' %>
+          <% if owner %>
+            <%= link_to 'Volver a clientes', user_clients_path(owner), class: 'btn btn-outline-primary' %>
+          <% else %>
+            <%= link_to 'Volver', root_path, class: 'btn btn-outline-primary' %>
+          <% end %>
         </div>
       </div>
     </div>
-  </div>
-</div>
-<div class="container py-4">
-  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-    <h1 class="h3 mb-3 mb-md-0"><%= @client.name %></h1>
-    <div class="d-flex">
-      <%= link_to 'Ir al panel', client_dashboard_path, class: 'btn btn-primary me-2' %>
-      <%= link_to 'Volver', user_clients_path(current_user), class: 'btn btn-secondary' %>
-    </div>
-  </div>
 
-  <div class="card">
     <div class="card-body">
-      <p class="mb-2"><strong>Email:</strong> <%= @client.email %></p>
-      <% if @client.company_name.present? %>
-        <p class="mb-0"><strong>Empresa:</strong> <%= @client.company_name %></p>
-      <% end %>
+      <ul class="nav nav-tabs" id="clientTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#client-profile" type="button" role="tab" aria-controls="client-profile" aria-selected="true">Perfil</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#client-activity" type="button" role="tab" aria-controls="client-activity" aria-selected="false">Actividad</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="permissions-tab" data-bs-toggle="tab" data-bs-target="#client-permissions" type="button" role="tab" aria-controls="client-permissions" aria-selected="false">Permisos</button>
+        </li>
+      </ul>
+
+      <div class="tab-content pt-4" id="clientTabsContent">
+        <div class="tab-pane fade show active" id="client-profile" role="tabpanel" aria-labelledby="profile-tab">
+          <dl class="row mb-0">
+            <dt class="col-sm-4 text-muted">Correo electrónico</dt>
+            <dd class="col-sm-8 mb-3"><%= @client.email %></dd>
+
+            <% if @client.company_name.present? %>
+              <dt class="col-sm-4 text-muted">Empresa</dt>
+              <dd class="col-sm-8 mb-3"><%= @client.company_name %></dd>
+            <% end %>
+
+            <% if owner.present? %>
+              <dt class="col-sm-4 text-muted">Propietario</dt>
+              <dd class="col-sm-8 mb-3"><%= owner.name.presence || owner.email %></dd>
+            <% end %>
+
+            <dt class="col-sm-4 text-muted">Fecha de alta</dt>
+            <dd class="col-sm-8 mb-0"><%= l(@client.created_at, format: :long) %></dd>
+          </dl>
+        </div>
+
+        <div class="tab-pane fade" id="client-activity" role="tabpanel" aria-labelledby="activity-tab">
+          <% if activity_events.any? %>
+            <ol class="timeline list-unstyled mb-0">
+              <% activity_events.each do |event| %>
+                <%= render 'clients/timeline_item', event: event %>
+              <% end %>
+            </ol>
+          <% else %>
+            <p class="text-muted mb-0">Aún no registramos actividad reciente para este cliente.</p>
+          <% end %>
+        </div>
+
+        <div class="tab-pane fade" id="client-permissions" role="tabpanel" aria-labelledby="permissions-tab">
+          <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
+            <div>
+              <p class="text-muted mb-1">Controla el acceso del cliente a la plataforma.</p>
+              <div class="d-flex flex-wrap gap-2">
+                <%= render 'clients/status_chip', text: (@client.inactive? ? 'Acceso revocado' : 'Acceso activo'), status: (@client.inactive? ? :muted : :success), icon: (@client.inactive? ? 'pause' : 'check') %>
+                <% if owner.present? && owner.client_invitations.exists?(email: @client.email) %>
+                  <%= render 'clients/status_chip', text: 'Invitación enviada', status: :info, icon: 'inbox' %>
+                <% end %>
+              </div>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+              <% if owner.present? %>
+                <%= link_to 'Reenviar invitación', new_user_client_path(owner, client: { email: @client.email }), class: 'btn btn-outline-primary' %>
+                <%= link_to 'Revocar acceso', user_client_path(owner, @client), method: :delete, data: { confirm: '¿Deseas revocar el acceso de este cliente?' }, class: 'btn btn-outline-danger' %>
+              <% else %>
+                <%= link_to 'Actualizar datos', edit_user_registration_path, class: 'btn btn-outline-primary' %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

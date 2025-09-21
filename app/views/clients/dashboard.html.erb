@@ -1,23 +1,139 @@
 <div class="container py-4">
   <%= render 'shared/branding' %>
 
-  <h1 class="h3 mb-4">Panel del Cliente</h1>
+  <% owner = current_user.respond_to?(:catalogue_owner) ? current_user.catalogue_owner : current_user %>
+  <% catalogues = Array(owner&.field_catalogues&.ordered&.limit(6)) %>
+  <% ongoing_conversations = catalogues.select { |catalogue| catalogue.status != 'ready' } %>
+  <% ready_summaries = catalogues.select { |catalogue| catalogue.status == 'ready' } %>
+  <% policy_analyses = Array(current_user.try(:policy_analyses)&.order(created_at: :desc)&.limit(5)) %>
+  <% recent_documents = policy_analyses.flat_map do |analysis| %>
+    <% analysis.documents.attachments.map { |attachment| { analysis: analysis, attachment: attachment } } %>
+  <% end.compact.sort_by { |entry| (entry[:attachment]&.created_at) || entry[:analysis]&.created_at }.reverse.first(4) %>
+  <% summary_events = ready_summaries.sort_by(&:updated_at).reverse.first(6).map do |catalogue| %>
+    {
+      title: "Resumen ##{catalogue.id}",
+      description: 'Disponible para su revisión inmediata.',
+      timestamp: catalogue.updated_at,
+      icon: 'summary',
+      status_chip: { text: 'Listo', status: :success, icon: 'sparkle' },
+      link: data_collection_path(catalogue)
+    }
+  <% end %>
 
-  <div class="row g-3">
-    <div class="col-md-6 col-lg-3">
-      <%= link_to 'Toma de datos', data_collections_path, class: 'btn btn-primary w-100' %>
+  <header class="dashboard-header d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+    <div>
+      <h1 class="h3 mb-2">Panel del Cliente</h1>
+      <p class="text-muted mb-0">Monitorea conversaciones, documentos y resúmenes en un solo vistazo.</p>
     </div>
-    <div class="col-md-6 col-lg-3">
-      <%= link_to 'Documentos', data_collections_path(anchor: 'documentos'), class: 'btn btn-primary w-100' %>
+    <div class="d-flex flex-wrap gap-2">
+      <%= link_to 'Nueva recopilación', data_collections_path, class: 'btn btn-primary' %>
+      <%= link_to 'Solicitar asistencia', risk_assistants_path, class: 'btn btn-outline-primary' %>
     </div>
-    <div class="col-md-6 col-lg-3">
-      <%= link_to 'Resúmenes', data_collections_path(anchor: 'resumenes'), class: 'btn btn-primary w-100' %>
+  </header>
+
+  <% kpis = [
+    {
+      title: 'Conversaciones activas',
+      value: ongoing_conversations.count,
+      subtitle: 'Seguimiento de la toma de datos en curso.',
+      icon: 'chat',
+      trend: ongoing_conversations.any? ? "#{ongoing_conversations.count} en curso" : nil,
+      status_chip: {
+        text: ongoing_conversations.any? ? 'En progreso' : 'Sin actividad',
+        status: ongoing_conversations.any? ? :warning : :muted,
+        icon: ongoing_conversations.any? ? 'pulse' : 'check'
+      },
+      primary_cta: { label: 'Ver conversaciones', path: data_collections_path },
+      secondary_cta: { label: 'Iniciar nueva', path: data_collections_path }
+    },
+    {
+      title: 'Documentos recibidos',
+      value: recent_documents.count,
+      subtitle: 'Archivos compartidos recientemente por tu equipo.',
+      icon: 'document',
+      status_chip: {
+        text: recent_documents.any? ? 'Actualizado' : 'Pendiente',
+        status: recent_documents.any? ? :info : :muted,
+        icon: recent_documents.any? ? 'inbox' : 'folder'
+      },
+      primary_cta: { label: 'Ver documentos', path: data_collections_path(anchor: 'documentos') },
+      secondary_cta: { label: 'Solicitar documento', path: risk_assistants_path }
+    },
+    {
+      title: 'Resúmenes listos',
+      value: ready_summaries.count,
+      subtitle: 'Resultados y resúmenes generados por los asistentes.',
+      icon: 'summary',
+      trend: ready_summaries.any? ? 'Nuevos resultados disponibles' : nil,
+      status_chip: {
+        text: ready_summaries.any? ? 'Listo' : 'En preparación',
+        status: ready_summaries.any? ? :success : :warning,
+        icon: ready_summaries.any? ? 'sparkle' : 'hourglass'
+      },
+      primary_cta: { label: 'Ver resúmenes', path: data_collections_path(anchor: 'resumenes') },
+      secondary_cta: { label: 'Ir a análisis', path: policy_analyses_path }
+    }
+  ] %>
+
+  <div class="row g-4 mb-4">
+    <% kpis.each do |kpi| %>
+      <div class="col-xl-4 col-lg-6">
+        <%= render 'clients/kpi_card', **kpi %>
+      </div>
+    <% end %>
+  </div>
+
+  <% conversation_items = ongoing_conversations.first(4).map do |catalogue| %>
+    error_message = catalogue.metadata&.[]('last_error')
+    {
+      icon: 'chat',
+      title: "Conversación ##{catalogue.id}",
+      meta: "Actualizado #{l(catalogue.updated_at, format: :short)}",
+      body: error_message.present? ? "Último error: #{error_message}" : nil,
+      status_chip: {
+        text: catalogue.status == 'failed' ? 'Con incidencias' : 'Activa',
+        status: catalogue.status == 'failed' ? :danger : :warning,
+        icon: catalogue.status == 'failed' ? 'alert' : 'pulse'
+      },
+      actions: [
+        { label: 'Continuar', path: data_collection_path(catalogue), variant: :primary }
+      ]
+    }
+  <% end %>
+
+  <% document_items = recent_documents.map do |entry| %>
+    analysis = entry[:analysis]
+    attachment = entry[:attachment]
+    timestamp = attachment.created_at || analysis.created_at
+    {
+      icon: 'document',
+      title: attachment.blob.filename.to_s,
+      meta: "Subido #{l(timestamp, format: :short)}",
+      body: "Análisis ##{analysis.id}",
+      status_chip: {
+        text: attachment.blob.content_type.to_s.split('/').last.upcase,
+        status: :info,
+        icon: 'inbox'
+      },
+      actions: [
+        { label: 'Ver análisis', path: policy_analysis_path(analysis), variant: :link }
+      ]
+    }
+  <% end %>
+
+  <% summary_events.each do |event| %>
+    event[:description] = 'Disponible para revisión y descarga.' if event[:description].blank?
+  <% end %>
+
+  <div class="row g-4">
+    <div class="col-xl-4 col-lg-6">
+      <%= render 'clients/widget_card', title: 'Conversaciones en curso', subtitle: 'Flujos de onboarding activos.', items: conversation_items, empty_state: 'No hay conversaciones activas en este momento.', header_cta: { label: 'Ver todas', path: data_collections_path } %>
     </div>
-    <div class="col-md-6 col-lg-3">
-      <%= link_to 'Análisis de pólizas', policy_analyses_path, class: 'btn btn-primary w-100' %>
+    <div class="col-xl-4 col-lg-6">
+      <%= render 'clients/widget_card', title: 'Últimos documentos', subtitle: 'Archivos compartidos recientemente.', items: document_items, empty_state: 'Todavía no se han compartido documentos.' %>
     </div>
-    <div class="col-md-6 col-lg-3">
-      <%= link_to 'Toma de datos con asistente', risk_assistants_path, class: 'btn btn-primary w-100' %>
-    </div>    
+    <div class="col-xl-4 col-lg-12">
+      <%= render 'clients/timeline', title: 'Resúmenes listos', subtitle: 'Hitos recientes en tus análisis.', events: summary_events, empty_state: 'Aún no hay resúmenes generados.', header_cta: { label: 'Ver todos', path: data_collections_path(anchor: 'resumenes') } %>
+    </div>
   </div>
 </div>

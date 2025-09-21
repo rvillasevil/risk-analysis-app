@@ -1,149 +1,230 @@
-<%# -------------------------------------------------------------- %>
-<%# Chat Page – Bootstrap 5 Responsive con Sidebar intacto         %>
-<%# -------------------------------------------------------------- %>
-<div class="chat-container container-fluid py-3">
-  <!-- CABECERA + Botón hamburguesa -->
-  <div class="d-flex justify-content-between align-items-center mb-0">
-    <button class="btn btn-outline-secondary d-md-none"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#sidebarCanvas">
-      <i class="bi bi-list"></i>
-      <h1 class="h4 mb-0"><%= @risk_assistant.name %></h1>
-    </button>
+<% client = @risk_assistant.user %>
+<div class="risk-assistant-page container-fluid py-4" data-controller="chat-interface tabs">
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body d-flex flex-column gap-4 gap-lg-3 flex-lg-row justify-content-between align-items-stretch">
+      <div class="flex-grow-1 pe-lg-4">
+        <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 mb-3">
+          <div>
+            <h1 class="h3 mb-1"><%= @risk_assistant.name %></h1>
+            <p class="text-muted mb-0">Conversación iniciada el <%= l(@risk_assistant.created_at, format: :long) %></p>
+          </div>
+          <div class="text-sm-end">
+            <span class="badge rounded-pill bg-neutral">Mensajes: <%= @risk_assistant.messages.count %></span>
+          </div>
+        </div>
+        <div class="progress-stats">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-medium">Progreso general</span>
+            <span class="text-muted"><%= @overall_pct %>% completado</span>
+          </div>
+          <div class="progress" role="progressbar" aria-valuenow="<%= @overall_pct %>" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar bg-success" style="width: <%= @overall_pct %>%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="client-overview card border-0 bg-soft h-100">
+        <div class="card-body">
+          <h2 class="h6 text-uppercase text-muted mb-3">Ficha del cliente</h2>
+          <dl class="row mb-0 small">
+            <dt class="col-5 text-muted">Compañía</dt>
+            <dd class="col-7 mb-2"><%= client&.company_name.presence || 'Sin definir' %></dd>
+            <dt class="col-5 text-muted">Contacto</dt>
+            <dd class="col-7 mb-2"><%= client&.name.presence || client&.email %></dd>
+            <dt class="col-5 text-muted">Correo</dt>
+            <dd class="col-7 mb-2"><%= mail_to client&.email if client&.email.present? %></dd>
+            <dt class="col-5 text-muted">Estado</dt>
+            <dd class="col-7 mb-0">
+              <% if @risk_assistant.initialised? %>
+                <span class="badge rounded-pill bg-status-ready">Listo</span>
+              <% else %>
+                <span class="badge rounded-pill bg-status-pending">Pendiente</span>
+              <% end %>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer bg-white border-0 pt-0">
+      <div class="nav nav-pills gap-2 flex-nowrap overflow-auto" role="tablist" aria-label="Secciones del asistente">
+        <button class="btn btn-outline-secondary active" id="chat-tab" type="button" role="tab" aria-controls="chat-panel" aria-selected="true" data-tabs-target="tab" data-action="tabs#change keydown->tabs#navigate">
+          <i class="bi bi-chat-dots me-2" aria-hidden="true"></i>Chat
+        </button>
+        <button class="btn btn-outline-secondary" id="files-tab" type="button" role="tab" aria-controls="files-panel" aria-selected="false" data-tabs-target="tab" data-action="tabs#change keydown->tabs#navigate">
+          <i class="bi bi-folder2-open me-2" aria-hidden="true"></i>Archivos
+        </button>
+        <button class="btn btn-outline-secondary" id="summary-tab" type="button" role="tab" aria-controls="summary-panel" aria-selected="false" data-tabs-target="tab" data-action="tabs#change keydown->tabs#navigate">
+          <i class="bi bi-clipboard-data me-2" aria-hidden="true"></i>Resumen
+        </button>
+      </div>
+    </div>
   </div>
 
-  <!-- SIDEBAR -->
-  <aside class="fixed-sidebar">
-      <!-- Desktop -->
-      <div class="d-none d-md-block">
-        <div class="sidebar-box">
-          <%#── Sección de “Archivos subidos” ──────────────────────────────────── %>          
-          <%= render partial: "sidebar_nav",                     
-                    locals: {
-                       risk_assistant: @risk_assistant,
-                       sections: @sections,
-                       progress_by_section: @progress_by_section,
-                       overall_pct: @overall_pct
-                     } %>
-        </div>
-      </div>
-      <!-- Offcanvas móvil -->
-      <div class="offcanvas offcanvas-start d-md-none" id="sidebarCanvas">
-        <div class="offcanvas-header border-bottom">
-          <h5 class="offcanvas-title">Panel</h5>
-          <button class="btn-close" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <div class="offcanvas-body p-0">
-          <div class="sidebar-box border-0 rounded-0">
-            <%= render partial: "sidebar_nav",
-                       locals: {
-                         risk_assistant: @risk_assistant,
-                         sections: @sections,
-                         progress_by_section: @progress_by_section,
-                         overall_pct: @overall_pct
-                       } %>
+  <div class="tab-content">
+    <section id="chat-panel" class="tab-pane active" role="tabpanel" aria-labelledby="chat-tab" data-tabs-target="panel">
+      <% display_msgs = @risk_assistant.messages.visible_to_user %>
+      <div class="chat-shell card border-0 shadow-sm mb-4">
+        <div class="card-body p-0">
+          <div class="chat-history" data-chat-interface-target="history">
+            <% if display_msgs.empty? %>
+              <div class="d-flex flex-column justify-content-center align-items-center text-muted py-5">
+                <i class="bi bi-robot display-5 mb-3" aria-hidden="true"></i>
+                <p class="mb-2 text-center">Para comenzar la toma de datos, escribe <strong>“Iniciar”</strong>.</p>
+                <button class="btn btn-primary" id="start-chat-btn" type="button" data-action="chat-interface#startChat">Iniciar</button>
+              </div>
+            <% else %>
+              <% display_msgs.each do |m| %>
+                <%= render partial: "messages/message", locals: { message: m } %>
+              <% end %>
+            <% end %>
           </div>
         </div>
-      </div>
-    </aside>
-
-    <!-- MAIN / CHAT -->
-    <main class="chat-page chat-main">
-      <h1 class="h1 mb-0"><%= @risk_assistant.name %></h1>
-        <% display_msgs = @risk_assistant.messages.visible_to_user %>
-
-        <div class="chat-history">
-          <% if display_msgs.empty? %>
-            <div class="d-flex flex-column justify-content-center align-items-center text-muted empty-chat">
-              <i class="bi bi-robot display-6"></i>
-              <p class="mb-1 mt-3">Para comenzar la toma de datos, escribe <strong>“Iniciar”</strong>.</p>
-              <button class="btn btn-primary mt-2" id="start-chat-btn" type="button">Iniciar</button>
+        <div class="card-footer bg-white border-0">
+          <%= form_with url: risk_assistant_messages_path(@risk_assistant),
+                        method: :post,
+                        local: true,
+                        html: { multipart: true, class: "chat-form", data: { chat_interface_target: "messageForm" } } do |f| %>
+            <div id="selected-file-container" class="mb-2 d-none" data-chat-interface-target="fileNameContainer">
+              <small class="text-muted">Archivo adjunto: <span id="selected-file-name" data-chat-interface-target="fileName"></span></small>
             </div>
-          <% else %>
-            <% display_msgs.each do |m| %>
-              <%= render partial: "messages/message", locals: { message: m } %>
-            <% end %>
+            <div class="input-group align-items-end">
+              <%= f.text_area :content,
+                             name: 'message[content]',
+                             rows: 2,
+                             required: true,
+                             class: 'form-control',
+                             placeholder: 'Escribe tu mensaje…',
+                             data: { chat_interface_target: "textarea" } %>
+              <%= file_field_tag :file,
+                                 id: 'fileUpload',
+                                 accept: 'image/*,.pdf,.doc,.docx,.txt',
+                                 class: 'd-none',
+                                 data: { chat_interface_target: "fileInput", action: "change->chat-interface#updateFileName" } %>
+              <button type="button" class="btn btn-outline-secondary" data-action="chat-interface#chooseFile">
+                <i class="bi bi-paperclip" aria-hidden="true"></i>
+                <span class="visually-hidden">Adjuntar archivo</span>
+              </button>
+              <%= f.submit 'Enviar', class: 'btn btn-primary ms-1' %>
+            </div>
           <% end %>
         </div>
+      </div>
+    </section>
 
-      <!-- FORMULARIO fijo abajo -->
-      <%= form_with url: risk_assistant_messages_path(@risk_assistant),
-                      method: :post,
-                      local: true,
-                      html: { multipart: true, class: "chat-form" } do |f| %>
-
-          <%#— Contenedor donde mostraremos el nombre del archivo seleccionado —%>
-          <div id="selected-file-container" class="mb-2" style="display: none;">
-            <small class="text-muted">Archivo adjunto: <span id="selected-file-name"></span></small>
+    <section id="files-panel" class="tab-pane" role="tabpanel" aria-labelledby="files-tab" data-tabs-target="panel" hidden>
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+            <div>
+              <h2 class="h5 mb-1">Archivos compartidos</h2>
+              <p class="text-muted mb-0">Gestiona los documentos subidos durante la conversación.</p>
+            </div>
+            <%= link_to risk_assistant_documents_path(@risk_assistant), class: 'btn btn-outline-primary btn-sm' do %>
+              Ver en biblioteca
+            <% end %>
           </div>
+          <% if @risk_assistant.uploaded_files.attached? %>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                  <tr>
+                    <th scope="col">Archivo</th>
+                    <th scope="col">Peso</th>
+                    <th scope="col" class="text-end">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @risk_assistant.uploaded_files.each do |file| %>
+                    <tr>
+                      <td>
+                        <div class="d-flex align-items-center gap-2">
+                          <i class="bi <%= file_icon_for(file) %> text-muted" aria-hidden="true"></i>
+                          <%= link_to file.filename.to_s,
+                                      url_for(file),
+                                      target: '_blank',
+                                      rel: 'noopener',
+                                      class: 'text-decoration-none fw-medium' %>
+                        </div>
+                      </td>
+                      <td><%= number_to_human_size(file.byte_size) %></td>
+                      <td class="text-end">
+                        <div class="btn-group" role="group" aria-label="Acciones sobre el archivo">
+                          <%= link_to rails_blob_path(file, disposition: 'attachment'),
+                                      class: 'btn btn-outline-primary btn-sm',
+                                      title: 'Descargar' do %>
+                            <i class="bi bi-download" aria-hidden="true"></i>
+                            <span class="visually-hidden">Descargar</span>
+                          <% end %>
+                          <%= link_to file_risk_assistant_path(@risk_assistant, file),
+                                      data: { turbo_method: :delete, turbo_confirm: '¿Eliminar archivo?' },
+                                      class: 'btn btn-outline-danger btn-sm',
+                                      title: 'Eliminar' do %>
+                            <i class="bi bi-trash" aria-hidden="true"></i>
+                            <span class="visually-hidden">Eliminar</span>
+                          <% end %>
+                        </div>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <div class="empty-state text-center py-5">
+              <i class="bi bi-folder2-open display-6 text-muted" aria-hidden="true"></i>
+              <p class="mt-3 mb-1 fw-semibold">Aún no se han compartido archivos.</p>
+              <p class="text-muted mb-0">Los documentos subidos aparecerán aquí para descarga rápida.</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </section>
 
-          <div class="input-group">
-            <%= f.text_area :content,
-                           name: 'message[content]',
-                           rows: 2,
-                           required: true,
-                           class: 'form-control',
-                           placeholder: 'Escribe tu mensaje…', style:"border-round:20px;" %>
-
-            <%#— Campo de subida de archivo oculto —%>
-            <%= file_field_tag :file,
-                               id: 'fileUpload',
-                               accept: 'image/*,.pdf,.doc,.docx,.txt',
-                               class: 'd-none' %>
-
-            <%#— Botón para disparar el selector de archivos —%>
-            <button type="button"
-                    class="btn btn-outline-secondary"
-                    onclick="document.getElementById('fileUpload').click()">
-              <i class="bi bi-paperclip"></i>
-            </button>
-
-            <%= f.submit 'Enviar', class: 'btn btn-primary ms-1' %>
+    <section id="summary-panel" class="tab-pane" role="tabpanel" aria-labelledby="summary-tab" data-tabs-target="panel" hidden>
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <div class="d-flex justify-content-between flex-wrap gap-2 align-items-start mb-3">
+            <div>
+              <h2 class="h5 mb-1">Resumen de captura</h2>
+              <p class="text-muted mb-0">Estado por sección y últimos valores registrados.</p>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+              <%= link_to risk_assistant_resume_path(@risk_assistant), class: 'btn btn-outline-secondary btn-sm' do %>
+                Editar mensajes
+              <% end %>
+              <%= link_to summary_risk_assistant_path(@risk_assistant), class: 'btn btn-primary btn-sm' do %>
+                Ver resumen completo
+              <% end %>
+            </div>
           </div>
-        <% end %>
-
-    </main>
+          <div class="row g-3 mb-4">
+            <% @progress_by_section.each_value do |info| %>
+              <div class="col-sm-6 col-lg-4">
+                <div class="status-card card h-100">
+                  <div class="card-body">
+                    <p class="text-muted text-uppercase small mb-1"><%= info[:title] %></p>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="display-6 fw-bold"><%= info[:pct] %>%</span>
+                      <% status_badge = info[:pct] == 100 ? 'bg-status-ready' : (info[:pct] >= 50 ? 'bg-status-progress' : 'bg-status-pending') %>
+                      <span class="badge <%= status_badge %>">
+                        <% if info[:pct] == 100 %>
+                          Listo
+                        <% elsif info[:pct] >= 50 %>
+                          En progreso
+                        <% else %>
+                          Pendiente
+                        <% end %>
+                      </span>
+                    </div>
+                    <p class="mb-0 text-muted small">Campos completos <strong><%= info[:done] %></strong> de <strong><%= info[:total] %></strong>.</p>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          <%= render partial: 'sidebar', locals: { sections: @sections, progress_by_section: @progress_by_section, overall_pct: @overall_pct, risk_assistant: @risk_assistant } %>
+        </div>
+      </div>
+    </section>
+  </div>
 </div>
-
-<script>
-  // Auto-scroll al fondo de la conversación
-  function scrollChatBottom(){
-    const hist = document.querySelector('.chat-history');
-    if(hist){ hist.scrollTop = hist.scrollHeight; }
-  }
-  document.addEventListener('DOMContentLoaded', scrollChatBottom);
-  document.addEventListener('turbo:frame-load', scrollChatBottom);
-  document.addEventListener('turbo:render', scrollChatBottom);
-
-  // Mostrar nombre de archivo seleccionado antes de enviar
-  document.addEventListener('DOMContentLoaded', () => {
-    const fileInput = document.getElementById('fileUpload');
-    const container = document.getElementById('selected-file-container');
-    const nameSpan = document.getElementById('selected-file-name');
-
-    fileInput.addEventListener('change', () => {
-      if (fileInput.files && fileInput.files.length > 0) {
-        const filename = fileInput.files[0].name;
-        nameSpan.textContent = filename;
-        container.style.display = 'block';
-      } else {
-        container.style.display = 'none';
-        nameSpan.textContent = '';
-      }
-    });
-  });
-  
-  // Botón “Iniciar” envía automáticamente el mensaje inicial
-  document.addEventListener('DOMContentLoaded', () => {
-    const startBtn = document.getElementById('start-chat-btn');
-    if(startBtn){
-      startBtn.addEventListener('click', () => {
-        const form     = document.querySelector('.chat-form');
-        const textarea = form.querySelector('textarea');
-        textarea.value = 'Iniciar';
-        form.submit();
-      });
-    }
-  });
-</script>
 

@@ -26,6 +26,17 @@ class PolicyAnalysesController < ApplicationController
 
   def show
     @extractions = @policy_analysis.extractions
+
+    respond_to do |format|
+      format.html
+      format.json do
+        if @extractions.present?
+          render json: JSON.parse(@extractions)
+        else
+          render json: { error: 'El análisis todavía no está disponible.' }, status: :accepted
+        end
+      end
+    end    
   end
 
   def create_analysis

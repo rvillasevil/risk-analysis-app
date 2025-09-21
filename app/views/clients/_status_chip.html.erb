@@ -1,0 +1,15 @@
+<% variant = (local_assigns[:status] || :neutral).to_sym %>
+<% classes = {
+  success: 'status-chip--success',
+  warning: 'status-chip--warning',
+  danger: 'status-chip--danger',
+  info:    'status-chip--info',
+  neutral: 'status-chip--neutral',
+  muted:   'status-chip--muted'
+} %>
+<span class="status-chip <%= classes.fetch(variant, classes[:neutral]) %>">
+  <% if local_assigns[:icon].present? %>
+    <span class="icon icon-<%= icon %> icon-sm me-2"></span>
+  <% end %>
+  <span class="status-chip__label"><%= text %></span>
+</span>

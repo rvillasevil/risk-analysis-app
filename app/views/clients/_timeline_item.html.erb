@@ -1,0 +1,27 @@
+<li class="timeline__item">
+  <div class="timeline__marker">
+    <% if event[:icon].present? %>
+      <span class="icon icon-<%= event[:icon] %> icon-sm"></span>
+    <% else %>
+      <span class="timeline__dot"></span>
+    <% end %>
+  </div>
+  <div class="timeline__content">
+    <div class="d-flex justify-content-between align-items-start gap-3">
+      <div>
+        <p class="fw-semibold mb-1"><%= event[:title] %></p>
+        <% if event[:description].present? %>
+          <p class="text-muted small mb-0"><%= event[:description] %></p>
+        <% end %>
+      </div>
+      <% if event[:timestamp].present? %>
+        <span class="text-muted small flex-shrink-0"><%= l(event[:timestamp], format: :short) %></span>
+      <% end %>
+    </div>
+    <% if event[:status_chip].present? %>
+      <div class="mt-2">
+        <%= render 'clients/status_chip', **event[:status_chip] %>
+      </div>
+    <% end %>
+  </div>
+</li>

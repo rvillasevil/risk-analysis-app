@@ -9,6 +9,11 @@ class DataCollectionsController < ApplicationController
 
   def show
     @messages = @field_catalogue.messages.order(:created_at)
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @field_catalogue.to_sections_hash }
+    end    
   end
 
   def create

@@ -1,0 +1,46 @@
+<div class="kpi-card card h-100 shadow-sm">
+  <div class="card-body d-flex flex-column">
+    <div class="d-flex align-items-start justify-content-between mb-3">
+      <% if local_assigns[:icon].present? %>
+        <span class="icon icon-<%= icon %> icon-lg"></span>
+      <% end %>
+      <% if local_assigns[:status_chip].present? %>
+        <%= render 'clients/status_chip', **status_chip %>
+      <% end %>
+    </div>
+
+    <div class="kpi-card__value display-6 fw-bold mb-1"><%= value %></div>
+    <p class="text-muted mb-2"><%= title %></p>
+
+    <% if local_assigns[:subtitle].present? %>
+      <p class="small text-muted mb-2"><%= subtitle %></p>
+    <% end %>
+
+    <% if local_assigns[:trend].present? %>
+      <p class="small fw-semibold text-success mb-0"><%= trend %></p>
+    <% end %>
+
+    <% if local_assigns[:description].present? %>
+      <p class="text-muted small mt-3 mb-0"><%= description %></p>
+    <% end %>
+
+    <% if local_assigns[:primary_cta].present? || local_assigns[:secondary_cta].present? %>
+      <div class="d-flex flex-wrap gap-2 mt-auto pt-3">
+        <% if local_assigns[:primary_cta].present? %>
+          <% options = { class: 'btn btn-primary' } %>
+          <% options[:method] = primary_cta[:method] if primary_cta[:method].present? %>
+          <% options[:data] = primary_cta[:data] if primary_cta[:data].present? %>
+          <%= link_to primary_cta[:label], primary_cta[:path], options %>
+        <% end %>
+
+        <% if local_assigns[:secondary_cta].present? %>
+          <% secondary_classes = secondary_cta[:variant] == :danger ? 'btn btn-outline-danger' : 'btn btn-outline-primary' %>
+          <% options = { class: secondary_classes } %>
+          <% options[:method] = secondary_cta[:method] if secondary_cta[:method].present? %>
+          <% options[:data] = secondary_cta[:data] if secondary_cta[:data].present? %>
+          <%= link_to secondary_cta[:label], secondary_cta[:path], options %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

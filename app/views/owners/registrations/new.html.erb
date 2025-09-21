@@ -1,49 +1,83 @@
-<div class="container">
-  <div class="row">
-    <div class="col-md-6 offset-md-3">
-      <h2 class="text-center mb-4">Nuevo propietario</h2>
+<%= render "devise/shared/auth_layout" do %>
+  <h2 class="h3 fw-bold text-center mb-2">Nuevo propietario</h2>
+  <p class="text-muted text-center mb-4">
+    Configura el espacio de tu correduría para personalizar asistentes, campos de datos y gestionar a tu equipo.
+  </p>
 
-      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { multipart: true }) do |f| %>
-        <%= render "devise/shared/error_messages", resource: resource %>
+  <div class="bg-light border rounded-3 p-3 mb-4">
+    <h3 class="h6 text-uppercase text-muted mb-3">Checklist previo al registro</h3>
+    <ul class="list-unstyled lh-lg mb-0">
+      <li class="d-flex align-items-start mb-2">
+        <i class="bi bi-check-circle-fill text-success me-2"></i>
+        Logotipo en formato PNG o SVG (máximo 2&nbsp;MB) para personalizar la plataforma.
+      </li>
+      <li class="d-flex align-items-start mb-2">
+        <i class="bi bi-check-circle-fill text-success me-2"></i>
+        Razón social y datos fiscales actualizados de la correduría.
+      </li>
+      <li class="d-flex align-items-start">
+        <i class="bi bi-check-circle-fill text-success me-2"></i>
+        Correo corporativo que será el usuario administrador principal.
+      </li>
+    </ul>
+  </div>
 
-        <%= f.hidden_field :role, value: :owner %>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { multipart: true }) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
 
-        <div class="mb-3">
-          <%= f.label :company_name, class: "form-label" %><br />
-          <%= f.text_field :company_name, class: "form-control" %>
-        </div>
+    <%= f.hidden_field :role, value: :owner %>
 
-        <div class="mb-3">
-          <%= f.label :logo, class: "form-label" %><br />
-          <%= f.file_field :logo, class: "form-control" %>
-        </div>
+    <div class="mb-3">
+      <%= f.label :company_name, "Nombre de la correduría", class: "form-label" %>
+      <%= f.text_field :company_name, class: "form-control", placeholder: "Ej. Seguros Atlántida" %>
+    </div>
 
-        <div class="mb-3">
-          <%= f.label :email, class: "form-label" %><br />
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
-        </div>
+    <div class="mb-3">
+      <%= f.label :logo, "Logotipo", class: "form-label" %>
+      <%= f.file_field :logo, class: "form-control" %>
+      <small class="text-muted">Formatos admitidos: PNG, JPG o SVG. Tamaño máximo 2&nbsp;MB.</small>
+    </div>
 
-        <div class="mb-3">
-          <%= f.label :password, class: "form-label" %>
+    <div class="mb-3">
+      <%= f.label :email, "Correo electrónico", class: "form-label" %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="mb-3 mb-md-0">
+          <%= f.label :password, "Contraseña", class: "form-label" %>
           <% if @minimum_password_length %>
-            <em>(<%= @minimum_password_length %> characters minimum)</em>
-          <% end %><br />
+            <small class="text-muted d-block mb-2">Mínimo <%= @minimum_password_length %> caracteres.</small>
+          <% end %>
           <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
         </div>
-
-        <div class="mb-3">
-          <%= f.label :password_confirmation, class: "form-label" %><br />
+      </div>
+      <div class="col-md-6">
+        <div class="mb-3 mb-md-0">
+          <%= f.label :password_confirmation, "Confirma la contraseña", class: "form-label" %>
           <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
         </div>
-
-        <div class="d-grid mb-4">
-          <%= f.submit "Registrarse", class: "btn btn-primary" %>
-        </div>
-      <% end %>
-
-      <div class="text-center">
-        <%= render "devise/shared/links" %>
       </div>
     </div>
+
+    <div class="d-grid mt-4">
+      <%= f.submit "Registrarse", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+  <div class="alert alert-primary mt-4" role="alert">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between">
+      <div class="me-md-3">
+        <h3 class="h6 mb-1">Próximo paso: invita a tus clientes</h3>
+        <p class="mb-0 small">Tras completar el alta, accede a tu panel y genera tokens desde la sección «Clientes» para que comiencen a colaborar.</p>
+      </div>
+      <%= link_to "Acceder para enviar invitaciones", new_owner_session_path, class: "btn btn-outline-light text-primary border-primary mt-3 mt-md-0" %>
+    </div>
   </div>
-</div>
+
+  <div class="text-center mt-3">
+    <p class="text-muted small mb-2">¿Ya tienes cuenta?</p>
+    <%= link_to "Inicia sesión", new_owner_session_path, class: "text-decoration-none" %>
+  </div>
+<% end %>

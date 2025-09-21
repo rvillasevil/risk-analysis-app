@@ -1,0 +1,120 @@
+// Design system base tokens
+// -----------------------------------------------------------------------------
+// Spacing scale
+// --ra-spacing-xxs: 0.25rem  (4px)  - tight spacing for badges and labels
+// --ra-spacing-xs : 0.5rem   (8px)  - small gaps between controls
+// --ra-spacing-sm : 0.75rem  (12px) - component padding (compact)
+// --ra-spacing-md : 1rem     (16px) - default padding
+// --ra-spacing-lg : 1.5rem   (24px) - section padding
+// --ra-spacing-xl : 2rem     (32px) - hero / block spacing
+// Typography
+// --ra-font-family-base   : primary font for body text
+// --ra-font-family-heading: headings font (inherits base if unset)
+// --ra-line-height-base   : global line height for comfortable reading
+// State colors
+// --ra-color-status-pending : Pending / data missing
+// --ra-color-status-progress: In progress / attention
+// --ra-color-status-ready   : Completed / success
+// --ra-color-status-alert   : Requires action / error
+// Neutral palette
+// --ra-color-text-strong  : primary text
+// --ra-color-text-muted   : secondary text
+// --ra-color-surface-soft : cards & panels background
+// --ra-color-surface-subtle: light backgrounds
+// --ra-color-surface-strong: emphasized surfaces (active pills)
+// --ra-color-border-soft  : soft borders & dividers
+
+:root {
+  --ra-spacing-xxs: 0.25rem;
+  --ra-spacing-xs: 0.5rem;
+  --ra-spacing-sm: 0.75rem;
+  --ra-spacing-md: 1rem;
+  --ra-spacing-lg: 1.5rem;
+  --ra-spacing-xl: 2rem;
+
+  --ra-font-family-base: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ra-font-family-heading: "Poppins", var(--ra-font-family-base);
+  --ra-line-height-base: 1.6;
+
+  --ra-color-primary: #0d6efd;
+  --ra-color-status-pending: #f59f00;
+  --ra-color-status-progress: #ffd43b;
+  --ra-color-status-ready: #2f9e44;
+  --ra-color-status-alert: #e03131;
+
+  --ra-color-text-strong: #1f2933;
+  --ra-color-text-muted: #6b7280;
+  --ra-color-surface-soft: #f8fafc;
+  --ra-color-surface-subtle: #f1f5f9;
+  --ra-color-surface-strong: #e2e8f0;
+  --ra-color-border-soft: #e5e7eb;
+}
+
+body {
+  font-family: var(--ra-font-family-base);
+  line-height: var(--ra-line-height-base);
+  color: var(--ra-color-text-strong);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--ra-font-family-heading);
+  letter-spacing: -0.015em;
+}
+
+.badge.bg-status-pending {
+  background-color: var(--ra-color-status-pending) !important;
+  color: #fff;
+}
+
+.badge.bg-status-progress {
+  background-color: var(--ra-color-status-progress) !important;
+  color: #343a40;
+}
+
+.badge.bg-status-ready {
+  background-color: var(--ra-color-status-ready) !important;
+  color: #fff;
+}
+
+.badge.bg-status-alert {
+  background-color: var(--ra-color-status-alert) !important;
+  color: #fff;
+}
+
+.badge.bg-neutral {
+  background-color: var(--ra-color-surface-strong) !important;
+  color: var(--ra-color-text-strong);
+}
+
+.text-muted {
+  color: var(--ra-color-text-muted) !important;
+}
+
+.dashboard-view {
+  .card {
+    border: 1px solid var(--ra-color-border-soft);
+    border-radius: 1rem;
+  }
+
+  .card-header {
+    border-bottom-color: var(--ra-color-border-soft);
+  }
+
+  .empty-state {
+    background: var(--ra-color-surface-subtle);
+    border: 1px dashed var(--ra-color-border-soft);
+    border-radius: 1rem;
+  }
+}
+
+.card[data-state="pending"] {
+  border-left: 4px solid var(--ra-color-status-pending);
+}
+
+.card[data-state="ready"] {
+  border-left: 4px solid var(--ra-color-status-ready);
+}
+
+.card[data-state="alert"] {
+  border-left: 4px solid var(--ra-color-status-alert);
+}

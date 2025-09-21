@@ -14,8 +14,11 @@
  *= require application.bootstrap
  */
 
+@import "design_system";
 @import "show";
 @import "summary";
+@import "dashboard";
+@import "static_pages";
 /*@import "chat_layout";*/
 
 * {

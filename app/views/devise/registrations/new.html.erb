@@ -1,48 +1,115 @@
-<div class="container">
-  <div class="row">
-    <div class="col-md-6 offset-md-3">
-      <h2 class="text-center mb-4">Nuevo usuario</h2>
+<% selected_role = (params[:role].presence || resource.role || 'client').to_s %>
+<% token_value   = params[:invitation_token].to_s %>
+<% base_errors   = resource.errors[:base] %>
+<% token_valid   = token_value.present? && base_errors.blank? %>
+<% email_filled  = resource.email.present? %>
 
-      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-        <%= render "devise/shared/error_messages", resource: resource %>
+<%= render "devise/shared/auth_layout" do %>
+  <h2 class="h3 fw-bold text-center mb-2">Activa tu cuenta</h2>
+  <p class="text-muted text-center mb-4">
+    Sigue los pasos para validar tu invitación, crear tus credenciales y comenzar a colaborar en DataRisk.
+  </p>
 
-        <%= f.hidden_field :role, value: params[:role] || resource.role %>
-
-        <div class="mb-3">
-          <%= label_tag :invitation_token, "Token de invitación", class: "form-label" %><br />
-          <%= text_field_tag :invitation_token, params[:invitation_token], class: "form-control" %>
-        </div>       
-
-        <div class="mb-3">
-          <%= f.label :email, class: "form-label" %><br />
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
-        </div>
-
-        <div class="mb-3">
-          <%= f.label :password, class: "form-label" %>
-          <% if @minimum_password_length %>
-          <em>(<%= @minimum_password_length %> characters minimum)</em>
-          <% end %><br />
-          <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
-        </div>
-
-        <div class="mb-3">
-          <%= f.label :password_confirmation, class: "form-label" %><br />
-          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
-        </div>
-
-        <div class="d-grid mb-4">
-          <%= f.submit "Sign up", class: "btn btn-primary" %>
-        </div>
-      <% end %>
-
-      <!-- Links adicionales -->
-      <div class="text-center">
-        <% unless params[:role] == 'owner' %>
-          <%= link_to "¿Eres una empresa?", new_user_registration_path(role: :owner) %><br />
-        <% end %>        
-        <%= render "devise/shared/links" %>
+  <div class="mb-4">
+    <div class="d-flex align-items-start mb-3">
+      <span class="badge rounded-pill me-3 <%= selected_role.present? ? 'bg-success' : 'bg-secondary-subtle text-body' %>">1</span>
+      <div>
+        <h3 class="h6 mb-1">Selecciona tu rol</h3>
+        <p class="mb-0 text-muted small">Elige si eres cliente invitado o administrador de la correduría.</p>
+      </div>
+    </div>
+    <div class="d-flex align-items-start mb-3">
+      <span class="badge rounded-pill me-3 <%= token_valid ? 'bg-success' : 'bg-secondary-subtle text-body' %>">2</span>
+      <div>
+        <h3 class="h6 mb-1">Introduce tu token</h3>
+        <p class="mb-0 text-muted small">Es el código que recibiste por email. Valida tu invitación antes de crear la contraseña.</p>
+      </div>
+    </div>
+    <div class="d-flex align-items-start">
+      <span class="badge rounded-pill me-3 <%= email_filled ? 'bg-success' : 'bg-secondary-subtle text-body' %>">3</span>
+      <div>
+        <h3 class="h6 mb-1">Completa tus credenciales</h3>
+        <p class="mb-0 text-muted small">Define correo y contraseña para entrar a la plataforma.</p>
       </div>
     </div>
   </div>
-</div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-6">
+      <% client_card_classes = ["card", "h-100", "border"] %>
+      <% client_card_classes << "border-primary shadow-sm" if selected_role == "client" %>
+      <%= link_to new_user_registration_path(role: :client, invitation_token: token_value.presence), class: client_card_classes.join(" ") do %>
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h3 class="h6 mb-0">Soy cliente invitado</h3>
+            <% if selected_role == "client" %>
+              <span class="badge bg-primary">Seleccionado</span>
+            <% end %>
+          </div>
+          <p class="text-muted small mb-0">Utiliza el token enviado por tu corredor para completar el registro.</p>
+        </div>
+      <% end %>
+    </div>
+    <div class="col-md-6">
+      <div class="card h-100 border-0 bg-light">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h3 class="h6 mb-0">Soy propietario / corredor</h3>
+            <span class="badge bg-secondary">Gestión de equipo</span>
+          </div>
+          <p class="text-muted small">Si quieres configurar DataRisk para tu correduría, completa el alta específica.</p>
+          <%= link_to "Ir al formulario de propietarios", new_owner_registration_path, class: "btn btn-outline-secondary btn-sm mt-2" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
+
+    <%= f.hidden_field :role, value: selected_role %>
+
+    <% token_field_classes = ["form-control", "form-control-lg"] %>
+    <% token_field_classes << "is-valid" if token_valid %>
+    <% token_field_classes << "is-invalid" if base_errors.present? %>
+    <div class="mb-3">
+      <%= label_tag :invitation_token, "Token de invitación", class: "form-label" %>
+      <%= text_field_tag :invitation_token, token_value.presence, class: token_field_classes.join(" "), placeholder: "Ej. ABCD-1234" %>
+      <small class="text-muted">Lo encontrarás en el correo con el asunto "Has sido invitado a DataRisk".</small>
+    </div>
+
+    <% email_field_classes = ["form-control"] %>
+    <% email_field_classes << "is-valid" if email_filled %>
+    <div class="mb-3">
+      <%= f.label :email, "Correo electrónico", class: "form-label" %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: email_field_classes.join(" ") %>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="mb-3 mb-md-0">
+          <%= f.label :password, "Contraseña", class: "form-label" %>
+          <% if @minimum_password_length %>
+            <small class="text-muted d-block mb-2">Mínimo <%= @minimum_password_length %> caracteres.</small>
+          <% end %>
+          <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="mb-3 mb-md-0">
+          <%= f.label :password_confirmation, "Confirma la contraseña", class: "form-label" %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-grid mt-4">
+      <%= f.submit "Crear cuenta", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+  <div class="text-center mt-4">
+    <p class="text-muted small mb-2">¿Ya tienes cuenta?</p>
+    <%= link_to "Inicia sesión", new_session_path(resource_name), class: "text-decoration-none" %>
+  </div>
+<% end %>
